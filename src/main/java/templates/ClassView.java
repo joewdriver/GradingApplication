@@ -45,22 +45,19 @@ public class ClassView extends JFrame {
         students.add(new JButton("Armin"));
         students.add(new JButton("Some Guy"));
 
-
-
         classNameHeader = new JLabel("Editing grades for " + className);
 
         editClassSettings = new JButton("Class Settings");
-
-        ActionListener alClone = new ActionListener() {
+        ActionListener alSettings = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
                 //
-                cloneClass();
+                goToSettings();
             }
         };
+        editClassSettings.addActionListener(alSettings);
 
         addStudentButton = new JButton("Add a Student");
-
         ActionListener alAdd = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
@@ -68,9 +65,9 @@ public class ClassView extends JFrame {
                 addStudent();
             }
         };
+        addStudentButton.addActionListener(alAdd);
 
         importStudentsButton = new JButton("Import Student List");
-
         ActionListener alImport = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
@@ -78,6 +75,7 @@ public class ClassView extends JFrame {
                 importStudents();
             }
         };
+        importStudentsButton.addActionListener(alImport);
     }
 
     /**
@@ -91,7 +89,7 @@ public class ClassView extends JFrame {
         JPanel framePanel = new JPanel();
         JPanel headerPanel =  new JPanel();
         JPanel footerPanel =  new JPanel();
-        JPanel centralPanel = new JPanel(new GridLayout(students.size() + 1,assignments.size() + 1));
+        JPanel centralPanel = new JPanel(new GridLayout(students.size() + 1,assignments.size() + 2));
 
         // core overall layout vertical
         GroupLayout coreLayout = new GroupLayout(framePanel);
@@ -125,6 +123,7 @@ public class ClassView extends JFrame {
         // grid layout organizes itself into one long array, a total pain, so we have to add everything sequentially
         // first the empty top left corner
         centralPanel.add("top left", new JLabel(""));
+        centralPanel.add("top left", new JLabel("Weighted Average"));
 
         // next the assignment list in the top row
         for(JButton assignment:assignments) {
@@ -135,6 +134,8 @@ public class ClassView extends JFrame {
         // will need a nested loop to make this work
         for(JComponent student: students) {
             centralPanel.add(student.getName(),student);
+            //TODO: add the average calculation here based on db call
+            centralPanel.add(new TextField("100"));
             for(JComponent assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
                 centralPanel.add(new TextField("100"));
@@ -161,11 +162,7 @@ public class ClassView extends JFrame {
         pane.add(framePanel);
     }
 
-    /**
-     * takes a class id and delivers it to the class view for rendering
-     * can use the private classname member stored at the class level
-     */
-    private void cloneClass() {
+    private void goToSettings() {
         //TODO: install view transition here
         System.exit(0);
     }
