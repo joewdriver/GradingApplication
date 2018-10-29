@@ -114,7 +114,7 @@ public class ClassesView extends JFrame {
      * @param classId the unique ID provided in the db
      */
     private void goToClass(String classId) {
-        //TODO: install view transition here
-        System.exit(0);
+        ClassView classes = new ClassView(classId);
+        classes.setVisible(true);
     }
 }

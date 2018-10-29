@@ -28,6 +28,7 @@ public class LoginView extends JFrame {
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // TODO: we need to add some actual validation here
                 ClassesView classes = new ClassesView();
                 classes.setVisible(true);
             }
