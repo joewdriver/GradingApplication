@@ -13,6 +13,7 @@ public class ClassView extends JFrame {
     private JButton addStudentButton;
     private JButton importStudentsButton;
     private JButton editClassSettings;
+    private JButton saveButton;
     private JLabel classNameHeader;
     private ArrayList<JButton> assignments = new ArrayList<JButton>();
     private ArrayList<JButton> students = new ArrayList<JButton>();
@@ -76,6 +77,15 @@ public class ClassView extends JFrame {
             }
         };
         importStudentsButton.addActionListener(alImport);
+
+        saveButton = new JButton("Save");
+        ActionListener alSave = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // retrieve the calling button and get its text object to pass in.
+                //
+                save();
+            }
+        };
     }
 
     /**
@@ -153,7 +163,8 @@ public class ClassView extends JFrame {
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
             .addComponent(editClassSettings)
             .addComponent(addStudentButton)
-            .addComponent(importStudentsButton));
+            .addComponent(importStudentsButton)
+            .addComponent(saveButton));
 
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
@@ -174,6 +185,11 @@ public class ClassView extends JFrame {
 
     private void importStudents() {
         //TODO: install view transition here
+        System.exit(0);
+    }
+
+    private void save() {
+        //TODO: call save function, reload page to recalculate scores
         System.exit(0);
     }
 }
