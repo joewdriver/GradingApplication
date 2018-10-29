@@ -28,11 +28,11 @@ public class LoginView extends JFrame {
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+                ClassesView classes = new ClassesView();
+                classes.setVisible(true);
             }
         };
         loginButton = new JButton("Submit");
-        loginButton.setText("Submit");
         loginButton.addActionListener(al);
 
         loginPrompt = new JLabel("Please Log In");
