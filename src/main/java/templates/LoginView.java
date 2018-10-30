@@ -31,6 +31,7 @@ public class LoginView extends JFrame {
                 // TODO: we need to add some actual validation here
                 ClassesView classes = new ClassesView();
                 classes.setVisible(true);
+                dispose();
             }
         };
         loginButton = new JButton("Submit");

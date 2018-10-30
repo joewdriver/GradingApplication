@@ -1,5 +1,7 @@
 package templates;
 
+import models.Student;
+
 import javax.swing.*;
 import javax.swing.GroupLayout.Group;
 import java.awt.*;
@@ -45,6 +47,18 @@ public class ClassView extends JFrame {
         students.add(new JButton("Katie"));
         students.add(new JButton("Armin"));
         students.add(new JButton("Some Guy"));
+
+        // action listener for the column headers
+        ActionListener alStudentView = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // retrieve the calling button and get its text object to pass in.
+                //TODO: create a non-dummy student from context
+                goToStudent(new Student("Sample ID", "Sample Name", "UnderGrad", "fake-email"));
+            }
+        };
+        for(JButton student:students) {
+            student.addActionListener(alStudentView);
+        }
 
         classNameHeader = new JLabel("Editing grades for " + className);
 
@@ -191,5 +205,11 @@ public class ClassView extends JFrame {
     private void save() {
         //TODO: call save function, reload page to recalculate scores
         System.exit(0);
+    }
+
+    private void goToStudent(Student student) {
+        StudentView studentView = new StudentView(student);
+        studentView.setVisible(true);
+        dispose();
     }
 }

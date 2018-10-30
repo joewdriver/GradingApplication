@@ -19,4 +19,23 @@ public class Class {
             e.printStackTrace();
         }
     }
+
+    public Class(String sectionNumber, String name, String year) {
+        this.sectionNumber = sectionNumber;
+        this.name = name;
+        this.year = year;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSectionNumber() {
+        return sectionNumber;
+    }
+
+    public String getGroup(String buId) {
+        //TODO: to be pulled from the db
+        return "random group";
+    }
 }

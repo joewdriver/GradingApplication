@@ -116,5 +116,6 @@ public class ClassesView extends JFrame {
     private void goToClass(String classId) {
         ClassView classes = new ClassView(classId);
         classes.setVisible(true);
+        dispose();
     }
 }
