@@ -14,7 +14,7 @@ public class DBManager {
     public DBManager() {
         try{
             System.out.println("Checkpoint 0");
-//            Class.forName("com.mysql.cj.jdbc.Driver");
+//            Course.forName("com.mysql.cj.jdbc.Driver");
 //            System.out.println("Checkpoint 1");
 //            Connection con= DriverManager.getConnection(
 //                    "jdbc:mysql://sql9.freemysqlhosting.net/sql9261878","sql9261878","N5thwVUwNj");

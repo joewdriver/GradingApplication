@@ -1,8 +1,8 @@
 package templates;
 
-import models.Class;
-import models.Group;
+import models.Course;
 import models.Student;
+import utils.ContextButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class StudentView extends JFrame {
-    private ArrayList<Class> classes;
+    private ArrayList<Course> courses;
     private JLabel name;
     private JLabel graduateLevel;
     private JComboBox groups;
@@ -21,10 +21,10 @@ public class StudentView extends JFrame {
 
     public StudentView(Student student) {
         this.student = student;
-        this.classes = student.getClasses();
+        this.courses = student.getClasses();
         this.createUIComponents();
         setTitle("Grading Records - " + student.getName());
-        setSize(700,400);
+        setSize(1200,800);
         setLocationRelativeTo(null);
         this.buildLayout();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -41,7 +41,7 @@ public class StudentView extends JFrame {
 
         JPanel corePanel = new JPanel();
         JPanel topPanel = new JPanel();
-        JPanel bottomPanel = new JPanel(new GridLayout(classes.size() + 1,3));
+        JPanel bottomPanel = new JPanel(new GridLayout(courses.size() + 1,3));
 
         // top level vertical container for two sub-panels
         GroupLayout coreLayout = new GroupLayout(corePanel);
@@ -73,16 +73,17 @@ public class StudentView extends JFrame {
         topLayout.setAutoCreateContainerGaps(true);
 
         // three column headers, fixed in this grid, we never get wider
-        bottomPanel.add("top left", new JLabel("Class"));
+        bottomPanel.add("top left", new JLabel("Course"));
         bottomPanel.add("top left", new JLabel("Grade"));
         bottomPanel.add("top left", new JLabel("Group"));
 
-        // set up an even listener for classes, and another for groups
+        // set up an even listener for courses, and another for groups
         ActionListener alGoToClass = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
                 //
-                goToClass(e.getSource().toString());
+                ContextButton btn = (ContextButton)e.getSource();
+                goToCourse((Course)btn.getContext());
             }
         };
 
@@ -94,10 +95,10 @@ public class StudentView extends JFrame {
             }
         };
 
-        // now loop the classes -- avoid the reserved term
-        for(Class section:classes) {
+        // now loop the courses -- avoid the reserved term
+        for(Course section: courses) {
             // add the action listener to the button
-            JButton tempClass = new JButton(section.getSectionNumber() + " " + section.getName());
+            ContextButton tempClass = new ContextButton(section.getSectionNumber() + " " + section.getName(), section);
             tempClass.addActionListener(alGoToClass);
             bottomPanel.add(tempClass);
 
@@ -116,9 +117,10 @@ public class StudentView extends JFrame {
         pane.add(corePanel);
     }
 
-    private void goToClass(String classId) {
-        ClassView classes = new ClassView(classId);
+    private void goToCourse(Course course) {
+        CourseView classes = new CourseView(course);
         classes.setVisible(true);
+        dispose();
     }
 
     private void goToGroup(String groupId) {

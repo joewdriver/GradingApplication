@@ -1,5 +1,8 @@
 package templates;
 
+import models.Course;
+import utils.ContextButton;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,12 +12,12 @@ import javax.swing.GroupLayout.Group;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class ClassesView extends JFrame {
+public class CoursesView extends JFrame {
     private JButton newClassButton;
     private JLabel classPrompt;
     private ArrayList<JButton> classes;
 
-    public ClassesView() {
+    public CoursesView() {
         this.createUIComponents();
         setTitle("Grading Records - All Classes");
         setSize(700,400);
@@ -26,26 +29,26 @@ public class ClassesView extends JFrame {
     private void createUIComponents() {
 
         //quick label for the header
-        classPrompt = new JLabel("Please Choose a Class to View");
+        classPrompt = new JLabel("Please Choose a Course to View");
 
         //link to the new class form
-        newClassButton = new JButton("Create a new Class");
+        newClassButton = new JButton("Create a new Course");
 
         // we'll create an arraylist to hold our class buttons
         classes = new ArrayList<JButton>();
 
         // providing a dummy list for the moment
         //TODO: replace with db call to populate the arraylist
-        classes.add(new JButton("Class 1"));
-        classes.add(new JButton("Class 2"));
-        classes.add(new JButton("Class 3"));
-        classes.add(new JButton("Class 4"));
+        classes.add(new ContextButton("Course 1", new Course("ID221","Sample Class", "Fall 2018")));
+        classes.add(new ContextButton("Course 2", new Course("ID221","Sample Class", "Fall 2018")));
+        classes.add(new ContextButton("Course 3", new Course("ID221","Sample Class", "Fall 2018")));
+        classes.add(new ContextButton("Course 4", new Course("ID221","Sample Class", "Fall 2018")));
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                // TODO: We can subclass JButton to carry more relevant info than just the class name
-                goToClass(((JButton)e.getSource()).getText());
+                // retrieve the calling button and get its context object to pass in.
+                ContextButton btn = (ContextButton)e.getSource();
+                goToCourse((Course)btn.getContext());
             }
         };
 
@@ -111,10 +114,11 @@ public class ClassesView extends JFrame {
 
     /**
      * takes a class id and delivers it to the class view for rendering
-     * @param classId the unique ID provided in the db
+     * @param course the course object
      */
-    private void goToClass(String classId) {
-        ClassView classes = new ClassView(classId);
+    private void goToCourse(Course course) {
+
+        CourseView classes = new CourseView(course);
         classes.setVisible(true);
         dispose();
     }

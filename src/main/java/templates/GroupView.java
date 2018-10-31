@@ -1,9 +1,12 @@
 package templates;
 
+import models.Assignment;
+import models.Course;
+import models.Group;
 import models.Student;
+import utils.ContextButton;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Group;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,21 +14,22 @@ import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class ClassView extends JFrame {
+public class GroupView extends JFrame {
     private JButton addStudentButton;
     private JButton importStudentsButton;
     private JButton editClassSettings;
     private JButton saveButton;
-    private JLabel classNameHeader;
-    private ArrayList<JButton> assignments = new ArrayList<JButton>();
+    private JLabel groupNameHeader;
+    private ArrayList<Assignment> assignments;
     private ArrayList<JButton> students = new ArrayList<JButton>();
-    private String className;
+    private Group group;
+    private ActionListener alAssignments;
 
 
-    public ClassView(String className) {
-        this.className = className;
+    public GroupView(Group group) {
+        this.group = group;
         this.createUIComponents();
-        setTitle("Grading Records - " + className);
+        setTitle("Grading Records - " + group.getCourse().getName() + " " + group.getName());
 
         // going to need alot more space with this one
         setSize(1200,800);
@@ -36,61 +40,27 @@ public class ClassView extends JFrame {
 
     private void createUIComponents() {
 
-        // TODO: remove this and populate these arraylists with a db call.
-        assignments.add(new JButton("Assignment 1"));
-        assignments.add(new JButton("Assignment 2"));
-        assignments.add(new JButton("Assignment 3"));
-        assignments.add(new JButton("Assignment 4"));
-        assignments.add(new JButton("Assignment 5"));
+        assignments = group.getCourse().getAssignments();
 
-        students.add(new JButton("Joe"));
-        students.add(new JButton("Katie"));
-        students.add(new JButton("Armin"));
-        students.add(new JButton("Some Guy"));
+        // TODO: remove this and populate this arraylist with a call to Group.getStudents.
+        students.add(new ContextButton("Joe", new Student("ID101","Joe Driver","Graduate", "sample")));
+        students.add(new ContextButton("Katie", new Student("ID102","Katie Quirk","Graduate", "sample")));
+        students.add(new ContextButton("Armin", new Student("ID103","Armin Sabouri","Undergraduate", "sample")));
+        students.add(new ContextButton("Some Guy", new Student("ID104","Some Guy","PHD", "sample")));
 
         // action listener for the column headers
         ActionListener alStudentView = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
-                //TODO: create a non-dummy student from context
-                goToStudent(new Student("Sample ID", "Sample Name", "UnderGrad", "fake-email"));
+                ContextButton btn = (ContextButton) e.getSource();
+                goToStudent((Student)btn.getContext());
             }
         };
         for(JButton student:students) {
             student.addActionListener(alStudentView);
         }
 
-        classNameHeader = new JLabel("Editing grades for " + className);
-
-        editClassSettings = new JButton("Class Settings");
-        ActionListener alSettings = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                //
-                goToSettings();
-            }
-        };
-        editClassSettings.addActionListener(alSettings);
-
-        addStudentButton = new JButton("Add a Student");
-        ActionListener alAdd = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                //
-                addStudent();
-            }
-        };
-        addStudentButton.addActionListener(alAdd);
-
-        importStudentsButton = new JButton("Import Student List");
-        ActionListener alImport = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                //
-                importStudents();
-            }
-        };
-        importStudentsButton.addActionListener(alImport);
+        groupNameHeader = new JLabel("Editing grades for " + group.getCourse().getName() + " " + group.getName());
 
         saveButton = new JButton("Save");
         ActionListener alSave = new ActionListener() {
@@ -98,6 +68,14 @@ public class ClassView extends JFrame {
                 // retrieve the calling button and get its text object to pass in.
                 //
                 save();
+            }
+        };
+
+         alAssignments = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // retrieve the calling button and get its text object to pass in.
+                ContextButton btn = (ContextButton)e.getSource();
+                goToAssignment((Assignment)btn.getContext());
             }
         };
     }
@@ -138,10 +116,10 @@ public class ClassView extends JFrame {
         GroupLayout headerLayout = new GroupLayout(headerPanel);
 
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
-                .addComponent(classNameHeader));
+                .addComponent(groupNameHeader));
 
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
-                .addComponent(classNameHeader));
+                .addComponent(groupNameHeader));
 
 
         // grid layout organizes itself into one long array, a total pain, so we have to add everything sequentially
@@ -150,8 +128,10 @@ public class ClassView extends JFrame {
         centralPanel.add("top left", new JLabel("Weighted Average"));
 
         // next the assignment list in the top row
-        for(JButton assignment:assignments) {
-            centralPanel.add(assignment.getName(), assignment);
+        for(Assignment assignment:assignments) {
+            ContextButton btn = new ContextButton(assignment.getName(), assignment);
+            btn.addActionListener(alAssignments);
+            centralPanel.add(btn, assignment);
         }
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
@@ -160,7 +140,7 @@ public class ClassView extends JFrame {
             centralPanel.add(student.getName(),student);
             //TODO: add the average calculation here based on db call
             centralPanel.add(new TextField("100"));
-            for(JComponent assignment:assignments) {
+            for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
                 centralPanel.add(new TextField("100"));
             }
@@ -187,29 +167,20 @@ public class ClassView extends JFrame {
         pane.add(framePanel);
     }
 
-    private void goToSettings() {
-        //TODO: install view transition here
-        System.exit(0);
-    }
-
-    private void addStudent() {
-        //TODO: install view transition here
-        System.exit(0);
-    }
-
-    private void importStudents() {
-        //TODO: install view transition here
-        System.exit(0);
-    }
-
     private void save() {
-        //TODO: call save function, reload page to recalculate scores
-        System.exit(0);
+        //TODO: save function needs to read the scores, update the db, then reload the app
+        GroupView courseView = new GroupView(this.group);
+        courseView.setVisible(true);
+        dispose();
     }
 
     private void goToStudent(Student student) {
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
         dispose();
+    }
+
+    private void goToAssignment(Assignment assignment) {
+        //TODO: add assignment view transition here
     }
 }

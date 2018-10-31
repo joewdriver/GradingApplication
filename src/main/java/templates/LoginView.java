@@ -1,7 +1,5 @@
 package templates;
 
-import sun.rmi.runtime.Log;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,7 +27,7 @@ public class LoginView extends JFrame {
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO: we need to add some actual validation here
-                ClassesView classes = new ClassesView();
+                CoursesView classes = new CoursesView();
                 classes.setVisible(true);
                 dispose();
             }
