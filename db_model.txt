@@ -1,0 +1,20 @@
+Class table:
+	CREATE TABLE `gradium`.`class` ( `ID` INT NOT NULL AUTO_INCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB;
+
+student table: 
+	CREATE TABLE `gradium`.`student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;
+
+class_assignments table:
+	CREATE TABLE `gradium`.`class_assignments` ( `BU_ID` INT(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;
+
+course_assignments table:
+	CREATE TABLE `gradium`.`course_assignments` ( `BU_ID` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;
+
+assignments table:
+	CREATE TABLE `gradium`.`assignments` ( `ID` INT(200) NOT NULL AUTO_INCREMENT , `class_ID` INT(200) NOT NULL , `description` VARCHAR(700) NULL , `score` INT(11) NOT NULL , `extra_credit` INT(11) NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB;
+
+group table:
+	CREATE TABLE `gradium`.`groups` ( `BU_ID` INT(200) NOT NULL , `class_id` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;
+
+weight table:
+	CREATE TABLE `gradium`.`weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`group_id`)) ENGINE = InnoDB;
