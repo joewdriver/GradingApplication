@@ -1,7 +1,10 @@
 package models;
 
+import utils.ContextButton;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Group {
     private int id;
@@ -19,11 +22,28 @@ public class Group {
         }
     }
 
+    public Group(int id, String name, Course course) {
+        this.id = id;
+        this.name = name;
+        this.course = course;
+    }
+
     public String getName() {
         return this.name;
     }
 
     public Course getCourse() {
         return this.course;
+    }
+
+    public ArrayList<Student> getStudents() {
+        //TODO: replace this with a db call
+        ArrayList<Student> students = new ArrayList<Student>();
+        students.add(new Student("ID101","Joe Driver","Graduate", "sample"));
+        students.add(new Student("ID102","Katie Quirk","Graduate", "sample"));
+        students.add(new Student("ID103","Armin Sabouri","Undergraduate", "sample"));
+        students.add(new Student("ID104","Some Guy","PHD", "sample"));
+
+        return students;
     }
 }

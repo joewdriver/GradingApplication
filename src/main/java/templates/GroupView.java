@@ -1,5 +1,6 @@
 package templates;
 
+import com.sun.jmx.remote.security.JMXPluggableAuthenticator;
 import models.Assignment;
 import models.Course;
 import models.Group;
@@ -15,15 +16,13 @@ import java.util.ArrayList;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class GroupView extends JFrame {
-    private JButton addStudentButton;
-    private JButton importStudentsButton;
-    private JButton editClassSettings;
     private JButton saveButton;
     private JLabel groupNameHeader;
     private ArrayList<Assignment> assignments;
-    private ArrayList<JButton> students = new ArrayList<JButton>();
+    private ArrayList<Student> students;
     private Group group;
     private ActionListener alAssignments;
+    private ActionListener alStudentView;
 
 
     public GroupView(Group group) {
@@ -41,12 +40,10 @@ public class GroupView extends JFrame {
     private void createUIComponents() {
 
         assignments = group.getCourse().getAssignments();
+        students = group.getStudents();
 
-        // TODO: remove this and populate this arraylist with a call to Group.getStudents.
-        students.add(new ContextButton("Joe", new Student("ID101","Joe Driver","Graduate", "sample")));
-        students.add(new ContextButton("Katie", new Student("ID102","Katie Quirk","Graduate", "sample")));
-        students.add(new ContextButton("Armin", new Student("ID103","Armin Sabouri","Undergraduate", "sample")));
-        students.add(new ContextButton("Some Guy", new Student("ID104","Some Guy","PHD", "sample")));
+        groupNameHeader = new JLabel("Add Students/Update Weights");
+        saveButton = new JButton("Update");
 
         // action listener for the column headers
         ActionListener alStudentView = new ActionListener() {
@@ -56,9 +53,6 @@ public class GroupView extends JFrame {
                 goToStudent((Student)btn.getContext());
             }
         };
-        for(JButton student:students) {
-            student.addActionListener(alStudentView);
-        }
 
         groupNameHeader = new JLabel("Editing grades for " + group.getCourse().getName() + " " + group.getName());
 
@@ -81,90 +75,96 @@ public class GroupView extends JFrame {
     }
 
     /**
-     * our most complicated view.  To get this going we're going to have a GridLayout and two GroupLayouts
-     * embedded into a third GroupLayout, all within containing panels
+     * we're going to have 2 tables of 2 columns in addition to header and footer management
      */
     private void buildLayout() {
         // this is the overall parent
         Container pane = getContentPane();
 
         JPanel framePanel = new JPanel();
-        JPanel headerPanel =  new JPanel();
-        JPanel footerPanel =  new JPanel();
-        JPanel centralPanel = new JPanel(new GridLayout(students.size() + 1,assignments.size() + 2));
+        JPanel headerPanel = new JPanel();
+        JPanel footerPanel = new JPanel();
+        JPanel weightPanel = new JPanel(new GridLayout(2, assignments.size() + 1));
+        JPanel spacerPanel = new JPanel();
+        JPanel gradesPanel = new JPanel(new GridLayout(students.size() + 1, assignments.size()+2));
 
-        // core overall layout vertical
         GroupLayout coreLayout = new GroupLayout(framePanel);
         coreLayout.setAutoCreateContainerGaps(true);
 
-        // core layout grouping to order our member panels high to low
-        coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
-                .addComponent(headerPanel)
-                .addComponent(centralPanel)
-                .addComponent(footerPanel)
-        );
-
+        // Build the parent container first
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(headerPanel)
-                .addComponent(centralPanel)
-                .addComponent(footerPanel)
-        );
+                .addComponent(spacerPanel)
+                .addComponent(weightPanel)
+                .addComponent(spacerPanel)
+                .addComponent(gradesPanel)
+                .addComponent(footerPanel));
+
+        coreLayout.setHorizontalGroup(coreLayout.createParallelGroup(CENTER)
+                .addComponent(headerPanel)
+                .addComponent(spacerPanel)
+                .addComponent(weightPanel)
+                .addComponent(spacerPanel)
+                .addComponent(gradesPanel)
+                .addComponent(footerPanel));
 
         framePanel.setLayout(coreLayout);
 
-        // horizontal header layout.  Currently has a single item, but built to be flexible for additions
+        // next the header
         GroupLayout headerLayout = new GroupLayout(headerPanel);
-
-        headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
-                .addComponent(groupNameHeader));
-
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(groupNameHeader));
+        headerLayout.setVerticalGroup(headerLayout.createParallelGroup()
+                .addComponent(groupNameHeader));
+        headerPanel.setLayout(headerLayout);
+
+        // now the assignments and weights.  first add assignment label
+        weightPanel.add(new JLabel("Assignment"));
+        // loop through the assignment list and set them as headers
+        for(Assignment assignment: assignments) {
+            ContextButton btn = new ContextButton(assignment.getName(), assignment);
+            btn.addActionListener(alAssignments);
+            weightPanel.add(btn);
+        }
+        // add the weight row label
+        weightPanel.add(new Label("Weight"));
+        // loop again to add weight value
+        for(Assignment assignment: assignments) {
+            weightPanel.add(new JTextField("1"));
+        }
+
+        spacerPanel.add(Box.createVerticalStrut(10));
 
 
-        // grid layout organizes itself into one long array, a total pain, so we have to add everything sequentially
-        // first the empty top left corner
-        centralPanel.add("top left", new JLabel(""));
-        centralPanel.add("top left", new JLabel("Weighted Average"));
+        // next we need to build the student/grade list. start with student and weight average headers
+        gradesPanel.add(new JLabel("Student"));
+        gradesPanel.add(new JLabel("Weighted Average"));
 
-        // next the assignment list in the top row
+        // Assignments will be headers
         for(Assignment assignment:assignments) {
             ContextButton btn = new ContextButton(assignment.getName(), assignment);
             btn.addActionListener(alAssignments);
-            centralPanel.add(btn, assignment);
+            gradesPanel.add(btn);
         }
-
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
-        for(JComponent student: students) {
-            centralPanel.add(student.getName(),student);
-            //TODO: add the average calculation here based on db call
-            centralPanel.add(new TextField("100"));
+        for(Student student: students) {
+            ContextButton btn = new ContextButton(student.getName(), student);
+            btn.addActionListener(this.alStudentView);
+            gradesPanel.add(btn);
+            //TODO: add the weighted calculation here based on db call
+            gradesPanel.add(new JLabel("     100"));
             for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
-                centralPanel.add(new TextField("100"));
+                gradesPanel.add(new JLabel("     100"));
             }
         }
 
-        // footer layout for various functional buttons
-        GroupLayout footerLayout = new GroupLayout(footerPanel);
 
-        footerLayout.setHorizontalGroup(footerLayout.createParallelGroup(CENTER)
-            .addComponent(editClassSettings)
-            .addComponent(addStudentButton)
-            .addComponent(importStudentsButton));
-
-        footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
-            .addComponent(editClassSettings)
-            .addComponent(addStudentButton)
-            .addComponent(importStudentsButton)
-            .addComponent(saveButton));
-
-
-        // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
-        // that wraps it and gives us the center aligned look.
         pane.setLayout(new GridBagLayout());
         pane.add(framePanel);
+
+
     }
 
     private void save() {

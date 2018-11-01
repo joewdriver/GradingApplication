@@ -2,6 +2,7 @@ package templates;
 
 import models.Course;
 import utils.ContextButton;
+import utils.DBManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,9 @@ import static javax.swing.GroupLayout.Alignment.CENTER;
 public class CoursesView extends JFrame {
     private JButton newClassButton;
     private JLabel classPrompt;
-    private ArrayList<JButton> classes;
+    private ArrayList<Course> courses;
+    private DBManager db = new DBManager();
+    private ActionListener alCourseView;
 
     public CoursesView() {
         this.createUIComponents();
@@ -34,27 +37,20 @@ public class CoursesView extends JFrame {
         //link to the new class form
         newClassButton = new JButton("Create a new Course");
 
-        // we'll create an arraylist to hold our class buttons
-        classes = new ArrayList<JButton>();
+        // we'll create an arraylist to hold our courses
+        courses = db.getCourses();
 
         // providing a dummy list for the moment
         //TODO: replace with db call to populate the arraylist
-        classes.add(new ContextButton("Course 1", new Course("ID221","Sample Class", "Fall 2018")));
-        classes.add(new ContextButton("Course 2", new Course("ID221","Sample Class", "Fall 2018")));
-        classes.add(new ContextButton("Course 3", new Course("ID221","Sample Class", "Fall 2018")));
-        classes.add(new ContextButton("Course 4", new Course("ID221","Sample Class", "Fall 2018")));
 
-        ActionListener al = new ActionListener() {
+
+        alCourseView = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its context object to pass in.
                 ContextButton btn = (ContextButton)e.getSource();
                 goToCourse((Course)btn.getContext());
             }
         };
-
-        for(JButton button:classes) {
-            button.addActionListener(al);
-        }
     }
 
     private void buildLayout() {
@@ -95,9 +91,11 @@ public class CoursesView extends JFrame {
         // populate the groups with our ui elements in order, with the header panel at the top
         listHorizontal.addComponent(headerPanel);
         listVertical.addComponent(headerPanel);
-        for(JButton button: classes) {
-            listHorizontal.addComponent(button);
-            listVertical.addComponent(button);
+        for(Course course: courses) {
+            ContextButton btn = new ContextButton(course.getName(), course);
+            btn.addActionListener(alCourseView);
+            listHorizontal.addComponent(btn);
+            listVertical.addComponent(btn);
         }
 
         // now we apply the groups to the layout

@@ -1,6 +1,7 @@
 package templates;
 
 import models.Course;
+import models.Group;
 import models.Student;
 import utils.ContextButton;
 
@@ -90,8 +91,8 @@ public class StudentView extends JFrame {
         ActionListener alGoToGroup = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its text object to pass in.
-                //
-                goToGroup(e.getSource().toString());
+                ContextButton btn = (ContextButton) e.getSource();
+                goToGroup((Group)btn.getContext());
             }
         };
 
@@ -106,7 +107,7 @@ public class StudentView extends JFrame {
             bottomPanel.add(new Label(Integer.toString(student.getGrade(section.getSectionNumber())),JLabel.CENTER));
 
             // add an action listener to the group
-            JButton tempGroup = new JButton(section.getGroup(student.getBuId()));
+            ContextButton tempGroup = new ContextButton(section.getGroup(student).getName(),section.getGroup(student));
             tempGroup.addActionListener(alGoToGroup);
             bottomPanel.add(tempGroup);
         }
@@ -123,8 +124,9 @@ public class StudentView extends JFrame {
         dispose();
     }
 
-    private void goToGroup(String groupId) {
-        //TODO: to be added once we add the group view
-        return;
+    private void goToGroup(Group group) {
+        GroupView groupView = new GroupView(group);
+        groupView.setVisible(true);
+        dispose();
     }
 }

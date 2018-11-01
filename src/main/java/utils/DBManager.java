@@ -5,10 +5,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+
 import com.mysql.jdbc.Driver;
+import models.Course;
 
 /**
  * Created by jdriver on 10/29/18.
+ * this will handle base db utilities and any requests not applicable to an object
  */
 public class DBManager {
     public DBManager() {
@@ -25,5 +29,14 @@ public class DBManager {
         }catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Course> getCourses() {
+        ArrayList<Course> courses = new ArrayList<Course>();
+        courses.add(new Course("ID221","Sample Class 1", "Fall 2018"));
+        courses.add(new Course("ID221","Sample Class 2", "Fall 2018"));
+        courses.add(new Course("ID221","Sample Class 3", "Fall 2018"));
+        courses.add(new Course("ID221","Sample Class 4", "Fall 2018"));
+        return courses;
     }
 }

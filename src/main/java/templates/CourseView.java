@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.EventListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -19,6 +18,7 @@ public class CourseView extends JFrame {
     private ContextButton importStudentsButton;
     private ContextButton editClassSettings;
     private JButton saveButton;
+    private JButton viewAllCoursesButton;
     private JLabel classNameHeader;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
@@ -29,6 +29,7 @@ public class CourseView extends JFrame {
     private ActionListener alSettings;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
+    private ActionListener alViewAllCourses;
 
 
 
@@ -108,13 +109,22 @@ public class CourseView extends JFrame {
             }
         };
 
+        alViewAllCourses = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                viewAllCourses();
+            }
+        };
+
+
         addStudentButton = new ContextButton("Add A Student", this.course);
         editClassSettings = new ContextButton("Class Setting", this.course);
         importStudentsButton = new ContextButton("Import Student List", this.course);
+        viewAllCoursesButton = new JButton("View all Courses");
 
         addStudentButton.addActionListener(alAddStudent);
         editClassSettings.addActionListener(alSettings);
         importStudentsButton.addActionListener(alImportStudents);
+        viewAllCoursesButton.addActionListener(alViewAllCourses);
     }
 
     /**
@@ -153,10 +163,12 @@ public class CourseView extends JFrame {
         GroupLayout headerLayout = new GroupLayout(headerPanel);
 
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
-                .addComponent(classNameHeader));
+                .addComponent(classNameHeader)
+                .addComponent(viewAllCoursesButton));
 
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
-                .addComponent(classNameHeader));
+                .addComponent(classNameHeader)
+                .addComponent(viewAllCoursesButton));
 
 
         // grid layout organizes itself into one long array, a total pain, so we have to add everything sequentially
@@ -236,5 +248,11 @@ public class CourseView extends JFrame {
 
     private void goToAssignment(Assignment assignment) {
         //TODO: add assignment view transition here
+    }
+
+    private void viewAllCourses() {
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
+        dispose();
     }
 }

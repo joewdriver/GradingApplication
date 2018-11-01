@@ -3,6 +3,7 @@ package models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import models.Group;
 
 public class Course {
     private int id;
@@ -35,9 +36,9 @@ public class Course {
         return sectionNumber;
     }
 
-    public String getGroup(String buId) {
+    public Group getGroup(Student student) {
         //TODO: to be pulled from the db
-        return "random group";
+        return new Group(1, "Sample Group", this);
     }
 
     public ArrayList<Assignment> getAssignments() {
