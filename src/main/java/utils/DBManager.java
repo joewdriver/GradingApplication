@@ -1,10 +1,8 @@
 package utils;
 
 import java.awt.peer.SystemTrayPeer;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.File;
+import java.sql.*;
 import java.util.ArrayList;
 
 import com.mysql.jdbc.Driver;
@@ -15,18 +13,33 @@ import models.Course;
  * this will handle base db utilities and any requests not applicable to an object
  */
 public class DBManager {
+
+    private String dbPath = "jdbc:sqlite:test.db";
+    private Connection conn;
+
     public DBManager() {
         try{
-            System.out.println("Checkpoint 0");
-//            Course.forName("com.mysql.cj.jdbc.Driver");
-//            System.out.println("Checkpoint 1");
-//            Connection con= DriverManager.getConnection(
-//                    "jdbc:mysql://sql9.freemysqlhosting.net/sql9261878","sql9261878","N5thwVUwNj");
-//            System.out.println("Checkpoint 2");
-//            //TODO: remove these lines, they are meant to test the connection during development
-//            System.out.println(con.getMetaData().toString());
-//            con.close();
+            // this either accesses or creates the db
+            conn = DriverManager.getConnection(dbPath);
         }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * this method needs to build the initial db the first time we start the application.  Thereafter it should detect
+     * that it has already been build and skip.
+     */
+    public void buildDB() {
+        //TODO build the whole thing
+
+    }
+
+    // needs to be called whenever we are done with the db.
+    public void closeDB() {
+        try {
+            conn.close();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

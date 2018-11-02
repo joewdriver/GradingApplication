@@ -6,7 +6,10 @@ import utils.DBManager;
  */
 public class Application {
     public static void main(String[] args) {
+
         DBManager db = new DBManager();
+        db.buildDB();
+
         LoginView login = new LoginView();
         login.setVisible(true);
     }

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import models.Group;
+import utils.DBManager;
 
 public class Course {
     private int id;
@@ -26,6 +27,7 @@ public class Course {
         this.sectionNumber = sectionNumber;
         this.name = name;
         this.year = year;
+        DBManager db = new DBManager();
     }
 
     public String getName() {
