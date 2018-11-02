@@ -1,11 +1,13 @@
 package utils;
 
-import java.awt.peer.SystemTrayPeer;
-import java.io.File;
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.mysql.jdbc.Driver;
+//import com.mysql.jdbc.Driver;
 import models.Course;
 
 /**
