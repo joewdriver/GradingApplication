@@ -1,6 +1,5 @@
 package templates;
 
-import com.sun.jmx.remote.security.JMXPluggableAuthenticator;
 import models.Assignment;
 import models.Course;
 import models.Group;
