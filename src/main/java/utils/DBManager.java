@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.sql.SQLException;
 
 //import com.mysql.jdbc.Driver;
 import models.Course;
@@ -16,11 +17,12 @@ import models.Course;
  */
 public class DBManager {
 
-    private String dbPath = "jdbc:sqlite:test.db";
+    private String dbPath = "jdbc:sqlite:gradium.db";
     private Connection conn;
 
     public DBManager() {
         try{
+            Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
             conn = DriverManager.getConnection(dbPath);
         }catch(Exception e){
@@ -33,8 +35,28 @@ public class DBManager {
      * that it has already been build and skip.
      */
     public void buildDB() {
-        //TODO build the whole thing
+        System.out.println("Building the tables");
+        final String studentQuery = "CREATE TABLE `gradium`.`student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;";
+        final String classQuery = "CREATE TABLE `gradium`.`class` ( `ID` INT NOT NULL AUTO_INCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB;";
+        final String class_assignments = "CREATE TABLE `gradium`.`class_assignments` ( `BU_ID` INT(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;";
+        final String course_assignments = "CREATE TABLE `gradium`.`course_assignments` ( `BU_ID` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;";
+        final String assignments = "CREATE TABLE `gradium`.`assignments` ( `ID` INT(200) NOT NULL AUTO_INCREMENT , `class_ID` INT(200) NOT NULL , `description` VARCHAR(700) NULL , `score` INT(11) NOT NULL , `extra_credit` INT(11) NOT NULL , PRIMARY KEY (`ID`)) ENGINE = InnoDB;";
+        final String group = "CREATE TABLE `gradium`.`groups` ( `BU_ID` INT(200) NOT NULL , `class_id` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;";
+        final String weight = "CREATE TABLE `gradium`.`weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`group_id`)) ENGINE = InnoDB;";
 
+        try {
+            Statement stmt = this.conn.createStatement();
+                stmt.execute(studentQuery);
+                stmt.execute(classQuery);
+                stmt.execute(class_assignments);
+                stmt.execute(course_assignments);
+                stmt.execute(assignments);
+                stmt.execute(group);
+                stmt.execute(weight);
+
+        }catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // needs to be called whenever we are done with the db.
