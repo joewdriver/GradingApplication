@@ -36,7 +36,7 @@ public class DBManager {
      */
     public void buildDB() {
         System.out.println("Building the tables");
-        final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`)) ENGINE = InnoDB;";
+        final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL )";
         final String class_assignments = "CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String course_assignments = "CREATE TABLE `course_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
@@ -58,7 +58,30 @@ public class DBManager {
             System.out.println(e.getMessage());
         }
     }
+    public void dropAllTables() {
+        System.out.println("Building the tables");
+        final String studentQuery = "DROP TABLE `student`";
+        final String classQuery = "DROP TABLE `class`";
+        final String class_assignments = "DROP TABLE `class_assignments`";
+        final String course_assignments = "DROP TABLE `course_assignments`";
+        final String assignments = "DROP TABLE `assignments`";
+        final String group = "DROP TABLE `groups`";
+        final String weight = "DROP TABLE `weight`";
 
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.execute(studentQuery);
+            stmt.execute(classQuery);
+            stmt.execute(class_assignments);
+            stmt.execute(course_assignments);
+            stmt.execute(assignments);
+            stmt.execute(group);
+            stmt.execute(weight);
+
+        }catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     // needs to be called whenever we are done with the db.
     public void closeDB() {
         try {
