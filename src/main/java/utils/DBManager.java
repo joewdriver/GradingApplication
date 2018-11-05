@@ -33,6 +33,10 @@ public class DBManager {
         }
     }
 
+    public Connection getConn() {
+        return conn;
+    }
+
     /**
      * this method needs to build the initial db the first time we start the application.  Thereafter it should detect
      * that it has already been build and skip.
