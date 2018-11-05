@@ -16,10 +16,10 @@ public class Course {
     public Course(ResultSet rs) {
         try {
             this.id = rs.getInt("id");
-            this.sectionNumber = rs.getString("section number");
+            this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
             this.year = rs.getString("year");
-            this.semester = rs.getString("semster");
+            this.semester = rs.getString("semester");
         } catch(SQLException e) {
             e.printStackTrace();
         }

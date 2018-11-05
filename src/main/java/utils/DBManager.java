@@ -25,8 +25,9 @@ public class DBManager {
             Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
             conn = DriverManager.getConnection(dbPath);
-            Course ex = new Course("2", "Course name", "2012", "Fall");
-            this.addCourse(ex);
+//            Course ex = new Course("2", "example", "2012", "Fall");
+            //this.addCourse(ex);
+            this.getCourses();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -113,7 +114,18 @@ public class DBManager {
 
     public ArrayList<Course> getCourses() {
         ArrayList<Course> courses = new ArrayList<Course>();
-        
+        String selectQuery = "SELECT ID, class, semester, name, year  FROM `class`";
+
+        try {
+             Statement stmt  = conn.createStatement();
+             ResultSet rs    = stmt.executeQuery(selectQuery);
+            // loop through the result set
+            while (rs.next()) {
+                courses.add(new Course(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 //        courses.add(new Course("ID221","Sample Class 1", "Fall 2018"));
 //        courses.add(new Course("ID221","Sample Class 2", "Fall 2018"));
 //        courses.add(new Course("ID221","Sample Class 3", "Fall 2018"));
