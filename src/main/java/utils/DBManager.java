@@ -25,6 +25,8 @@ public class DBManager {
             Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
             conn = DriverManager.getConnection(dbPath);
+            Course ex = new Course("2", "Course name", "2012", "Fall");
+            this.addCourse(ex);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -91,12 +93,31 @@ public class DBManager {
         }
     }
 
+    public void addCourse(Course course){
+        String courseName = course.getName();
+        String sectionNum = course.getSectionNumber();
+        String year = course.getYear();
+        String semester = course.getSemester();
+        String insertQuery = "INSERT INTO `class` (class, semester, name, year) VALUES(?,?,?,?)";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
+                pstmt.setString(1, sectionNum);
+                pstmt.setString(2, semester);
+                pstmt.setString(3, courseName);
+                pstmt.setString(4, year);
+                pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<Course> getCourses() {
         ArrayList<Course> courses = new ArrayList<Course>();
-        courses.add(new Course("ID221","Sample Class 1", "Fall 2018"));
-        courses.add(new Course("ID221","Sample Class 2", "Fall 2018"));
-        courses.add(new Course("ID221","Sample Class 3", "Fall 2018"));
-        courses.add(new Course("ID221","Sample Class 4", "Fall 2018"));
+        
+//        courses.add(new Course("ID221","Sample Class 1", "Fall 2018"));
+//        courses.add(new Course("ID221","Sample Class 2", "Fall 2018"));
+//        courses.add(new Course("ID221","Sample Class 3", "Fall 2018"));
+//        courses.add(new Course("ID221","Sample Class 4", "Fall 2018"));
         return courses;
     }
 }
