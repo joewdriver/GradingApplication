@@ -67,10 +67,10 @@ public class Course {
 
         //TODO: db call to retrieve and build a student list
         ArrayList<Student> students = new ArrayList<Student>();
-        students.add(new Student("ID101", "Joe Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID102", "Armin Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID103", "Katie Quirk", "Graduate", "Sample3"));
-        students.add(new Student("ID104", "Some Guy", "PHD", "Sample4"));
+        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
+        //students.add(new Student("ID104", "Some Guy", "PHD", "Sample4"));
 
         return students;
     }

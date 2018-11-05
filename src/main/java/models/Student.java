@@ -1,8 +1,10 @@
 package models;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import utils.DBManager;
 
 public class Student {
     private String buId;
@@ -12,7 +14,7 @@ public class Student {
 
     private String graduateLevel;
     private String email;
-
+    private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
             this.buId = rs.getString("buId");
@@ -58,6 +60,18 @@ public class Student {
     public int getGrade(String classId) {
         //TODO: DB call here
         return 100;
+    }
+
+    public void addClass(int ClassId){
+        String insertQuery = "INSERT INTO `class_assignments` (BU_ID, Class_ID) VALUES(?,?)";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            pstmt.setString(1, this.buId);
+            pstmt.setInt(2, ClassId);
+            pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //TODO: turn this into an actual query instead of mocked data
