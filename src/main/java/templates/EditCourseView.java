@@ -1,5 +1,7 @@
 package templates;
 
+import models.Course;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,13 +13,28 @@ public class EditCourseView extends JFrame {
     private JTextField courseName;
     private JTextField courseId;
     private JTextField year;
+    private JLabel header;
+    private String headerData;
     private JComboBox season;
     private JButton submitButton;
+    private Course course;
 
     public EditCourseView() {
+        this.course = new Course("Section","Course Name","Year");
+        headerData = "Create a new Course";
+        setup();
+    }
+
+    public EditCourseView(Course course) {
+        this.course=course;
+        headerData = "Edit this Course";
+        setup();
+    }
+
+    private void setup() {
         this.createUIComponents();
         setTitle("Gradium - Add/Edit Course");
-        setSize(1200,800);
+        setSize(700,400);
         setLocationRelativeTo(null);
         this.buildLayout();
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -33,14 +50,16 @@ public class EditCourseView extends JFrame {
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
-        // TODO when editing a course, these fields should auto-populate the course info
-        courseName = new JTextField("course name");
+        header = new JLabel(headerData);
+
+        courseName = new JTextField(course.getName());
         courseName.setPreferredSize(new Dimension(200,10));
-        courseId = new JTextField("course ID");
+        courseId = new JTextField(course.getSectionNumber());
         courseId.setPreferredSize(new Dimension(200,10));
-        year = new JTextField("Year");
+        year = new JTextField(course.getYear());
         year.setPreferredSize(new Dimension(40,30));
 
+        // TODO: populate default value based on course being edited
         String[] seasons = new String[] {"Spring","Fall","Winter"};
         season = new JComboBox(seasons);
     }
@@ -62,6 +81,7 @@ public class EditCourseView extends JFrame {
         // horizontal group parallel, we are saying these should appear in the same column.  Parallel
         // Groups also handle alignment
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
+                .addComponent(header)
                 .addComponent(courseName)
                 .addComponent(courseId)
                 .addComponent(yearPanel)
@@ -70,6 +90,7 @@ public class EditCourseView extends JFrame {
 
         // by making the vertical group sequential, we order the products top to bottom
         layout.setVerticalGroup(layout.createSequentialGroup()
+                .addComponent(header)
                 .addComponent(courseName)
                 .addComponent(courseId)
                 .addComponent(yearPanel)
