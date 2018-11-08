@@ -22,7 +22,7 @@ public class Student {
             this.first_name = rs.getString("first_name");
             this.middle_name = rs.getString("middle_intial");
             this.family_name = rs.getString("family_name");
-            this.graduateLevel = rs.getString("graduateLevel");
+            this.graduateLevel = rs.getString("type");
             this.email = rs.getString("email");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,10 +93,6 @@ public class Student {
             System.out.println(e.getMessage());
         }
 
-
-//        courses.add(new Course("ID101", "Fake Course", " 2022", "Fall"));
-//        courses.add(new Course("ID102", "Fake Course", " 2023", "Fall"));
-//        courses.add(new Course("ID103", "Fake Course", " 2024", "Fall"));
         return courses;
     }
 }

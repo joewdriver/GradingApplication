@@ -7,6 +7,10 @@ public class Assignment {
     private int id;
     private String classId;
     private String name;
+    private String description;
+    private int value;
+    private int extraCredit;
+    private String type;
     /**
      * constructor to build a code object based on a result set from MySQL.
      * @param rs the result set passed in
@@ -19,6 +23,30 @@ public class Assignment {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getExtraCredit() {
+        return extraCredit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     /**
