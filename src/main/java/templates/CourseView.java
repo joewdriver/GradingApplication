@@ -186,7 +186,7 @@ public class CourseView extends JFrame {
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
         for(Student student: students) {
-            ContextButton btn = new ContextButton(student.getName(), student);
+            ContextButton btn = new ContextButton(student.getFamily_name(), student);
             btn.addActionListener(this.alStudentView);
             centralPanel.add(btn);
             //TODO: add the average calculation here based on db call

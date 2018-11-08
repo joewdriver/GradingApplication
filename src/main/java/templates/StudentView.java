@@ -24,7 +24,7 @@ public class StudentView extends JFrame {
         this.student = student;
         this.courses = student.getClasses();
         this.createUIComponents();
-        setTitle("Grading Records - " + student.getName());
+        setTitle("Grading Records - " + student.getFamily_name());
         setSize(1200,800);
         setLocationRelativeTo(null);
         this.buildLayout();
@@ -33,7 +33,7 @@ public class StudentView extends JFrame {
 
     private void createUIComponents() {
 
-        name = new JLabel(student.getName());
+        name = new JLabel(student.getFamily_name());
         graduateLevel = new JLabel(student.getGraduateLevel());
     }
 
