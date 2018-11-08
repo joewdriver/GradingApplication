@@ -14,7 +14,7 @@ import javax.swing.GroupLayout.Group;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class CoursesView extends JFrame {
-    private JButton newClassButton;
+    private JButton newCourseButton;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
     private DBManager db = new DBManager();
@@ -34,8 +34,14 @@ public class CoursesView extends JFrame {
         //quick label for the header
         classPrompt = new JLabel("Please Choose a Course to View");
 
-        //link to the new class form
-        newClassButton = new JButton("Create a new Course");
+        //link to the new course form
+        newCourseButton = new JButton("Create a new Course");
+        ActionListener al = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addCourse();
+            }
+        };
+        newCourseButton.addActionListener(al);
 
         // we'll create an arraylist to hold our courses
         courses = db.getCourses();
@@ -74,11 +80,11 @@ public class CoursesView extends JFrame {
         // the top level label and the button should appear in a single row
         headerHorizontal
                 .addComponent(classPrompt)
-                .addComponent(newClassButton);
+                .addComponent(newCourseButton);
 
         headerVertical
                 .addComponent(classPrompt)
-                .addComponent(newClassButton);
+                .addComponent(newCourseButton);
 
         // apply the groups to the header panel
         headerLayout.setVerticalGroup(headerVertical);
@@ -118,6 +124,12 @@ public class CoursesView extends JFrame {
 
         CourseView classes = new CourseView(course);
         classes.setVisible(true);
+        dispose();
+    }
+
+    private void addCourse() {
+        EditCourseView editCourse = new EditCourseView();
+        editCourse.setVisible(true);
         dispose();
     }
 }
