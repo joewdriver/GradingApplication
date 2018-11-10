@@ -40,6 +40,8 @@ public class Student {
         return this.buId;
     }
 
+    public String getEmail() { return this.email; }
+
     public int getGrade(String classId) {
         //TODO: DB call here
         return 100;

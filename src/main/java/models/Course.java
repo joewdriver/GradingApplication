@@ -38,6 +38,8 @@ public class Course {
         return sectionNumber;
     }
 
+    public String getYear() { return year; }
+
     public Group getGroup(Student student) {
         //TODO: to be pulled from the db
         return new Group(1, "Sample Group", this);
