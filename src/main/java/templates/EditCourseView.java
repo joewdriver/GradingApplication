@@ -1,6 +1,7 @@
 package templates;
 
 import models.Course;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class EditCourseView extends JFrame {
+public class EditCourseView extends View {
     private JTextField courseName;
     private JTextField courseId;
     private JTextField year;
@@ -22,22 +23,17 @@ public class EditCourseView extends JFrame {
     public EditCourseView() {
         this.course = new Course("Section","Course Name","Year");
         headerData = "Create a new Course";
-        setup();
+        setup(700, 400, "Gradium - Add Course");
+        createUIComponents();
+        buildLayout() ;
     }
 
     public EditCourseView(Course course) {
         this.course=course;
         headerData = "Edit this Course";
-        setup();
-    }
-
-    private void setup() {
-        this.createUIComponents();
-        setTitle("Gradium - Add/Edit Course");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Gradium - Edit Course");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {

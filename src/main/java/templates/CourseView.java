@@ -4,6 +4,7 @@ import models.Assignment;
 import models.Course;
 import models.Student;
 import utils.ContextButton;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class CourseView extends JFrame {
+public class CourseView extends View {
     private ContextButton addStudentButton;
     private ContextButton importStudentsButton;
     private ContextButton editClassSettings;
@@ -35,14 +36,9 @@ public class CourseView extends JFrame {
 
     public CourseView(Course course) {
         this.course = course;
-        this.createUIComponents();
-        setTitle("Grading Records - " + course.getName());
-
-        // going to need alot more space with this one
-        setSize(1200,800);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(1200, 800, "Gradium Records " + course.getName());
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
