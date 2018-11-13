@@ -247,7 +247,9 @@ public class CourseView extends JFrame {
     }
 
     private void goToAssignment(Assignment assignment) {
-        //TODO: add assignment view transition here
+        AssignmentView assignmentView = new AssignmentView(assignment);
+        assignmentView.setVisible(true);
+        dispose();
     }
 
     private void viewAllCourses() {
