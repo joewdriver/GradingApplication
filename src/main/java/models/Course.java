@@ -18,7 +18,7 @@ public class Course {
 
     public Course(ResultSet rs) {
         try {
-            this.id = rs.getInt("id");
+            this.id = rs.getInt("class_ID");
             this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
             this.year = rs.getString("year");
@@ -119,11 +119,11 @@ public class Course {
             System.out.println(e.getMessage());
         }
 
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
+        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
+        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
+        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
+        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
+        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
 
         return assignments;
     }
@@ -148,11 +148,10 @@ public class Course {
             System.out.println(e.getMessage());
         }
 
-//
-//        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
-//        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
-//        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
-        //students.add(new Student("ID104", "Some Guy", "PHD", "Sample4"));
+
+        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
 
         return students;
     }
