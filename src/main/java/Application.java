@@ -9,7 +9,7 @@ public class Application {
 
         DBManager db = new DBManager();
         db.buildDB();
-
+        db.getCourses();
         LoginView login = new LoginView();
         login.setVisible(true);
     }

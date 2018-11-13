@@ -19,6 +19,7 @@ public class StudentView extends JFrame {
     private JLabel graduateLevel;
     private JComboBox groups;
     private Student student;
+    private ContextButton editStudent;
 
     public StudentView(Student student) {
         this.student = student;
@@ -35,6 +36,16 @@ public class StudentView extends JFrame {
 
         name = new JLabel(student.getFamily_name());
         graduateLevel = new JLabel(student.getGraduateLevel());
+
+        ActionListener al = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ContextButton btn = (ContextButton) e.getSource();
+                goToEditStudent((Student)btn.getContext());
+            }
+        };
+        editStudent = new ContextButton("Edit Student", this.student);
+        editStudent.addActionListener(al);
+
     }
 
     private void buildLayout() {
@@ -62,11 +73,15 @@ public class StudentView extends JFrame {
         GroupLayout topLayout = new GroupLayout(topPanel);
         topLayout.setHorizontalGroup(topLayout.createSequentialGroup()
                 .addComponent(name)
-                .addComponent(graduateLevel));
+                .addComponent(graduateLevel)
+                .addComponent(editStudent)
+        );
 
         topLayout.setVerticalGroup(topLayout.createParallelGroup(CENTER)
                 .addComponent(name)
-                .addComponent(graduateLevel));
+                .addComponent(graduateLevel)
+                .addComponent(editStudent)
+        );
 
         topPanel.setLayout(topLayout);
 
@@ -127,6 +142,12 @@ public class StudentView extends JFrame {
     private void goToGroup(Group group) {
         GroupView groupView = new GroupView(group);
         groupView.setVisible(true);
+        dispose();
+    }
+
+    private void goToEditStudent(Student student) {
+        EditStudentView editView = new EditStudentView(student);
+        editView.setVisible(true);
         dispose();
     }
 }

@@ -58,22 +58,14 @@ public class Student {
         return this.buId;
     }
 
+    public String getEmail() { return this.email; }
+
     public int getGrade(String classId) {
         //TODO: DB call here
         return 100;
     }
 
-    public void addClass(int ClassId){
-        String insertQuery = "INSERT INTO `class_assignments` (BU_ID, Class_ID) VALUES(?,?)";
-        try {
-            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
-            pstmt.setString(1, this.buId);
-            pstmt.setInt(2, ClassId);
-            pstmt.executeUpdate();
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     //TODO: turn this into an actual query instead of mocked data
     public ArrayList<Course> getClasses() {
@@ -81,7 +73,6 @@ public class Student {
         String selectQuery = "SELECT ID, class, semester, name, year  FROM `class` as A " +
                 "INNER JOIN `class_assignments` as B on B.Class_ID = A.ID" +
                 "WHERE B.BU_ID = " + this.buId;
-
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);

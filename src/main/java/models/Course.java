@@ -49,9 +49,23 @@ public class Course {
     public String getSemester(){ return semester;}
 
     public Group getGroup(Student student) {
-        //TODO: to be pulled from the db
+        ArrayList<Assignment> groups = new ArrayList<Assignment>();
+        String id = student.getBuId();
+        String selectQuery = "SELECT *  FROM `groups` WHERE  BU_ID = '" + id + "'";
+
+        try {
+            Statement stmt  = this.db.getConn().createStatement();
+            ResultSet rs    = stmt.executeQuery(selectQuery);
+            // loop through the result set
+            while (rs.next()) {
+                groups.add(new Assignment(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
 
 
+        //not sure what name is going to look like
         return new Group(1, "Sample Group", this);
     }
 
@@ -69,13 +83,30 @@ public class Course {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public void deleteAssignment(Assignment assignment){
+        int id = assignment.getId();
+        String deleteQuery = "DELETE FROM `assignments` WHERE class_ID = ?";
+        try {
+             PreparedStatement pstmt = this.db.getConn().prepareStatement(deleteQuery);
+
+            // set the corresponding param
+            pstmt.setInt(1, id);
+            // execute the delete statement
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public ArrayList<Assignment> getAssignments() {
-
         //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT ID, class_ID, name FROM `class` WHERE class_id = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -104,7 +135,7 @@ public class Course {
         ArrayList<Student> students = new ArrayList<Student>();
         String selectQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student` AS A" +
                 "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID" +
-                " WHERE A.class_id = '" + this.id + "'";
+                " WHERE B.Class_ID = '" + this.id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -125,4 +156,35 @@ public class Course {
 
         return students;
     }
+
+    public void deleteStudent(Student student){
+        String id = student.getBuId();
+        String deleteQuery = "DELETE FROM `class_assignments` WHERE class_ID = ? AND BU_ID = ?";
+        try {
+            PreparedStatement pstmt = this.db.getConn().prepareStatement(deleteQuery);
+
+            // set the corresponding param
+            pstmt.setInt(1, this.id);
+            pstmt.setString(2, id);
+            // execute the delete statement
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public void addStudent(Student student){
+        String insertQuery = "INSERT INTO `class_assignments` (BU_ID, Class_ID) VALUES(?,?)";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            pstmt.setString(1, student.getBuId());
+            pstmt.setInt(2, this.id);
+            pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

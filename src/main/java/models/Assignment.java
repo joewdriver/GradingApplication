@@ -17,8 +17,8 @@ public class Assignment {
      */
     public Assignment(ResultSet rs) {
         try {
-            this.classId = rs.getString("classId");
-            this.id = rs.getInt("id");
+            this.classId = rs.getString("class_ID");
+            this.id = rs.getInt("ID");
             this.name = rs.getString("name");
         } catch (SQLException e) {
             e.printStackTrace();
