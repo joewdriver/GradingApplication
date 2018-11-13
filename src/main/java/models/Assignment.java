@@ -7,13 +7,13 @@ import utils.DBManager;
 
 public class Assignment {
     private int id;
+    private int totalPoints;
     private String classId;
     private String name;
     private String description;
     private int value;
     private int extraCredit;
     private String type;
-    private int totalPoints;
     private DBManager db = new DBManager();
 
 
@@ -45,17 +45,12 @@ public class Assignment {
         return classId;
     }
 
-    public String getType() {
-        return type;
-    }
+
 
     public int getValue() {
         return value;
     }
 
-    public String getDescription() {
-        return description;
-    }
 
     /**
      * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
@@ -68,6 +63,10 @@ public class Assignment {
         this.totalPoints = totalPoints;
     }
 
+
+    /**
+     * a constructor that handles a default type setting to homework
+     */
     public Assignment(String classId, String name) {
         this.classId = classId;
         this.name = name;
@@ -76,10 +75,26 @@ public class Assignment {
         this.description = "This is a sample description";
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
     public void setDescription(String description) {
-        //TODO: update the db
         this.description = description;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
     public void setType(String type) {
         this.type = type;
     }
@@ -88,18 +103,17 @@ public class Assignment {
         return this.totalPoints;
     }
 
+    /**
+     * retrieves the course name and ID in which the assignment exists
+     */
     public Course getCourse() {
-        //TODO: this needs to be replaced with a db call
-        //TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-        // //`class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL )";
-
         String selectQuery = "ID, class, semester, name, year  FROM `class` AS A " +
                 "INNER JOIN `assignments` AS B ON A.class_ID = B.class_ID " +
                 "WHERE B.class_ID = '" + this.classId + "'";
 
         try {
-            Statement stmt  = this.db.getConn().createStatement();
-            ResultSet rs    = stmt.executeQuery(selectQuery);
+            Statement stmt = this.db.getConn().createStatement();
+            ResultSet rs = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 return new Course(rs); //should only be one course
@@ -109,13 +123,9 @@ public class Assignment {
         }
         return null;
     }
+
     public double getAverageScore() {
         //TODO: this needs to be replaced with a db call
         return 95.5;
-    }
-
-
-    public String getName() {
-        return this.name;
     }
 }
