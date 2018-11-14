@@ -3,7 +3,7 @@ package models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Assignment {
+public class Assignment implements Comparable<Assignment>{
     private int id;
     private int totalPoints;
     private String classId;
@@ -51,6 +51,10 @@ public class Assignment {
 
     public String getName() {
         return this.name;
+    }
+
+    public int compareTo(Assignment assignment) {
+        return type.compareTo(assignment.getType());
     }
 
     public String getDescription() {
