@@ -51,11 +51,11 @@ public class Course {
 
         //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        assignments.add(new Assignment(this.getSectionNumber(),"homework 1", "homework"));
-        assignments.add(new Assignment(this.getSectionNumber(),"quiz 1", "quiz"));
-        assignments.add(new Assignment(this.getSectionNumber(),"homework 2", "homework"));
-        assignments.add(new Assignment(this.getSectionNumber(),"quiz 2", "quiz"));
-        assignments.add(new Assignment(this.getSectionNumber(),"homework 3", "homework"));
+        assignments.add(new Assignment(this.getSectionNumber(),"homework 1", "homework", 100));
+        assignments.add(new Assignment(this.getSectionNumber(),"quiz 1", "quiz", 100));
+        assignments.add(new Assignment(this.getSectionNumber(),"homework 2", "homework", 100));
+        assignments.add(new Assignment(this.getSectionNumber(),"quiz 2", "quiz", 100));
+        assignments.add(new Assignment(this.getSectionNumber(),"homework 3", "homework", 100));
 
         Collections.sort(assignments);
         return assignments;

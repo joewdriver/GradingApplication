@@ -203,9 +203,9 @@ public class CourseView extends JFrame {
         undergraduatePanel.add(new JLabel(""));
         String tmpName = "";
         for(int i=0;i<assignments.size();i++) {
-            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
-                undergraduatePanel.add(new JLabel(assignments.get(i).getAssignmentType()));
-                tmpName = assignments.get(i).getAssignmentType();
+            if (assignments.get(i).getType().compareTo(tmpName) != 0) {
+                undergraduatePanel.add(new JLabel(assignments.get(i).getType()));
+                tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
         }
@@ -214,9 +214,9 @@ public class CourseView extends JFrame {
         undergraduatePanel.add(new JLabel(""));
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
-            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+            if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 undergraduatePanel.add(new TextField("100"));
-                tmpName = assignments.get(i).getAssignmentType();
+                tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
         }
@@ -263,9 +263,9 @@ public class CourseView extends JFrame {
         graduatePanel.add(new JLabel(""));
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
-            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
-                graduatePanel.add(new JLabel(assignments.get(i).getAssignmentType()));
-                tmpName = assignments.get(i).getAssignmentType();
+            if (assignments.get(i).getType().compareTo(tmpName) != 0) {
+                graduatePanel.add(new JLabel(assignments.get(i).getType()));
+                tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
         }
@@ -274,9 +274,9 @@ public class CourseView extends JFrame {
         graduatePanel.add(new JLabel(""));
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
-            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+            if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 graduatePanel.add(new TextField("100"));
-                tmpName = assignments.get(i).getAssignmentType();
+                tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
         }
@@ -363,7 +363,9 @@ public class CourseView extends JFrame {
     }
 
     private void goToAssignment(Assignment assignment) {
-        //TODO: add assignment view transition here
+        AssignmentView assignmentView = new AssignmentView(assignment);
+        assignmentView.setVisible(true);
+        dispose();
     }
 
     private void viewAllCourses() {

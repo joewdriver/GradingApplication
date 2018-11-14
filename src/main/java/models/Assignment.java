@@ -5,9 +5,12 @@ import java.sql.SQLException;
 
 public class Assignment implements Comparable<Assignment>{
     private int id;
+    private int totalPoints;
     private String classId;
     private String name;
-    private String assignmentType;
+    private String type;
+    private String description;
+
     /**
      * constructor to build a code object based on a result set from MySQL.
      * @param rs the result set passed in
@@ -17,7 +20,8 @@ public class Assignment implements Comparable<Assignment>{
             this.classId = rs.getString("classId");
             this.id = rs.getInt("id");
             this.name = rs.getString("name");
-            this.assignmentType = rs.getString("assignmentType");
+            this.type = rs.getString("type");
+            this.totalPoints = rs.getInt("totalPoints");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -27,21 +31,66 @@ public class Assignment implements Comparable<Assignment>{
      * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
      * the created assignment object.  can call the other constructor
      */
-    public Assignment(String classId, String name, String assignmentType) {
+    public Assignment(String classId, String name, String type, int totalPoints) {
         this.classId = classId;
         this.name = name;
-        this.assignmentType = assignmentType;
+        this.type = type;
+        this.totalPoints = totalPoints;
+    }
+
+    /**
+     * a constructor that handles a default type setting to homework
+     */
+    public Assignment(String classId, String name) {
+        this.classId = classId;
+        this.name = name;
+        this.type = "Homework";
+        this.totalPoints = 100;
+        this.description = "This is a sample description";
     }
 
     public String getName() {
         return this.name;
     }
 
-    public String getAssignmentType() {
-        return assignmentType;
+    public int compareTo(Assignment assignment) {
+        return type.compareTo(assignment.getType());
     }
 
-    public int compareTo(Assignment assignment) {
-        return assignmentType.compareTo(assignment.getAssignmentType());
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getTotalPoints() {
+        return this.totalPoints;
+    }
+
+    /**
+     * retrieves the course name and ID in which the assignment exists
+     */
+    public Course getCourse() {
+        //TODO: this needs to be replaced with a db call
+        return new Course("ID201","Sample Course","Fall 2018");
+    }
+
+    public double getAverageScore() {
+        //TODO: this needs to be replaced with a db call
+        return 95.5;
     }
 }
