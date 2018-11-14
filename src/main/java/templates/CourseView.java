@@ -6,6 +6,7 @@ import models.Student;
 import utils.ContextButton;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,7 +118,7 @@ public class CourseView extends JFrame {
 
 
         addStudentButton = new ContextButton("Add A Student", this.course);
-        editClassSettings = new ContextButton("Class Setting", this.course);
+        editClassSettings = new ContextButton("Class Settings", this.course);
         importStudentsButton = new ContextButton("Import Student List", this.course);
         viewAllCoursesButton = new JButton("View all Courses");
 
@@ -132,13 +133,28 @@ public class CourseView extends JFrame {
      * embedded into a third GroupLayout, all within containing panels
      */
     private void buildLayout() {
+        // temp lists for graduates and undergraduates
+        ArrayList<Student> graduates = new ArrayList<Student>();
+        ArrayList<Student> undergraduates = new ArrayList<Student>();
+
+        // populate each list accordingly
+        for(Student student : students) {
+            if(student.getGraduateLevel().equals("Undergrad"))
+                undergraduates.add(student);
+            else
+                graduates.add(student);
+        }
+
         // this is the overall parent
         Container pane = getContentPane();
 
         JPanel framePanel = new JPanel();
         JPanel headerPanel =  new JPanel();
         JPanel footerPanel =  new JPanel();
-        JPanel centralPanel = new JPanel(new GridLayout(students.size() + 1,assignments.size() + 2));
+        JPanel spacePanel =  new JPanel();
+        //JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size() + 3,assignments.size() + 1));
+        JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size()+4,assignments.size()+3));
+        JPanel graduatePanel = new JPanel(new GridLayout(graduates.size() + 4,assignments.size() + 3));
 
         // core overall layout vertical
         GroupLayout coreLayout = new GroupLayout(framePanel);
@@ -147,13 +163,17 @@ public class CourseView extends JFrame {
         // core layout grouping to order our member panels high to low
         coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
                 .addComponent(headerPanel)
-                .addComponent(centralPanel)
+                .addComponent(undergraduatePanel)
+                .addComponent(spacePanel)
+                .addComponent(graduatePanel)
                 .addComponent(footerPanel)
         );
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(headerPanel)
-                .addComponent(centralPanel)
+                .addComponent(undergraduatePanel)
+                .addComponent(spacePanel)
+                .addComponent(graduatePanel)
                 .addComponent(footerPanel)
         );
 
@@ -171,46 +191,142 @@ public class CourseView extends JFrame {
                 .addComponent(viewAllCoursesButton));
 
 
+        // Undergrad set-up
         // grid layout organizes itself into one long array, a total pain, so we have to add everything sequentially
-        // first the empty top left corner
-        centralPanel.add("top left", new JLabel(""));
-        centralPanel.add("top left", new JLabel("Weighted Average"));
+        TitledBorder ugradBorder = new TitledBorder("Undergraduates");
+        ugradBorder.setTitleJustification(TitledBorder.CENTER);
+        ugradBorder.setTitlePosition(TitledBorder.TOP);
+        undergraduatePanel.setBorder(ugradBorder);
+
+        // empty top left corner
+        // Add in the assignment weights
+        undergraduatePanel.add(new JLabel(""));
+        String tmpName = "";
+        for(int i=0;i<assignments.size();i++) {
+            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+                undergraduatePanel.add(new JLabel(assignments.get(i).getAssignmentType()));
+                tmpName = assignments.get(i).getAssignmentType();
+            } else
+                undergraduatePanel.add(new JLabel(""));
+        }
+        undergraduatePanel.add(new JLabel(""));
+
+        undergraduatePanel.add(new JLabel(""));
+        tmpName = "";
+        for(int i=0;i<assignments.size();i++) {
+            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+                undergraduatePanel.add(new TextField("100"));
+                tmpName = assignments.get(i).getAssignmentType();
+            } else
+                undergraduatePanel.add(new JLabel(""));
+        }
+        undergraduatePanel.add(new JLabel(""));
 
         // next the assignment list in the top row
+        undergraduatePanel.add(new JLabel(""));
         for(Assignment assignment:assignments) {
             ContextButton btn = new ContextButton(assignment.getName(), assignment);
             btn.addActionListener(alAssignmentView);
-            centralPanel.add(btn);
+            undergraduatePanel.add(btn);
         }
+        undergraduatePanel.add(new JLabel(""));
+        undergraduatePanel.add(new JLabel(""));
+
+        // next the assignment list in the top row
+        for(Assignment assignment:assignments) {
+            undergraduatePanel.add(new TextField("100"));
+        }
+        undergraduatePanel.add(new JLabel("  Total Grade"));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
-        for(Student student: students) {
+        for(Student student: undergraduates) {
+            System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getName(), student);
             btn.addActionListener(this.alStudentView);
-            centralPanel.add(btn);
+            undergraduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
-            centralPanel.add(new TextField("100"));
+            //undergraduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
-                centralPanel.add(new TextField("100"));
+                undergraduatePanel.add(new TextField("100"));
             }
+            undergraduatePanel.add(new TextField("100"));
+        }
+
+        // adding in the graduate stuff
+        TitledBorder gradBorder = new TitledBorder("Graduates");
+        gradBorder.setTitleJustification(TitledBorder.CENTER);
+        gradBorder.setTitlePosition(TitledBorder.TOP);
+        graduatePanel.setBorder(gradBorder);
+
+        graduatePanel.add(new JLabel(""));
+        tmpName = "";
+        for(int i=0;i<assignments.size();i++) {
+            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+                graduatePanel.add(new JLabel(assignments.get(i).getAssignmentType()));
+                tmpName = assignments.get(i).getAssignmentType();
+            } else
+                graduatePanel.add(new JLabel(""));
+        }
+        graduatePanel.add(new JLabel(""));
+
+        graduatePanel.add(new JLabel(""));
+        tmpName = "";
+        for(int i=0;i<assignments.size();i++) {
+            if (assignments.get(i).getAssignmentType().compareTo(tmpName) != 0) {
+                graduatePanel.add(new TextField("100"));
+                tmpName = assignments.get(i).getAssignmentType();
+            } else
+                graduatePanel.add(new JLabel(""));
+        }
+        graduatePanel.add(new JLabel(""));
+
+        // next the assignment list in the top row
+        graduatePanel.add(new JLabel(""));
+        for(Assignment assignment:assignments) {
+            ContextButton btn = new ContextButton(assignment.getName(), assignment);
+            btn.addActionListener(alAssignmentView);
+            graduatePanel.add(btn);
+        }
+        graduatePanel.add(new JLabel(""));
+        graduatePanel.add(new JLabel(""));
+
+        // next the assignment list in the top row
+        for(Assignment assignment:assignments) {
+            graduatePanel.add(new TextField("100"));
+        }
+        graduatePanel.add(new JLabel("  Total Grade"));
+
+        // now we get weird. leftmost column should be name buttons, everything else text fields.
+        // will need a nested loop to make this work
+        for(Student student: graduates) {
+            System.out.println(student.getGraduateLevel());
+            ContextButton btn = new ContextButton(student.getName(), student);
+            btn.addActionListener(this.alStudentView);
+            graduatePanel.add(btn);
+            //TODO: add the average calculation here based on db call
+            //graduatePanel.add(new TextField("100"));
+            for(Assignment assignment:assignments) {
+                // TODO: resolve this based on db call of student assignment join
+                graduatePanel.add(new TextField("100"));
+            }
+            graduatePanel.add(new TextField("100"));
         }
 
         // footer layout for various functional buttons
         GroupLayout footerLayout = new GroupLayout(footerPanel);
 
         footerLayout.setHorizontalGroup(footerLayout.createParallelGroup(CENTER)
-            .addComponent(editClassSettings)
-            .addComponent(addStudentButton)
-            .addComponent(importStudentsButton));
+                .addComponent(editClassSettings)
+                .addComponent(addStudentButton)
+                .addComponent(importStudentsButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
-            .addComponent(editClassSettings)
-            .addComponent(addStudentButton)
-            .addComponent(importStudentsButton)
-            .addComponent(saveButton));
-
+                .addComponent(editClassSettings)
+                .addComponent(addStudentButton)
+                .addComponent(importStudentsButton)
+                .addComponent(saveButton));
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
