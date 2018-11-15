@@ -2,6 +2,7 @@ package templates;
 
 import models.Assignment;
 import utils.ContextButton;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.awt.event.ActionListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class AssignmentView extends JFrame {
+public class AssignmentView extends View {
     private JButton editButton;
     private JButton courseInfo;
     private JLabel totalPoints;
@@ -22,16 +23,9 @@ public class AssignmentView extends JFrame {
 
     public AssignmentView(Assignment assignment) {
         this.assignment = assignment;
-        setup();
-    }
-
-    public void setup() {
-        this.createUIComponents();
-        setTitle("Grading Records - Login");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Gradium Login");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {

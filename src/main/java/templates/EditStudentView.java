@@ -1,6 +1,7 @@
 package templates;
 
 import models.Student;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.ActionListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class EditStudentView extends JFrame {
+public class EditStudentView extends View {
     private JTextField buId;
     private JTextField name;
     private JComboBox gradLevel;
@@ -20,23 +21,17 @@ public class EditStudentView extends JFrame {
     // constructor for creating a new student
     public EditStudentView() {
         this.student = new Student("BU ID","Student name","Grad Level","student email");
-        setUp();
+        setup(700, 400, "Add Student");
+        createUIComponents();
+        buildLayout() ;
     }
 
     // constructor for editing an existing student
     public EditStudentView(Student student) {
         this.student = student;
-        setUp();
-    }
-
-    // TODO set up is similar for all views, we should look into abstracting it
-    private void setUp() {
-        this.createUIComponents();
-        setTitle("Gradium - Add/Edit Student");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Edit Student");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
