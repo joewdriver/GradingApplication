@@ -8,10 +8,12 @@ import utils.View;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.io.File;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -341,8 +343,14 @@ public class CourseView extends View {
     }
 
     private void importStudents(Course course) {
-        //TODO: install view transition here
-        System.exit(0);
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.csv", "csv");
+        fileChooser.addChoosableFileFilter(filter);
+        fileChooser.setFileFilter(filter);
+        fileChooser.showDialog(null,"Please Select the File");
+        fileChooser.setVisible(true);
+        File filename = fileChooser.getSelectedFile();
+        System.out.println("File name "+filename.getName());
     }
 
     private void save() {
