@@ -23,6 +23,7 @@ public class CourseView extends View {
     private ContextButton editClassSettings;
     private JButton saveButton;
     private JButton viewAllCoursesButton;
+    private JButton addAssignment;
     private JLabel classNameHeader;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
@@ -34,6 +35,7 @@ public class CourseView extends View {
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
     private ActionListener alViewAllCourses;
+    private ActionListener alAddAssignment;
 
 
 
@@ -114,16 +116,24 @@ public class CourseView extends View {
             }
         };
 
+        alAddAssignment = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                addAssignment(course);
+            }
+        };
+
 
         addStudentButton = new ContextButton("Add A Student", this.course);
         editClassSettings = new ContextButton("Class Settings", this.course);
         importStudentsButton = new ContextButton("Import Student List", this.course);
         viewAllCoursesButton = new JButton("View all Courses");
+        addAssignment = new JButton("Add Assignment");
 
         addStudentButton.addActionListener(alAddStudent);
         editClassSettings.addActionListener(alSettings);
         importStudentsButton.addActionListener(alImportStudents);
         viewAllCoursesButton.addActionListener(alViewAllCourses);
+        addAssignment.addActionListener(alAddAssignment);
     }
 
     /**
@@ -213,6 +223,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
+                //TODO dynamically pull the weights
                 undergraduatePanel.add(new TextField("100"));
                 tmpName = assignments.get(i).getType();
             } else
@@ -240,7 +251,7 @@ public class CourseView extends View {
         // will need a nested loop to make this work
         for(Student student: undergraduates) {
             System.out.println(student.getGraduateLevel());
-            ContextButton btn = new ContextButton(student.getName(), student);
+            ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
@@ -300,7 +311,7 @@ public class CourseView extends View {
         // will need a nested loop to make this work
         for(Student student: graduates) {
             System.out.println(student.getGraduateLevel());
-            ContextButton btn = new ContextButton(student.getName(), student);
+            ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
@@ -315,15 +326,18 @@ public class CourseView extends View {
         // footer layout for various functional buttons
         GroupLayout footerLayout = new GroupLayout(footerPanel);
 
-        footerLayout.setHorizontalGroup(footerLayout.createParallelGroup(CENTER)
+        footerLayout.setVerticalGroup(footerLayout.createParallelGroup(CENTER)
                 .addComponent(editClassSettings)
                 .addComponent(addStudentButton)
-                .addComponent(importStudentsButton));
+                .addComponent(importStudentsButton)
+                .addComponent(addAssignment)
+                .addComponent(saveButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
                 .addComponent(editClassSettings)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
+                .addComponent(addAssignment)
                 .addComponent(saveButton));
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
@@ -338,8 +352,9 @@ public class CourseView extends View {
     }
 
     private void addStudent(Course course) {
-        //TODO: install view transition here
-        System.exit(0);
+        EditStudentView editStudentView = new EditStudentView();
+        editStudentView.setVisible(true);
+        dispose();
     }
 
     private void importStudents(Course course) {
@@ -375,6 +390,12 @@ public class CourseView extends View {
     private void viewAllCourses() {
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
+        dispose();
+    }
+
+    private void addAssignment(Course course) {
+        EditAssignmentView editAssignmentView = new EditAssignmentView(course);
+        editAssignmentView.setVisible(true);
         dispose();
     }
 }

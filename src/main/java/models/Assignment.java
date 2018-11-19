@@ -81,12 +81,17 @@ public class Assignment implements Comparable<Assignment>{
         return this.totalPoints;
     }
 
+    public int getScore(Student student) {
+        //TODO add db call here to get score for a given student, or return null if student has no score
+        return 99;
+    }
+
     /**
      * retrieves the course name and ID in which the assignment exists
      */
     public Course getCourse() {
         //TODO: this needs to be replaced with a db call
-        return new Course("ID201","Sample Course","Fall 2018");
+        return new Course(-1, "ID201","Sample Course","2018","Spring");
     }
 
     public double getAverageScore() {
