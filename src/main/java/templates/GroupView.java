@@ -144,7 +144,9 @@ public class GroupView extends View {
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
         for(Student student: students) {
+
             ContextButton btn = new ContextButton(student.getFullName(), student);
+
             btn.addActionListener(this.alStudentView);
             gradesPanel.add(btn);
             //TODO: add the weighted calculation here based on db call
