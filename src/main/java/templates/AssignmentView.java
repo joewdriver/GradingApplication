@@ -193,8 +193,9 @@ public class AssignmentView extends View {
         pane.add(panel);
     }
 
-    // TODO: this needs to take us to the newly created assignment
     private void editAssignment() {
+        EditAssignmentView editAssignmentView = new EditAssignmentView(this.assignment);
+        editAssignmentView.setVisible(true);
         dispose();
     }
 }

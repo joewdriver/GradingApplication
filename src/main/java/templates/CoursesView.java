@@ -44,10 +44,6 @@ public class CoursesView extends View {
         // we'll create an arraylist to hold our courses
         courses = db.getCourses();
 
-        // providing a dummy list for the moment
-        //TODO: replace with db call to populate the arraylist
-
-
         alCourseView = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // retrieve the calling button and get its context object to pass in.

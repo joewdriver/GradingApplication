@@ -13,6 +13,7 @@ public class Course {
     private String sectionNumber;
     private String name;
     private String year;
+    private String season;
 
     public Course(ResultSet rs) {
         try {
@@ -20,16 +21,17 @@ public class Course {
             this.sectionNumber = rs.getString("section number");
             this.name = rs.getString("name");
             this.year = rs.getString("year");
+            this.season = rs.getString("season");
         } catch(SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Course(String sectionNumber, String name, String year) {
+    public Course(String sectionNumber, String name, String year, String season) {
         this.sectionNumber = sectionNumber;
         this.name = name;
         this.year = year;
-        DBManager db = new DBManager();
+        this.season = season;
     }
 
     public String getName() {
@@ -41,6 +43,8 @@ public class Course {
     }
 
     public String getYear() { return year; }
+
+    public String getSeason() { return season; }
 
     public Group getGroup(Student student) {
         //TODO: to be pulled from the db

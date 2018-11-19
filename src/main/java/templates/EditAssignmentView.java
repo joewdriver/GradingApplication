@@ -1,6 +1,7 @@
 package templates;
 
 import models.Assignment;
+import models.Course;
 import models.Student;
 import utils.View;
 
@@ -22,8 +23,8 @@ public class EditAssignmentView extends View {
     private Assignment assignment;
 
     // constructor for creating a new assignment
-    public EditAssignmentView() {
-        this.assignment = new Assignment("Course ID","Assignment Name","Assignment Type",100);
+    public EditAssignmentView(Course course) {
+        this.assignment = new Assignment(course.getSectionNumber(),"Assignment Name","Assignment Type",100);
         setup(1200, 800, "Add Assignment");
         createUIComponents();
         buildLayout() ;

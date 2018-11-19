@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -21,7 +23,7 @@ public class EditCourseView extends View {
     private Course course;
 
     public EditCourseView() {
-        this.course = new Course("Section","Course Name","Year");
+        this.course = new Course("Section","Course Name","Year","Fall");
         headerData = "Create a new Course";
         setup(700, 400, "Gradium - Add Course");
         createUIComponents();
@@ -56,8 +58,9 @@ public class EditCourseView extends View {
         year.setPreferredSize(new Dimension(40,30));
 
         // TODO: populate default value based on course being edited
-        String[] seasons = new String[] {"Spring","Fall","Winter"};
+        String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
+        season.setSelectedIndex(Arrays.asList(seasons).indexOf(course.getSeason()));
     }
 
     private void buildLayout() {
