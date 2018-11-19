@@ -69,6 +69,14 @@ public class Course {
         students.add(new Student("ID102", "Armin Sabouri", "Undergrad", "Sample2"));
         students.add(new Student("ID103", "Katie Quirk", "Graduate", "Sample3"));
         students.add(new Student("ID104", "Some Guy", "PHD", "Sample4"));
+        students.add(new Student("ID105", "Joe Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID106", "Armin Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID107", "Katie Quirk", "Graduate", "Sample3"));
+        students.add(new Student("ID108", "Some Guy", "PHD", "Sample4"));
+        students.add(new Student("ID109", "Joe Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID110", "Armin Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID111", "Katie Quirk", "Graduate", "Sample3"));
+        students.add(new Student("ID112", "Some Guy", "PHD", "Sample4"));
 
         return students;
     }

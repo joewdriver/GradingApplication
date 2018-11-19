@@ -21,6 +21,7 @@ public class CourseView extends View {
     private ContextButton editClassSettings;
     private JButton saveButton;
     private JButton viewAllCoursesButton;
+    private JButton addAssignment;
     private JLabel classNameHeader;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
@@ -107,6 +108,12 @@ public class CourseView extends View {
         };
 
         alViewAllCourses = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                viewAllCourses();
+            }
+        };
+
+        alAddAssignment = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewAllCourses();
             }
@@ -211,6 +218,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
+                //TODO dynamically pull the weights
                 undergraduatePanel.add(new TextField("100"));
                 tmpName = assignments.get(i).getType();
             } else
@@ -368,5 +376,9 @@ public class CourseView extends View {
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
         dispose();
+    }
+
+    private void addAssignment() {
+        Add
     }
 }
