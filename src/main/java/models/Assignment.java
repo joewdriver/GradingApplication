@@ -91,7 +91,7 @@ public class Assignment implements Comparable<Assignment>{
      */
     public Course getCourse() {
         //TODO: this needs to be replaced with a db call
-        return new Course("ID201","Sample Course","2018","Spring");
+        return new Course(-1, "ID201","Sample Course","2018","Spring");
     }
 
     public double getAverageScore() {

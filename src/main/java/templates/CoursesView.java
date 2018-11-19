@@ -43,6 +43,7 @@ public class CoursesView extends View {
 
         // we'll create an arraylist to hold our courses
         courses = db.getCourses();
+        db.closeDB();
 
         alCourseView = new ActionListener() {
             public void actionPerformed(ActionEvent e) {

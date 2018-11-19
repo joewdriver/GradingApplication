@@ -50,9 +50,9 @@ public class Student {
     //TODO: turn this into an actual query instead of mocked data
     public ArrayList<Course> getClasses() {
         ArrayList<Course> courses = new ArrayList<Course>();
-        courses.add(new Course("ID101", "Fake Course", "2022","Fall"));
-        courses.add(new Course("ID102", "Fake Course", "2023","Spring"));
-        courses.add(new Course("ID103", "Fake Course", "2024", "Summer"));
+        courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
+        courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
+        courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));
         return courses;
     }
 }

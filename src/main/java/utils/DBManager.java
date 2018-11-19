@@ -91,12 +91,33 @@ public class DBManager {
         }
     }
 
+    public void executeUpdate(String query) {
+        try {
+            Statement stmt = this.conn.createStatement();
+            stmt.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<Course> getCourses() {
         ArrayList<Course> courses = new ArrayList<Course>();
-        courses.add(new Course("ID221","Sample Class 1", "2018", "Spring"));
-        courses.add(new Course("ID221","Sample Class 2", "2018", "Spring"));
-        courses.add(new Course("ID221","Sample Class 3", "2018", "Fall"));
-        courses.add(new Course("ID221","Sample Class 4", "2018", "Winter"));
+        try {
+            Statement stmt = this.conn.createStatement();
+            ResultSet rs = stmt.executeQuery(Strings.getAllCourses);
+            while (rs.next()) {
+                courses.add(new Course(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+//        ArrayList<Course> courses = new ArrayList<Course>();
+//        courses.add(new Course("ID221","Sample Class 1", "2018", "Spring"));
+//        courses.add(new Course("ID221","Sample Class 2", "2018", "Spring"));
+//        courses.add(new Course("ID221","Sample Class 3", "2018", "Fall"));
+//        courses.add(new Course("ID221","Sample Class 4", "2018", "Winter"));
         return courses;
     }
 }

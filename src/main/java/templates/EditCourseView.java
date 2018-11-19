@@ -23,7 +23,7 @@ public class EditCourseView extends View {
     private Course course;
 
     public EditCourseView() {
-        this.course = new Course("Section","Course Name","Year","Fall");
+        this.course = new Course(-1,"Section","Course Name","Year","Fall");
         headerData = "Create a new Course";
         setup(700, 400, "Gradium - Add Course");
         createUIComponents();
@@ -116,6 +116,15 @@ public class EditCourseView extends View {
 
     // TODO: this needs to take us to the newly created course
     private void goToCourse() {
+        // first rebuild the course object with the new values
+        this.course.setName(courseName.getText());
+        this.course.setYear(year.getText());
+        this.course.setSeason((String)season.getSelectedItem());
+        this.course.setSectionNumber(courseId.getText());
+        this.course.save();
+
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
         dispose();
     }
 }
