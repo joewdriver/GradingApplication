@@ -1,15 +1,18 @@
 package templates;
 
 import models.Course;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class EditCourseView extends JFrame {
+public class EditCourseView extends View {
     private JTextField courseName;
     private JTextField courseId;
     private JTextField year;
@@ -20,24 +23,19 @@ public class EditCourseView extends JFrame {
     private Course course;
 
     public EditCourseView() {
-        this.course = new Course("Section","Course Name","Year", "fall");
+        this.course = new Course(-1,"Section","Course Name","Year","Fall");
         headerData = "Create a new Course";
-        setup();
+        setup(700, 400, "Gradium - Add Course");
+        createUIComponents();
+        buildLayout() ;
     }
 
     public EditCourseView(Course course) {
         this.course=course;
         headerData = "Edit this Course";
-        setup();
-    }
-
-    private void setup() {
-        this.createUIComponents();
-        setTitle("Gradium - Add/Edit Course");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Gradium - Edit Course");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
@@ -60,8 +58,9 @@ public class EditCourseView extends JFrame {
         year.setPreferredSize(new Dimension(40,30));
 
         // TODO: populate default value based on course being edited
-        String[] seasons = new String[] {"Spring","Fall","Winter"};
+        String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
+        season.setSelectedIndex(Arrays.asList(seasons).indexOf(course.getSeason()));
     }
 
     private void buildLayout() {
@@ -117,6 +116,15 @@ public class EditCourseView extends JFrame {
 
     // TODO: this needs to take us to the newly created course
     private void goToCourse() {
+        // first rebuild the course object with the new values
+        this.course.setName(courseName.getText());
+        this.course.setYear(year.getText());
+        this.course.setSeason((String)season.getSelectedItem());
+        this.course.setSectionNumber(courseId.getText());
+        this.course.save();
+
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
         dispose();
     }
 }

@@ -4,6 +4,7 @@ import models.Course;
 import models.Group;
 import models.Student;
 import utils.ContextButton;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class StudentView extends JFrame {
+public class StudentView extends View {
     private ArrayList<Course> courses;
     private JLabel name;
     private JLabel graduateLevel;
@@ -24,17 +25,15 @@ public class StudentView extends JFrame {
     public StudentView(Student student) {
         this.student = student;
         this.courses = student.getClasses();
-        this.createUIComponents();
-        setTitle("Grading Records - " + student.getFamily_name());
-        setSize(1200,800);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setup(1200, 800, "Gradium " + student.getFullName());
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
 
-        name = new JLabel(student.getFamily_name());
+        name = new JLabel(student.getFullName());
         graduateLevel = new JLabel(student.getGraduateLevel());
 
         ActionListener al = new ActionListener() {

@@ -1,6 +1,8 @@
 package templates;
 
+import models.Course;
 import models.Student;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +11,11 @@ import java.awt.event.ActionListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class EditStudentView extends JFrame {
+public class EditStudentView extends View {
     private JTextField buId;
-    private JTextField name;
+    private JTextField familyName;
+    private JTextField firstName;
+    private JTextField middleInitial;
     private JComboBox gradLevel;
     private JTextField email;
     private JButton submitButton;
@@ -19,24 +23,19 @@ public class EditStudentView extends JFrame {
 
     // constructor for creating a new student
     public EditStudentView() {
-        this.student = new Student("BU ID","Student", "sd", "sd","Grad Level","student email");
-        setUp();
+
+        this.student = new Student("BU ID","Joe","W","Driver","Grad Level","student email");
+        setup(700, 400, "Add Student");
+        createUIComponents();
+        buildLayout();
     }
 
     // constructor for editing an existing student
     public EditStudentView(Student student) {
         this.student = student;
-        setUp();
-    }
-
-    // TODO set up is similar for all views, we should look into abstracting it
-    private void setUp() {
-        this.createUIComponents();
-        setTitle("Gradium - Add/Edit Student");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Edit Student");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
@@ -49,8 +48,15 @@ public class EditStudentView extends JFrame {
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
-        name = new JTextField(student.getFirst_name());
-        name.setPreferredSize(new Dimension(200,10));
+
+        familyName = new JTextField(student.getFamilyName());
+        familyName.setPreferredSize(new Dimension(200,10));
+        firstName = new JTextField(student.getFirstName());
+        firstName.setPreferredSize(new Dimension(200,10));
+        middleInitial = new JTextField(student.getMiddleInitial());
+        middleInitial.setPreferredSize(new Dimension(20,10));
+
+
         buId = new JTextField(student.getBuId());
         buId.setPreferredSize(new Dimension(200,10));
         email = new JTextField(student.getEmail());
@@ -75,7 +81,9 @@ public class EditStudentView extends JFrame {
         // horizontal group parallel, we are saying these should appear in the same column.  Parallel
         // Groups also handle alignment
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
-                .addComponent(name)
+                .addComponent(firstName)
+                .addComponent(middleInitial)
+                .addComponent(familyName)
                 .addComponent(buId)
                 .addComponent(email)
                 .addComponent(gradLevel)
@@ -84,7 +92,9 @@ public class EditStudentView extends JFrame {
 
         // by making the vertical group sequential, we order the products top to bottom
         layout.setVerticalGroup(layout.createSequentialGroup()
-                .addComponent(name)
+                .addComponent(firstName)
+                .addComponent(middleInitial)
+                .addComponent(familyName)
                 .addComponent(buId)
                 .addComponent(email)
                 .addComponent(gradLevel)
@@ -99,8 +109,14 @@ public class EditStudentView extends JFrame {
         pane.add(panel);
     }
 
-    // TODO: this needs to take us to the newly created student
     private void goToStudent() {
+        this.student.setBuId(buId.getText());
+        this.student.setEmail(email.getText());
+        this.student.setGraduateLevel((String)gradLevel.getSelectedItem());
+        this.student.setFamilyName(familyName.getText());
+        this.student.save();
+        StudentView studentView = new StudentView(student);
+        studentView.setVisible(true);
         dispose();
     }
 }

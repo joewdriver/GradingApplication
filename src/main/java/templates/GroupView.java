@@ -5,6 +5,7 @@ import models.Course;
 import models.Group;
 import models.Student;
 import utils.ContextButton;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class GroupView extends JFrame {
+public class GroupView extends View {
     private JButton saveButton;
     private JLabel groupNameHeader;
     private ArrayList<Assignment> assignments;
@@ -26,14 +27,9 @@ public class GroupView extends JFrame {
 
     public GroupView(Group group) {
         this.group = group;
-        this.createUIComponents();
-        setTitle("Grading Records - " + group.getCourse().getName() + " " + group.getName());
-
-        // going to need alot more space with this one
-        setSize(1200,800);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(1200, 800,"Gradium " + group.getCourse().getName() + " " + group.getName());
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {
@@ -148,7 +144,9 @@ public class GroupView extends JFrame {
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
         for(Student student: students) {
-            ContextButton btn = new ContextButton(student.getFamily_name(), student);
+
+            ContextButton btn = new ContextButton(student.getFullName(), student);
+
             btn.addActionListener(this.alStudentView);
             gradesPanel.add(btn);
             //TODO: add the weighted calculation here based on db call

@@ -75,10 +75,11 @@ public class Group {
             System.out.println(e.getMessage());
         }
 
-        //students.add(new Student("ID101","Joe","m", " Driver","Graduate", "sample"));
-        //students.add(new Student("ID102","Katie", "m", " Quirk","Graduate", "sample"));
-        //students.add(new Student("ID103","Armin", "m", " Sabouri","Undergraduate", "sample"));
-        //students.add(new Student("ID104","Some Guy","PHD", "sample"));
+        students.add(new Student("ID101","Joe","m", " Driver","Graduate", "sample"));
+        students.add(new Student("ID102","Katie", "m", " Quirk","Graduate", "sample"));
+        students.add(new Student("ID103","Armin", "m", " Sabouri","Undergraduate", "sample"));
+        students.add(new Student("ID104","Some Guy","PHD", "sample"));
+
 
         return students;
     }

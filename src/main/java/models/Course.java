@@ -5,14 +5,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import models.Group;
 import utils.DBManager;
+import utils.Strings;
 
 public class Course {
     private int id;
     private String sectionNumber;
     private String name;
     private String year;
+
     private String semester;
     private DBManager db = new DBManager();
 
@@ -22,22 +26,30 @@ public class Course {
             this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
             this.year = rs.getString("year");
-            this.semester = rs.getString("semester");
+            this.season = rs.getString("semester");
+
         } catch(SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public Course(String sectionNumber, String name, String year, String semester) {
+
+    public Course(int id, String sectionNumber, String name, String year, String season) {
+        this.id = id;
         this.sectionNumber = sectionNumber;
         this.name = name;
         this.year = year;
-        this.semester = semester;
-        //DBManager db = new DBManager();
+        this.season = season;
     }
+
+    public int getId() { return this.id; }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSectionNumber() {
@@ -47,6 +59,20 @@ public class Course {
     public String getYear(){ return year; }
 
     public String getSemester(){ return semester;}
+  
+    public void setSectionNumber(String sectionNumber) {
+        this.sectionNumber = sectionNumber;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getSeason() { return season; }
+
+    public void setSeason(String season) {
+        this.season = season;
+    }
 
     public Group getGroup(Student student) {
         ArrayList<Assignment> groups = new ArrayList<Assignment>();
@@ -125,6 +151,8 @@ public class Course {
         assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
         assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
 
+
+        Collections.sort(assignments);
         return assignments;
     }
 
@@ -152,6 +180,7 @@ public class Course {
         students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
         students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
         students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
+
 
         return students;
     }
@@ -186,4 +215,22 @@ public class Course {
         }
     }
 
+    /**
+     * either insert a new course into the db, or updates the existing course depending on whether a valid id
+     * is found.  If inserting, it will also update its own id field with the newly created one
+     */
+    public void save() {
+        String query;
+        DBManager db = new DBManager();
+        // first, if this is a new course we run an insert
+        if(this.id == -1) {
+            query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year);
+            db.executeUpdate(query);
+        // this will cover updates of existing objects
+        } else {
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
+            db.executeUpdate(query);
+        }
+        db.closeDB();
+    }
 }

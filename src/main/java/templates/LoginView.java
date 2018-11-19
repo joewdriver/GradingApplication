@@ -1,5 +1,7 @@
 package templates;
 
+import utils.View;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,19 +9,16 @@ import java.awt.event.ActionListener;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class LoginView extends JFrame {
+public class LoginView extends View {
     private JButton loginButton;
     private JLabel loginPrompt;
     private JTextField username;
     private JPasswordField password;
 
     public LoginView() {
-        this.createUIComponents();
-        setTitle("Grading Records - Login");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700,400, "Gradium Login");
+        createUIComponents();
+        buildLayout() ;
     }
 
     private void createUIComponents() {

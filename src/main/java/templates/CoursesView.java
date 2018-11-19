@@ -3,6 +3,7 @@ package templates;
 import models.Course;
 import utils.ContextButton;
 import utils.DBManager;
+import utils.View;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import javax.swing.GroupLayout.Group;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
-public class CoursesView extends JFrame {
+public class CoursesView extends View {
     private JButton newCourseButton;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
@@ -21,12 +22,9 @@ public class CoursesView extends JFrame {
     private ActionListener alCourseView;
 
     public CoursesView() {
-        this.createUIComponents();
-        setTitle("Grading Records - All Classes");
-        setSize(700,400);
-        setLocationRelativeTo(null);
-        this.buildLayout();
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setup(700, 400, "Gradium All Classes");
+        createUIComponents();
+        buildLayout();
     }
 
     private void createUIComponents() {
@@ -45,10 +43,7 @@ public class CoursesView extends JFrame {
 
         // we'll create an arraylist to hold our courses
         courses = db.getCourses();
-
-        // providing a dummy list for the moment
-        //TODO: replace with db call to populate the arraylist
-
+        db.closeDB();
 
         alCourseView = new ActionListener() {
             public void actionPerformed(ActionEvent e) {

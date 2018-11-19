@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import utils.DBManager;
 
-public class Assignment {
+public class Assignment implements Comparable<Assignment>{
     private int id;
     private int totalPoints;
     private String classId;
@@ -79,6 +79,10 @@ public class Assignment {
         return this.name;
     }
 
+    public int compareTo(Assignment assignment) {
+        return type.compareTo(assignment.getType());
+    }
+
     public String getDescription() {
         return this.description;
     }
@@ -103,10 +107,16 @@ public class Assignment {
         return this.totalPoints;
     }
 
+    public int getScore(Student student) {
+        //TODO add db call here to get score for a given student, or return null if student has no score
+        return 99;
+    }
+
     /**
      * retrieves the course name and ID in which the assignment exists
      */
     public Course getCourse() {
+
         String selectQuery = "ID, class, semester, name, year  FROM `class` AS A " +
                 "INNER JOIN `assignments` AS B ON A.class_ID = B.class_ID " +
                 "WHERE B.class_ID = '" + this.classId + "'";
@@ -122,6 +132,7 @@ public class Assignment {
             System.out.println(e.getMessage());
         }
         return null;
+
     }
 
     public double getAverageScore() {
