@@ -251,7 +251,7 @@ public class CourseView extends View {
         // will need a nested loop to make this work
         for(Student student: undergraduates) {
             System.out.println(student.getGraduateLevel());
-            ContextButton btn = new ContextButton(student.getName(), student);
+            ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
@@ -311,7 +311,7 @@ public class CourseView extends View {
         // will need a nested loop to make this work
         for(Student student: graduates) {
             System.out.println(student.getGraduateLevel());
-            ContextButton btn = new ContextButton(student.getName(), student);
+            ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
@@ -352,8 +352,9 @@ public class CourseView extends View {
     }
 
     private void addStudent(Course course) {
-        //TODO: install view transition here
-        System.exit(0);
+        EditStudentView editStudentView = new EditStudentView();
+        editStudentView.setVisible(true);
+        dispose();
     }
 
     private void importStudents(Course course) {

@@ -39,10 +39,10 @@ public class Group {
     public ArrayList<Student> getStudents() {
         //TODO: replace this with a db call
         ArrayList<Student> students = new ArrayList<Student>();
-        students.add(new Student("ID101","Joe Driver","Graduate", "sample"));
-        students.add(new Student("ID102","Katie Quirk","Graduate", "sample"));
-        students.add(new Student("ID103","Armin Sabouri","Undergraduate", "sample"));
-        students.add(new Student("ID104","Some Guy","PHD", "sample"));
+        students.add(new Student("ID101","Joe", "a", "Driver","Graduate", "sample"));
+        students.add(new Student("ID102","Katie", "a", "Quirk","Graduate", "sample"));
+        students.add(new Student("ID103","Armin", "a", "Sabouri","Undergraduate", "sample"));
+        students.add(new Student("ID104","Some", "a", "Guy","PHD", "sample"));
 
         return students;
     }

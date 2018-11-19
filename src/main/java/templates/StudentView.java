@@ -25,14 +25,14 @@ public class StudentView extends View {
     public StudentView(Student student) {
         this.student = student;
         this.courses = student.getClasses();
-        setup(1200, 800, "Gradium " + student.getName());
+        setup(1200, 800, "Gradium " + student.getFullName());
         createUIComponents();
         buildLayout() ;
     }
 
     private void createUIComponents() {
 
-        name = new JLabel(student.getName());
+        name = new JLabel(student.getFullName());
         graduateLevel = new JLabel(student.getGraduateLevel());
 
         ActionListener al = new ActionListener() {

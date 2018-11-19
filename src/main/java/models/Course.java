@@ -89,18 +89,18 @@ public class Course {
 
         //TODO: db call to retrieve and build a student list
         ArrayList<Student> students = new ArrayList<Student>();
-        students.add(new Student("ID101", "Joe Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID102", "Armin Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID103", "Katie Quirk", "Graduate", "Sample3"));
-        students.add(new Student("ID104", "Some Guy", "PHD", "Sample4"));
-        students.add(new Student("ID105", "Joe Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID106", "Armin Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID107", "Katie Quirk", "Graduate", "Sample3"));
-        students.add(new Student("ID108", "Some Guy", "PHD", "Sample4"));
-        students.add(new Student("ID109", "Joe Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID110", "Armin Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID111", "Katie Quirk", "Graduate", "Sample3"));
-        students.add(new Student("ID112", "Some Guy", "PHD", "Sample4"));
+        students.add(new Student("ID101", "Joe", "a", "Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID102", "Armin", "a", "Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID103", "Katie", "a", "Quirk", "Graduate", "Sample3"));
+        students.add(new Student("ID104", "Some", "a", "Guy", "PHD", "Sample4"));
+        students.add(new Student("ID105", "Joe", "a", "Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID106", "Armin", "a", "Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID107", "Katie", "a", "Quirk", "Graduate", "Sample3"));
+        students.add(new Student("ID108", "Some", "a", "Guy", "PHD", "Sample4"));
+        students.add(new Student("ID109", "Joe", "a", "Driver", "Graduate", "Sample1"));
+        students.add(new Student("ID110", "Armin", "a", "Sabouri", "Undergrad", "Sample2"));
+        students.add(new Student("ID111", "Katie", "a", "Quirk", "Graduate", "Sample3"));
+        students.add(new Student("ID112", "Some", "a", "Guy", "PHD", "Sample4"));
 
         return students;
     }
@@ -115,15 +115,12 @@ public class Course {
         // first, if this is a new course we run an insert
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year);
-            System.out.println("running the following query\n" + query);
             db.executeUpdate(query);
-            db.closeDB();
         // this will cover updates of existing objects
         } else {
             query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            System.out.println("running the following query\n" + query);
             db.executeUpdate(query);
-            db.closeDB();
         }
+        db.closeDB();
     }
 }

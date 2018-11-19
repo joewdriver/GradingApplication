@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.sql.SQLException;
 
 //import com.mysql.jdbc.Driver;
+import com.sun.org.apache.regexp.internal.RE;
 import models.Course;
 
 /**
@@ -36,7 +37,7 @@ public class DBManager {
      */
     public void buildDB() {
         System.out.println("Building the tables");
-        final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
+        final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_initial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL )";
         final String class_assignments = "CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String course_assignments = "CREATE TABLE `course_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
@@ -92,6 +93,7 @@ public class DBManager {
     }
 
     public void executeUpdate(String query) {
+        System.out.println(query);
         try {
             Statement stmt = this.conn.createStatement();
             stmt.executeUpdate(query);
@@ -101,11 +103,21 @@ public class DBManager {
         }
     }
 
-    public ArrayList<Course> getCourses() {
-        ArrayList<Course> courses = new ArrayList<Course>();
+    public ResultSet executeQuery(String query) {
+        ResultSet rs = null;
         try {
             Statement stmt = this.conn.createStatement();
-            ResultSet rs = stmt.executeQuery(Strings.getAllCourses);
+            rs = stmt.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return rs;
+    }
+
+    public ArrayList<Course> getCourses() {
+        ArrayList<Course> courses = new ArrayList<Course>();
+        ResultSet rs = executeQuery(Strings.getAllCourses);
+        try {
             while (rs.next()) {
                 courses.add(new Course(rs));
             }
@@ -113,11 +125,6 @@ public class DBManager {
             e.printStackTrace();
         }
 
-//        ArrayList<Course> courses = new ArrayList<Course>();
-//        courses.add(new Course("ID221","Sample Class 1", "2018", "Spring"));
-//        courses.add(new Course("ID221","Sample Class 2", "2018", "Spring"));
-//        courses.add(new Course("ID221","Sample Class 3", "2018", "Fall"));
-//        courses.add(new Course("ID221","Sample Class 4", "2018", "Winter"));
         return courses;
     }
 }
