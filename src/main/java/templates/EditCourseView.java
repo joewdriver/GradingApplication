@@ -114,7 +114,6 @@ public class EditCourseView extends View {
         pane.add(panel);
     }
 
-    // TODO: this needs to take us to the newly created course
     private void goToCourse() {
         // first rebuild the course object with the new values
         this.course.setName(courseName.getText());
