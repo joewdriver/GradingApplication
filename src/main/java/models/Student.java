@@ -14,18 +14,18 @@ import utils.DBManager;
 public class Student {
     private String buId;
 
-    private String first_name;
-    private String middle_name;
-    private String family_name;
+    private String firstName;
+    private String middleInitial;
+    private String familyName;
     private String graduateLevel;
     private String email;
     private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
             this.buId = rs.getString("buId");
-            this.first_name = rs.getString("first_name");
-            this.middle_name = rs.getString("middle_intial");
-            this.family_name = rs.getString("family_name");
+            this.firstName = rs.getString("first_name");
+            this.middleInitial = rs.getString("middle_intial");
+            this.familyName = rs.getString("family_name");
             this.graduateLevel = rs.getString("type");
 
             this.email = rs.getString("email");
@@ -36,9 +36,9 @@ public class Student {
 
     public Student(String buId, String first_name, String middle_name, String family_name, String graduateLevel, String email) {
         this.buId = buId;
-        this.first_name = first_name;
-        this.middle_name = middle_name;
-        this.family_name = family_name;
+        this.firstName = first_name;
+        this.middleInitial = middle_name;
+        this.familyName = family_name;
 
         this.graduateLevel = graduateLevel;
         this.email = email;

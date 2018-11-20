@@ -16,13 +16,14 @@ public class Course implements Comparable<Course> {
     private String sectionNumber;
     private String name;
     private String year;
+    private String season;
 
     private String semester;
     private DBManager db = new DBManager();
 
     public Course(ResultSet rs) {
         try {
-            this.id = rs.getInt("class_ID");
+            this.id = rs.getInt("ID");
             this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
             this.year = rs.getString("year");

@@ -100,7 +100,7 @@ public class DBManager {
         }
     }
 
-    public void addCourse(Course course){
+    public void addCourse(Course course) {
         String courseName = course.getName();
         String sectionNum = course.getSectionNumber();
         String year = course.getYear();
@@ -108,14 +108,15 @@ public class DBManager {
         String insertQuery = "INSERT INTO `class` (class, semester, name, year) VALUES(?,?,?,?)";
         try {
             PreparedStatement pstmt = conn.prepareStatement(insertQuery);
-                pstmt.setString(1, sectionNum);
-                pstmt.setString(2, semester);
-                pstmt.setString(3, courseName);
-                pstmt.setString(4, year);
-                pstmt.executeUpdate();
-        }catch (SQLException e) {
+            pstmt.setString(1, sectionNum);
+            pstmt.setString(2, semester);
+            pstmt.setString(3, courseName);
+            pstmt.setString(4, year);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
     public void executeUpdate(String query) {
         System.out.println(query);
