@@ -2,14 +2,20 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import utils.DBManager;
 
 public class Assignment implements Comparable<Assignment>{
     private int id;
     private int totalPoints;
     private String classId;
     private String name;
-    private String type;
     private String description;
+    private int value;
+    private int extraCredit;
+    private String type;
+    private DBManager db = new DBManager();
+
 
     /**
      * constructor to build a code object based on a result set from MySQL.
@@ -17,8 +23,8 @@ public class Assignment implements Comparable<Assignment>{
      */
     public Assignment(ResultSet rs) {
         try {
-            this.classId = rs.getString("classId");
-            this.id = rs.getInt("id");
+            this.classId = rs.getString("class_ID");
+            this.id = rs.getInt("ID");
             this.name = rs.getString("name");
             this.type = rs.getString("type");
             this.totalPoints = rs.getInt("totalPoints");
@@ -26,6 +32,25 @@ public class Assignment implements Comparable<Assignment>{
             e.printStackTrace();
         }
     }
+
+    public int getExtraCredit() {
+        return extraCredit;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getClassId() {
+        return classId;
+    }
+
+
+
+    public int getValue() {
+        return value;
+    }
+
 
     /**
      * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
@@ -37,6 +62,7 @@ public class Assignment implements Comparable<Assignment>{
         this.type = type;
         this.totalPoints = totalPoints;
     }
+
 
     /**
      * a constructor that handles a default type setting to homework
@@ -90,8 +116,23 @@ public class Assignment implements Comparable<Assignment>{
      * retrieves the course name and ID in which the assignment exists
      */
     public Course getCourse() {
-        //TODO: this needs to be replaced with a db call
-        return new Course(-1, "ID201","Sample Course","2018","Spring");
+
+        String selectQuery = "ID, class, semester, name, year  FROM `class` AS A " +
+                "INNER JOIN `assignments` AS B ON A.class_ID = B.class_ID " +
+                "WHERE B.class_ID = '" + this.classId + "'";
+
+        try {
+            Statement stmt = this.db.getConn().createStatement();
+            ResultSet rs = stmt.executeQuery(selectQuery);
+            // loop through the result set
+            while (rs.next()) {
+                return new Course(rs); //should only be one course
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+
     }
 
     public double getAverageScore() {

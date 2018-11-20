@@ -23,6 +23,7 @@ public class EditStudentView extends View {
 
     // constructor for creating a new student
     public EditStudentView() {
+
         this.student = new Student("BU ID","Joe","W","Driver","Grad Level","student email");
         setup(700, 400, "Add Student");
         createUIComponents();
@@ -47,12 +48,14 @@ public class EditStudentView extends View {
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
+
         familyName = new JTextField(student.getFamilyName());
         familyName.setPreferredSize(new Dimension(200,10));
         firstName = new JTextField(student.getFirstName());
         firstName.setPreferredSize(new Dimension(200,10));
         middleInitial = new JTextField(student.getMiddleInitial());
         middleInitial.setPreferredSize(new Dimension(20,10));
+
 
         buId = new JTextField(student.getBuId());
         buId.setPreferredSize(new Dimension(200,10));

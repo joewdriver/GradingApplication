@@ -9,7 +9,8 @@ public class Application {
 
         DBManager db = new DBManager();
         db.buildDB();
-
+        db.getCourses();
+        //db.dropAllTables();
         LoginView login = new LoginView();
         login.setVisible(true);
     }

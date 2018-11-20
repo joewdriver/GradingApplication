@@ -249,9 +249,12 @@ public class CourseView extends View {
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
+
+        
         for(Student student: undergraduates) {
             System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
+
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
