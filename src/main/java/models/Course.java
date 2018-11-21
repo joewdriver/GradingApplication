@@ -11,18 +11,19 @@ import models.Group;
 import utils.DBManager;
 import utils.Strings;
 
-public class Course {
+public class Course implements Comparable<Course> {
     private int id;
     private String sectionNumber;
     private String name;
     private String year;
+    private String season;
 
     private String semester;
     private DBManager db = new DBManager();
 
     public Course(ResultSet rs) {
         try {
-            this.id = rs.getInt("class_ID");
+            this.id = rs.getInt("ID");
             this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
             this.year = rs.getString("year");
@@ -40,6 +41,18 @@ public class Course {
         this.name = name;
         this.year = year;
         this.season = season;
+    }
+
+    public int compareTo(Course course) {
+
+        boolean larger = (Integer.parseInt(this.year) > Integer.parseInt(course.getYear()));
+        if(larger) {
+            return 1;
+        } else if(!larger) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     public int getId() { return this.id; }
