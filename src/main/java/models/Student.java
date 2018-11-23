@@ -95,9 +95,45 @@ public class Student {
         this.email = email;
     }
 
-    public int getGrade(String classId) {
-        //TODO: DB call here
-        return 100;
+    public double getGrade(String classId) {
+        /*
+        * @details: provide the average grade
+        * */
+        ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+        ArrayList<Integer> scores = new ArrayList<Integer>();
+        double rsum = 0.0;
+
+        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints  FROM `assignments` as A " +
+                "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
+                "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
+        try {
+            Statement stmt  = this.db.getConn().createStatement();
+            ResultSet rs    = stmt.executeQuery(selectQuery);
+            // loop through the result set
+            while (rs.next()) {
+                scores.add(rs.getInt("score"));
+                assignments.add(new Assignment(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        int scoreIdx = 0;
+        for (Assignment assign : assignments){
+            int assignIdx = 0;
+            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
+            try {
+                Statement stmt  = this.db.getConn().createStatement();
+                ResultSet rs    = stmt.executeQuery(selectQuery);
+                while (rs.next() ) {
+                    rsum += rs.getInt("weight") * scores.get(scoreIdx);
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            scoreIdx++;
+        }
+        return rsum;
     }
 
 
