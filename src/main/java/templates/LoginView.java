@@ -6,14 +6,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import utils.DBManager;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class LoginView extends View {
     private JButton loginButton;
     private JLabel loginPrompt;
+    private JLabel authPrompt = new JLabel("");
     private JTextField username;
     private JPasswordField password;
+    private DBManager db = new DBManager();
 
     public LoginView() {
         setup(700,400, "Gradium Login");
@@ -22,22 +25,40 @@ public class LoginView extends View {
     }
 
     private void createUIComponents() {
-
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: we need to add some actual validation here
-                CoursesView classes = new CoursesView();
-                classes.setVisible(true);
-                dispose();
+                if(db.firstLogin() == true) {
+                    //register client for an account
+                    db.register(username.getText(), String.valueOf(password.getPassword()));
+                    CoursesView classes = new CoursesView();
+                    classes.setVisible(true);
+                    dispose();
+                }
+                else {
+                    if(db.checkAuth(username.getText(), String.valueOf(password.getPassword())) == true){
+                        CoursesView classes = new CoursesView();
+                        classes.setVisible(true);
+                        dispose();
+                    }else{
+                      System.out.println("login failed");
+                        authPrompt = new JLabel("Authentication failed");
+                        //buildLayout();
+                    }
+                }
+
             }
         };
         loginButton = new JButton("Submit");
         loginButton.addActionListener(al);
+        System.out.println(db.firstLogin());
+        if(db.firstLogin())
+            loginPrompt = new JLabel("Please register for an account");
+        else
+            loginPrompt = new JLabel("Please Log In");
 
-        loginPrompt = new JLabel("Please Log In");
         username = new JTextField("username");
         username.setPreferredSize(new Dimension(200,10));
-        password = new JPasswordField("password");
+        password = new JPasswordField();
         password.setPreferredSize(new Dimension(200,10));
     }
 
@@ -58,6 +79,7 @@ public class LoginView extends View {
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
                 .addComponent(loginButton)
                 .addComponent(loginPrompt)
+                .addComponent(authPrompt)
                 .addComponent(username,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addComponent(password,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
@@ -65,6 +87,7 @@ public class LoginView extends View {
         // by making the vertical group sequential, we order the products top to bottom
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addComponent(loginPrompt)
+                .addComponent(authPrompt)
                 .addComponent(username,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addComponent(password,GroupLayout.DEFAULT_SIZE,GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addComponent(loginButton)

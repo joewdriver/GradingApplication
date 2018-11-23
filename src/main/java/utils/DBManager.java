@@ -7,9 +7,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.SQLException;
+import utils.bcrypt;
 
 //import com.mysql.jdbc.Driver;
-import com.sun.org.apache.regexp.internal.RE;
+//import com.sun.org.apache.regexp.internal.RE;
+import models.Assignment;
 import models.Course;
 
 /**
@@ -20,6 +22,7 @@ public class DBManager {
 
     private String dbPath = "jdbc:sqlite:gradium.db";
     private Connection conn;
+    private String salt = "$2a$12$j8hShUjV20vKXOBJarEOd.";
 
     public DBManager() {
         try{
@@ -51,7 +54,7 @@ public class DBManager {
         final String assignments = "CREATE TABLE `assignments` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `totalPoints` INT(200) NOT NULL , `class_ID` INT(200) NOT NULL , `name` INT(200) NOT NULL, `description` VARCHAR(700) NULL , `score` INT(11) NOT NULL , `extra_credit` INT(11) NOT NULL, `type` VARCHAR(200) NULL )";
         final String group = "CREATE TABLE `groups` ( `group_id` INT(200) NOT NULL , `BU_ID` VARCHAR(200) NOT NULL , `class_id` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String weight = "CREATE TABLE `weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`group_id`))";
-
+        final String auth = "CREATE TABLE `auth` (`username` VARCHAR(200) NOT NULL, `password` VARCHAR(200) NOT NULL)";
         try {
             Statement stmt = this.conn.createStatement();
                 stmt.execute(studentQuery);
@@ -61,6 +64,7 @@ public class DBManager {
                 stmt.execute(assignments);
                 stmt.execute(group);
                 stmt.execute(weight);
+                stmt.execute(auth);
 
         }catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -91,6 +95,56 @@ public class DBManager {
         }
         System.out.println("All tables dropped");
     }
+
+    public boolean firstLogin(){
+        String selectQuery = "SELECT * FROM auth LIMIT 1";
+        try {
+            Statement stmt  = this.conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(selectQuery);
+            if (!rs.next() ) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+
+    public void register(String username, String psw){
+        String generatedSecuredPasswordHash = bcrypt.hashpw(psw, this.salt);
+        String insertQuery = "INSERT INTO `auth` (username, password) VALUES(?,?)";
+        try {
+            PreparedStatement pstmt = conn.prepareStatement(insertQuery);
+            pstmt.setString(1, username);
+            pstmt.setString(2, generatedSecuredPasswordHash);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkAuth(String username, String psw){
+        String generatedSecuredPasswordHash = bcrypt.hashpw(psw, this.salt);
+        String selectQuery = "SELECT * FROM auth";
+
+        try {
+            Statement stmt  = this.conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(selectQuery);
+
+            // loop through the result set
+            while (rs.next()) {
+                if(username.equals(rs.getString("username")) && rs.getString("password").equals(generatedSecuredPasswordHash))
+                    return true;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
+    }
+
+
     // needs to be called whenever we are done with the db.
     public void closeDB() {
         try {
@@ -116,6 +170,23 @@ public class DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteCourse(Course course){
+        int id = course.getId();
+        String deleteQuery = "DELETE FROM `class` WHERE class_ID = ?";
+        try {
+            PreparedStatement pstmt = this.conn.prepareStatement(deleteQuery);
+
+            // set the corresponding param
+            pstmt.setInt(1, id);
+            // execute the delete statement
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     public void executeUpdate(String query) {

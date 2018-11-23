@@ -8,9 +8,10 @@ public class Application {
     public static void main(String[] args) {
 
         DBManager db = new DBManager();
+        //db.dropAllTables();
         db.buildDB();
         db.getCourses();
-        //db.dropAllTables();
+
         LoginView login = new LoginView();
         login.setVisible(true);
     }
