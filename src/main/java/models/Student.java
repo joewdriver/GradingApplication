@@ -101,9 +101,10 @@ public class Student {
         * */
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
+        ArrayList<Integer> totals = new ArrayList<Integer>();
         double rsum = 0.0;
 
-        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints  FROM `assignments` as A " +
+        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints, score  FROM `assignments` as A " +
                 "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
                 "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
         try {
@@ -112,6 +113,7 @@ public class Student {
             // loop through the result set
             while (rs.next()) {
                 scores.add(rs.getInt("score"));
+                totals.add(rs.getInt("totalPoints"));
                 assignments.add(new Assignment(rs));
             }
         } catch (SQLException e) {
@@ -126,7 +128,10 @@ public class Student {
                 Statement stmt  = this.db.getConn().createStatement();
                 ResultSet rs    = stmt.executeQuery(selectQuery);
                 while (rs.next() ) {
-                    rsum += rs.getInt("weight") * scores.get(scoreIdx);
+                    if(totals.get(scoreIdx) != 0)
+                        rsum += rs.getInt("weight") * (scores.get(scoreIdx) / totals.get(scoreIdx));
+                    else
+                        rsum += 0 ;
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
