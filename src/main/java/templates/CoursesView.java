@@ -17,11 +17,13 @@ import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class CoursesView extends View {
     private JButton newCourseButton;
+    private JButton allStudentsButton;
     private JButton sortNewest, sortOldest, reset, search;
     private JTextField searchField;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
     private DBManager db = new DBManager();
+    private ActionListener alAllStudents;
     private ActionListener alCourseView, alSort, alSearch;
     private String sortCondition, searchTerm;
 
@@ -62,6 +64,15 @@ public class CoursesView extends View {
             }
         };
         newCourseButton.addActionListener(al);
+
+        //see all students
+        allStudentsButton = new JButton("See all students");
+        alAllStudents = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                seeAllStudents();
+            }
+        };
+        allStudentsButton.addActionListener(alAllStudents);
 
         // set up the sort buttons
         sortNewest = new JButton("newest");
@@ -136,11 +147,13 @@ public class CoursesView extends View {
         // the top level label and the button should appear in a single row
         headerHorizontal
                 .addComponent(classPrompt)
-                .addComponent(newCourseButton);
+                .addComponent(newCourseButton)
+                .addComponent(allStudentsButton);
 
         headerVertical
                 .addComponent(classPrompt)
-                .addComponent(newCourseButton);
+                .addComponent(newCourseButton)
+                .addComponent(allStudentsButton);
 
         Group sortHorizontal = headerLayout.createSequentialGroup();
         Group sortVertical = headerLayout.createParallelGroup(CENTER);
@@ -224,6 +237,12 @@ public class CoursesView extends View {
     private void addCourse() {
         EditCourseView editCourse = new EditCourseView();
         editCourse.setVisible(true);
+        dispose();
+    }
+
+    private void seeAllStudents() {
+        AllStudentsView allStudentsView = new AllStudentsView();
+        allStudentsView.setVisible(true);
         dispose();
     }
 }
