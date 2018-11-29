@@ -48,11 +48,11 @@ public class DBManager {
     public void buildDB() {
         System.out.println("Building the tables");
         final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_initial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
-        final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL )";
+        final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL, `is_active` INT(1) NOT NULL )";
         final String class_assignments = "CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String course_assignments = "CREATE TABLE `course_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String assignments = "CREATE TABLE `assignments` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `totalPoints` INT(200) NOT NULL , `class_ID` INT(200) NOT NULL , `name` INT(200) NOT NULL, `description` VARCHAR(700) NULL , `score` INT(11) NOT NULL , `extra_credit` INT(11) NOT NULL, `type` VARCHAR(200) NULL )";
-        final String group = "CREATE TABLE `groups` ( `group_id` INT(200) NOT NULL , `BU_ID` VARCHAR(200) NOT NULL , `class_id` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
+        final String group = "CREATE TABLE `groups` ( `group_id` INT(200) NOT NULL , `BU_ID` VARCHAR(200) NOT NULL , `class_id` INT(200) NOT NULL, `weight` INT(200) , PRIMARY KEY (`BU_ID`))";
         final String weight = "CREATE TABLE `weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`group_id`))";
         final String auth = "CREATE TABLE `auth` (`username` VARCHAR(200) NOT NULL, `password` VARCHAR(200) NOT NULL)";
         try {

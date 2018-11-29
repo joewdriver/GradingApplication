@@ -234,16 +234,14 @@ public class Course implements Comparable<Course> {
      */
     public void save() {
         String query;
-        DBManager db = new DBManager();
         // first, if this is a new course we run an insert
         if(this.id == -1) {
-            query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year);
-            db.executeUpdate(query);
+            query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
+            this.db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
             query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            db.executeUpdate(query);
+            this.db.executeUpdate(query);
         }
-        db.closeDB();
     }
 }
