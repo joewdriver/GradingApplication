@@ -21,6 +21,8 @@ public class StudentView extends View {
     private JComboBox groups;
     private Student student;
     private ContextButton editStudent;
+    private JButton allStudentsButton;
+    private ActionListener alAllStudents;
 
     public StudentView(Student student) {
         this.student = student;
@@ -44,6 +46,15 @@ public class StudentView extends View {
         };
         editStudent = new ContextButton("Edit Student", this.student);
         editStudent.addActionListener(al);
+
+        //see all students
+        allStudentsButton = new JButton("See all students");
+        alAllStudents = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                seeAllStudents();
+            }
+        };
+        allStudentsButton.addActionListener(alAllStudents);
 
     }
 
@@ -74,12 +85,14 @@ public class StudentView extends View {
                 .addComponent(name)
                 .addComponent(graduateLevel)
                 .addComponent(editStudent)
+                .addComponent(allStudentsButton)
         );
 
         topLayout.setVerticalGroup(topLayout.createParallelGroup(CENTER)
                 .addComponent(name)
                 .addComponent(graduateLevel)
                 .addComponent(editStudent)
+                .addComponent(allStudentsButton)
         );
 
         topPanel.setLayout(topLayout);
@@ -118,7 +131,7 @@ public class StudentView extends View {
             bottomPanel.add(tempClass);
 
             // display the grade as a non-editable label
-            bottomPanel.add(new Label(Integer.toString(student.getGrade(section.getSectionNumber())),JLabel.CENTER));
+            bottomPanel.add(new Label(Double.toString(student.getGrade(section.getSectionNumber())),JLabel.CENTER));
 
             // add an action listener to the group
             ContextButton tempGroup = new ContextButton(section.getGroup(student).getName(),section.getGroup(student));
@@ -147,6 +160,12 @@ public class StudentView extends View {
     private void goToEditStudent(Student student) {
         EditStudentView editView = new EditStudentView(student);
         editView.setVisible(true);
+        dispose();
+    }
+
+    private void seeAllStudents() {
+        AllStudentsView allStudentsView = new AllStudentsView();
+        allStudentsView.setVisible(true);
         dispose();
     }
 }

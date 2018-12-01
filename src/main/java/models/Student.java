@@ -22,12 +22,11 @@ public class Student {
     private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
-            this.buId = rs.getString("buId");
+            this.buId = rs.getString("BU_ID");
             this.firstName = rs.getString("first_name");
-            this.middleInitial = rs.getString("middle_intial");
+            this.middleInitial = rs.getString("middle_initial");
             this.familyName = rs.getString("family_name");
             this.graduateLevel = rs.getString("type");
-
             this.email = rs.getString("email");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,9 +94,50 @@ public class Student {
         this.email = email;
     }
 
-    public int getGrade(String classId) {
-        //TODO: DB call here
-        return 100;
+    public double getGrade(String classId) {
+        /*
+        * @details: provide the average grade
+        * */
+        ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+        ArrayList<Integer> scores = new ArrayList<Integer>();
+        ArrayList<Integer> totals = new ArrayList<Integer>();
+        double rsum = 0.0;
+
+        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints, score  FROM `assignments` as A " +
+                "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
+                "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
+        try {
+            Statement stmt  = this.db.getConn().createStatement();
+            ResultSet rs    = stmt.executeQuery(selectQuery);
+            // loop through the result set
+            while (rs.next()) {
+                scores.add(rs.getInt("score"));
+                totals.add(rs.getInt("totalPoints"));
+                assignments.add(new Assignment(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        int scoreIdx = 0;
+        for (Assignment assign : assignments){
+            int assignIdx = 0;
+            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
+            try {
+                Statement stmt  = this.db.getConn().createStatement();
+                ResultSet rs    = stmt.executeQuery(selectQuery);
+                while (rs.next() ) {
+                    if(totals.get(scoreIdx) != 0)
+                        rsum += rs.getInt("weight") * (scores.get(scoreIdx) / totals.get(scoreIdx));
+                    else
+                        rsum += 0 ;
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+            scoreIdx++;
+        }
+        return rsum;
     }
 
 

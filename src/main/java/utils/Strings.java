@@ -11,6 +11,7 @@ public class Strings {
             "VALUES\n" +
             " (\"%s\",\"%s\",\"%s\",\"%s\",%d);";
 
+
     public static final String updateCourse = "UPDATE class SET " +
             "class=\"%s\", semester=\"%s\", name=\"%s\", year=\"%s\", active=%d " +
             "WHERE ID=\"%s\";";

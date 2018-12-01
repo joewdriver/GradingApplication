@@ -22,6 +22,7 @@ public class CourseView extends View {
     private ContextButton importStudentsButton;
     private ContextButton editClassSettings;
     private JButton saveButton;
+    private JButton deleteButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
     private JLabel classNameHeader;
@@ -31,6 +32,7 @@ public class CourseView extends View {
     private ActionListener alStudentView;
     private ActionListener alAssignmentView;
     private ActionListener alSave;
+    private ActionListener alDelete;
     private ActionListener alSettings;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
@@ -59,6 +61,13 @@ public class CourseView extends View {
                 // retrieve the calling button and get its text object to pass in.
                 //
                 save();
+            }
+        };
+
+        deleteButton = new JButton("Delete");
+        alDelete = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                delete();
             }
         };
 
@@ -134,6 +143,7 @@ public class CourseView extends View {
         importStudentsButton.addActionListener(alImportStudents);
         viewAllCoursesButton.addActionListener(alViewAllCourses);
         addAssignment.addActionListener(alAddAssignment);
+        deleteButton.addActionListener(alDelete);
     }
 
     /**
@@ -334,14 +344,17 @@ public class CourseView extends View {
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton));
+                .addComponent(saveButton)
+                .addComponent(deleteButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
                 .addComponent(editClassSettings)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton));
+                .addComponent(saveButton)
+                .addComponent(deleteButton));
+
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
@@ -368,13 +381,22 @@ public class CourseView extends View {
         fileChooser.showDialog(null,"Please Select the File");
         fileChooser.setVisible(true);
         File filename = fileChooser.getSelectedFile();
-        System.out.println("File name "+filename.getName());
+        if(filename != null)
+            System.out.println("File name "+filename.getName());
     }
 
     private void save() {
         //TODO: save function needs to read the scores, update the db, then reload the app
         CourseView courseView = new CourseView(this.course);
         courseView.setVisible(true);
+        dispose();
+    }
+
+    private void delete(){
+        this.course.deleteClass();
+
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
         dispose();
     }
 

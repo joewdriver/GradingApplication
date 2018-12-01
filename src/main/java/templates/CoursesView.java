@@ -16,13 +16,13 @@ import javax.swing.GroupLayout.Group;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class CoursesView extends View {
-    private JButton newCourseButton;
-    private JButton sortNewest, sortOldest, reset, search, sortActive;
+    private JButton newCourseButton, sortNewest, sortOldest, reset, search, sortActive;
+    private JButton allStudentsButton;
     private JTextField searchField;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
     private DBManager db = new DBManager();
-    private ActionListener alCourseView, alSort, alSearch, alActive;
+    private ActionListener alCourseView, alSort, alSearch, alActive, alAllStudents;
     private String sortCondition, searchTerm;
     private boolean active;
 
@@ -82,6 +82,16 @@ public class CoursesView extends View {
         } else if (!active) {
             sortActive = new JButton("Show active Courses");
         }
+
+        //see all students
+        allStudentsButton = new JButton("See all students");
+        alAllStudents = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                seeAllStudents();
+            }
+        };
+        allStudentsButton.addActionListener(alAllStudents);
+
         // set up the sort buttons
         sortNewest = new JButton("newest");
         sortOldest = new JButton("oldest");
@@ -161,11 +171,13 @@ public class CoursesView extends View {
         // the top level label and the button should appear in a single row
         headerHorizontal
                 .addComponent(classPrompt)
-                .addComponent(newCourseButton);
+                .addComponent(newCourseButton)
+                .addComponent(allStudentsButton);
 
         headerVertical
                 .addComponent(classPrompt)
-                .addComponent(newCourseButton);
+                .addComponent(newCourseButton)
+                .addComponent(allStudentsButton);
 
         Group sortHorizontal = headerLayout.createSequentialGroup();
         Group sortVertical = headerLayout.createParallelGroup(CENTER);
@@ -257,6 +269,11 @@ public class CoursesView extends View {
     private void activeCourses() {
         CoursesView coursesView = new CoursesView(sortCondition, searchField.getText(), active);
         coursesView.setVisible(true);
+    }
+
+    private void seeAllStudents() {
+        AllStudentsView allStudentsView = new AllStudentsView();
+        allStudentsView.setVisible(true);
         dispose();
     }
 }

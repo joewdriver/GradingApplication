@@ -107,9 +107,8 @@ public class Assignment implements Comparable<Assignment>{
         return this.totalPoints;
     }
 
-    public int getScore(Student student) {
-        //TODO add db call here to get score for a given student, or return null if student has no score
-        return 99;
+    public double getScore(Student student) {
+        return student.getGrade(this.classId);
     }
 
     /**
