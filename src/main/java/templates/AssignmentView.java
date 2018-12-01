@@ -132,7 +132,7 @@ public class AssignmentView extends View {
             JPanel studentPanel = new JPanel();
             GroupLayout studentLayout = new GroupLayout(studentPanel);
             JLabel studentName = new JLabel(student.getFullName());
-            JTextField score = new JTextField(Integer.toString(assignment.getScore(student)));
+            JTextField score = new JTextField(Double.toString(assignment.getScore(student)));
             score.setMinimumSize(new Dimension(40,15));
             studentName.setMinimumSize(new Dimension(200, 15));
 

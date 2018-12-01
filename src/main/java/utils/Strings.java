@@ -7,9 +7,9 @@ public class Strings {
     public static final String getAllCourses = "SELECT * FROM class";
 
     public static final String createCourse = "INSERT INTO class (\n" +
-            " class, semester, name, year)\n" +
+            " class, semester, name, year, is_active)\n" +
             "VALUES\n" +
-            " (\"%s\",\"%s\",\"%s\",\"%s\");";
+            " (\"%s\",\"%s\",\"%s\",\"%s\",\"%d\");";
 
     public static final String updateCourse = "UPDATE class SET " +
             "class=\"%s\", semester=\"%s\", name=\"%s\", year=\"%s\" " +
