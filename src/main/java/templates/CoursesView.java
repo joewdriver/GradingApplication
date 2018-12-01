@@ -17,18 +17,20 @@ import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class CoursesView extends View {
     private JButton newCourseButton;
-    private JButton sortNewest, sortOldest, reset, search;
+    private JButton sortNewest, sortOldest, reset, search, sortActive;
     private JTextField searchField;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
     private DBManager db = new DBManager();
-    private ActionListener alCourseView, alSort, alSearch;
+    private ActionListener alCourseView, alSort, alSearch, alActive;
     private String sortCondition, searchTerm;
+    private boolean active;
 
     public CoursesView() {
         setup(1200, 800, "Gradium All Classes");
         this.sortCondition = "";
         this.searchTerm = "";
+        active = true;
         createUIComponents();
         buildLayout();
     }
@@ -37,6 +39,7 @@ public class CoursesView extends View {
         setup(1200, 800, "Gradium All Classes");
         this.sortCondition = sortCondition;
         this.searchTerm = "";
+        active = true;
         createUIComponents();
         buildLayout();
     }
@@ -45,6 +48,16 @@ public class CoursesView extends View {
         setup(1200, 800, "Gradium All Classes");
         this.sortCondition = sortCondition;
         this.searchTerm = searchTerm;
+        this.active = true;
+        createUIComponents();
+        buildLayout();
+    }
+
+    public CoursesView(String sortCondition, String searchTerm, boolean active) {
+        setup(1200, 800, "Gradium All Classes");
+        this.sortCondition = sortCondition;
+        this.searchTerm = searchTerm;
+        this.active = active;
         createUIComponents();
         buildLayout();
     }
@@ -63,6 +76,12 @@ public class CoursesView extends View {
         };
         newCourseButton.addActionListener(al);
 
+        // button to only show active courses
+        if(active) {
+            sortActive = new JButton("Show all Courses");
+        } else if (!active) {
+            sortActive = new JButton("Show active Courses");
+        }
         // set up the sort buttons
         sortNewest = new JButton("newest");
         sortOldest = new JButton("oldest");
@@ -102,6 +121,12 @@ public class CoursesView extends View {
         alSearch = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 searchCourses();
+            }
+        };
+
+        alActive = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                activeCourses();
             }
         };
 
@@ -174,15 +199,18 @@ public class CoursesView extends View {
         listVertical.addComponent(sortPanel);
 
         for(Course course: courses) {
-            // if we are using a search term, verify the course qualifies before adding it in
-            if(course.getName().contains(searchTerm) || course.getSectionNumber().contains(searchTerm)) {
-                System.out.println("Checkpoint 2 " + searchTerm);
-                ContextButton btn = new ContextButton(
-                        course.getSectionNumber() + " " + course.getName() +
-                                " " + course.getSeason() + " " + course.getYear(), course);
-                btn.addActionListener(alCourseView);
-                listHorizontal.addComponent(btn);
-                listVertical.addComponent(btn);
+            // first check if the course is active or if we require active courses.
+            if(course.getActive() || !this.active) {
+                // if we are using a search term, verify the course qualifies before adding it in
+                if (course.getName().contains(searchTerm) || course.getSectionNumber().contains(searchTerm)) {
+                    // add the course object to a dynamically generated context button
+                    ContextButton btn = new ContextButton(
+                            course.getSectionNumber() + " " + course.getName() +
+                                    " " + course.getSeason() + " " + course.getYear(), course);
+                    btn.addActionListener(alCourseView);
+                    listHorizontal.addComponent(btn);
+                    listVertical.addComponent(btn);
+                }
             }
         }
 
@@ -215,8 +243,7 @@ public class CoursesView extends View {
     }
 
     private void searchCourses() {
-        System.out.println("Checkpoint 1");
-        CoursesView coursesView = new CoursesView("", searchField.getText());
+        CoursesView coursesView = new CoursesView(sortCondition, searchField.getText());
         coursesView.setVisible(true);
         dispose();
     }
@@ -224,6 +251,12 @@ public class CoursesView extends View {
     private void addCourse() {
         EditCourseView editCourse = new EditCourseView();
         editCourse.setVisible(true);
+        dispose();
+    }
+
+    private void activeCourses() {
+        CoursesView coursesView = new CoursesView(sortCondition, searchField.getText(), active);
+        coursesView.setVisible(true);
         dispose();
     }
 }

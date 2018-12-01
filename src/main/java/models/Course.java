@@ -17,6 +17,7 @@ public class Course implements Comparable<Course> {
     private String name;
     private String year;
     private String season;
+    private int active;
 
     private String semester;
     private DBManager db = new DBManager();
@@ -28,6 +29,7 @@ public class Course implements Comparable<Course> {
             this.name = rs.getString("name");
             this.year = rs.getString("year");
             this.season = rs.getString("semester");
+            this.active = 1;
 
         } catch(SQLException e) {
             e.printStackTrace();
@@ -67,6 +69,14 @@ public class Course implements Comparable<Course> {
 
     public String getSectionNumber() {
         return sectionNumber;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     public String getYear(){ return year; }
