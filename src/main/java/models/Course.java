@@ -29,7 +29,7 @@ public class Course implements Comparable<Course> {
             this.name = rs.getString("name");
             this.year = rs.getString("year");
             this.season = rs.getString("semester");
-            this.active = 1;
+            this.active = rs.getInt("active");
 
         } catch(SQLException e) {
             e.printStackTrace();
@@ -77,8 +77,12 @@ public class Course implements Comparable<Course> {
         return sectionNumber;
     }
 
-    public int getActive() {
-        return active;
+    public boolean  getActive() {
+        if (active==1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void setActive(int active) {
@@ -254,13 +258,12 @@ public class Course implements Comparable<Course> {
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
             System.out.println(query);
-            this.db.executeQuery(query);
-            //this.db.addCourse(this);
+            this.db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
-            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            this.db.executeQuery(query);
-//            this.db.addCourse(this);
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
+            this.db.executeUpdate(query);
         }
+        this.db.closeDB();
     }
 }

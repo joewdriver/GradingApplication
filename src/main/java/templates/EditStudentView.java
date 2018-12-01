@@ -116,6 +116,6 @@ public class EditStudentView extends View {
         this.student.save();
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
-        dispose();
+        end();
     }
 }

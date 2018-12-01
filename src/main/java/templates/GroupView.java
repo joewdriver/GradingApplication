@@ -168,13 +168,13 @@ public class GroupView extends View {
         //TODO: save function needs to read the scores, update the db, then reload the app
         GroupView courseView = new GroupView(this.group);
         courseView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToStudent(Student student) {
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToAssignment(Assignment assignment) {

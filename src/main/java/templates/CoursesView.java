@@ -21,7 +21,6 @@ public class CoursesView extends View {
     private JTextField searchField;
     private JLabel classPrompt;
     private ArrayList<Course> courses;
-    private DBManager db = new DBManager();
     private ActionListener alCourseView, alSort, alSearch, alActive, alAllStudents;
     private String sortCondition, searchTerm;
     private boolean active;
@@ -245,35 +244,36 @@ public class CoursesView extends View {
     private void goToCourse(Course course) {
         CourseView classes = new CourseView(course);
         classes.setVisible(true);
-        dispose();
+        end();
     }
 
     private void sortCourses(String sort) {
         CoursesView coursesView = new CoursesView(sort);
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void searchCourses() {
         CoursesView coursesView = new CoursesView(sortCondition, searchField.getText());
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void addCourse() {
         EditCourseView editCourse = new EditCourseView();
         editCourse.setVisible(true);
-        dispose();
+        end();
     }
 
     private void activeCourses() {
         CoursesView coursesView = new CoursesView(sortCondition, searchField.getText(), active);
         coursesView.setVisible(true);
+        end();
     }
 
     private void seeAllStudents() {
         AllStudentsView allStudentsView = new AllStudentsView();
         allStudentsView.setVisible(true);
-        dispose();
+        end();
     }
 }

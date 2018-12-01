@@ -93,6 +93,6 @@ public class EditAssignmentView extends View {
 
     // TODO: this needs to take us to the newly created assignment
     private void goToStudent() {
-        dispose();
+        end();
     }
 }
