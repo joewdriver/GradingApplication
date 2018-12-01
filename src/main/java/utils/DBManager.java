@@ -46,6 +46,7 @@ public class DBManager {
      * that it has already been build and skip.
      */
     public void buildDB() {
+
         System.out.println("Building the tables");
         final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_initial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL, `is_active` INT(1) NOT NULL )";
@@ -57,14 +58,14 @@ public class DBManager {
         final String auth = "CREATE TABLE `auth` (`username` VARCHAR(200) NOT NULL, `password` VARCHAR(200) NOT NULL)";
         try {
             Statement stmt = this.conn.createStatement();
-                stmt.execute(studentQuery);
-                stmt.execute(classQuery);
-                stmt.execute(class_assignments);
-                stmt.execute(course_assignments);
-                stmt.execute(assignments);
-                stmt.execute(group);
-                stmt.execute(weight);
-                stmt.execute(auth);
+            stmt.execute(studentQuery);
+            stmt.execute(classQuery);
+            stmt.execute(class_assignments);
+            stmt.execute(course_assignments);
+            stmt.execute(assignments);
+            stmt.execute(group);
+            stmt.execute(weight);
+            stmt.execute(auth);
 
         }catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -174,7 +175,7 @@ public class DBManager {
 
     public void deleteCourse(Course course){
         int id = course.getId();
-        String deleteQuery = "DELETE FROM `class` WHERE class_ID = ?";
+        String deleteQuery = "DELETE FROM `class` WHERE ID = ?";
         try {
             PreparedStatement pstmt = this.conn.prepareStatement(deleteQuery);
 

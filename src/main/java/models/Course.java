@@ -35,12 +35,18 @@ public class Course implements Comparable<Course> {
     }
 
 
+
+
     public Course(int id, String sectionNumber, String name, String year, String season) {
         this.id = id;
         this.sectionNumber = sectionNumber;
         this.name = name;
         this.year = year;
         this.season = season;
+    }
+
+    public void deleteClass(){
+        this.db.deleteCourse(this);
     }
 
     public int compareTo(Course course) {
@@ -71,7 +77,7 @@ public class Course implements Comparable<Course> {
 
     public String getYear(){ return year; }
 
-    public String getSemester(){ return semester;}
+    public String getSemester(){ return season;}
   
     public void setSectionNumber(String sectionNumber) {
         this.sectionNumber = sectionNumber;
@@ -237,11 +243,14 @@ public class Course implements Comparable<Course> {
         // first, if this is a new course we run an insert
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
-            this.db.executeUpdate(query);
+            System.out.println(query);
+            this.db.executeQuery(query);
+            //this.db.addCourse(this);
         // this will cover updates of existing objects
         } else {
             query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            this.db.executeUpdate(query);
+            this.db.executeQuery(query);
+//            this.db.addCourse(this);
         }
     }
 }
