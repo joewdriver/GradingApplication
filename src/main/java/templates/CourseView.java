@@ -381,7 +381,8 @@ public class CourseView extends View {
         fileChooser.showDialog(null,"Please Select the File");
         fileChooser.setVisible(true);
         File filename = fileChooser.getSelectedFile();
-        System.out.println("File name "+filename.getName());
+        if(filename != null)
+            System.out.println("File name "+filename.getName());
     }
 
     private void save() {
