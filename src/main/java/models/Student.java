@@ -22,12 +22,11 @@ public class Student {
     private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
-            this.buId = rs.getString("buId");
+            this.buId = rs.getString("BU_ID");
             this.firstName = rs.getString("first_name");
-            this.middleInitial = rs.getString("middle_intial");
+            this.middleInitial = rs.getString("middle_initial");
             this.familyName = rs.getString("family_name");
             this.graduateLevel = rs.getString("type");
-
             this.email = rs.getString("email");
         } catch (SQLException e) {
             e.printStackTrace();

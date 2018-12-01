@@ -34,18 +34,7 @@ public class AllStudentsView extends View {
     }
 
     private void createUIComponents() {
-        String studentQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student`";
-
-        try {
-            Statement stmt  = this.db.getConn().createStatement();
-            ResultSet rs    = stmt.executeQuery(studentQuery);
-            // loop through the result set
-            while (rs.next()) {
-                students.add(new Student(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+        ArrayList<Student> students = this.db.getAllStudents();
 
         // TODO: remove this and make it actually pull from the db
         students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));

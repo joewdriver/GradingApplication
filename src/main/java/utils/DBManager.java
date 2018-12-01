@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.SQLException;
+
+import models.Student;
 import utils.bcrypt;
 
 //import com.mysql.jdbc.Driver;
@@ -226,5 +228,21 @@ public class DBManager {
         }
 
         return courses;
+    }
+
+    public ArrayList<Student> getAllStudents(){
+        ArrayList<Student> students = new ArrayList<Student>();
+
+        ResultSet rs = executeQuery("SELECT * FROM `student`");
+        try {
+            while (rs.next()) {
+                students.add(new Student(rs));
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return students;
     }
 }
