@@ -24,5 +24,5 @@ public class Strings {
 
     public static final String updateStudent = "UPDATE student SET " +
             "first_name=\"%s\", middle_initial=\"%s\", family_name=\"%s\", type=\"%s\", email=\"%s\" " +
-            "WHERE BU_ID=\"%s\"";
+            "WHERE BU_ID = \"%s\"";
 }

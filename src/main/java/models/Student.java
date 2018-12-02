@@ -94,7 +94,7 @@ public class Student {
         this.email = email;
     }
 
-    public double getGrade(String classId) {
+    public double getGrade(int classId) {
         /*
         * @details: provide the average grade
         * */

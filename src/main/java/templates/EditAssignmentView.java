@@ -21,10 +21,13 @@ public class EditAssignmentView extends View {
     private JTextField description;
     private JButton submitButton;
     private Assignment assignment;
+    private Course course;
 
     // constructor for creating a new assignment
     public EditAssignmentView(Course course) {
-        this.assignment = new Assignment(course.getSectionNumber(),"Assignment Name","Assignment Type",100);
+        this.course = course;
+        this.assignment = new Assignment(course.getId(),"Assignment Name","Assignment Type",100);
+
         setup(1200, 800, "Add Assignment");
         createUIComponents();
         buildLayout() ;
@@ -42,14 +45,23 @@ public class EditAssignmentView extends View {
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                goToStudent();
+
+                String name = assignmentName.getText();
+                String desc = description.getText();
+                String type = assignmentType.getText();
+                System.out.println(name + desc + type);
+                createAssignment(name, type, desc);
             }
         };
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
         assignmentName = new JTextField(assignment.getName());
-        courseId = new JTextField(assignment.getCourse().getSectionNumber());
+        Course tempCourse = assignment.getCourse();
+        if(tempCourse == null)//the case where we are adding a assignment that is not tied to a class
+            courseId = new JTextField("Section Number");
+        else
+            courseId = new JTextField(assignment.getCourse().getSectionNumber());
         assignmentType = new JTextField(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200,10));
         totalPoints = new JTextField(assignment.getTotalPoints());
@@ -92,7 +104,15 @@ public class EditAssignmentView extends View {
     }
 
     // TODO: this needs to take us to the newly created assignment
-    private void goToStudent() {
+    private void createAssignment(String name, String type, String desc) {
+        System.out.println("in go to students");
+        Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
+
+        this.course.addAssignment(assignment);
+
+
+        CourseView editAssignmentView = new CourseView(this.course);
+        editAssignmentView.setVisible(true);
         dispose();
     }
 }

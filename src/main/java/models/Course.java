@@ -115,7 +115,7 @@ public class Course implements Comparable<Course> {
     }
 
     public void addAssignment(Assignment assignment){
-        String insertQuery = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type) VALUES(?,?,?,?,?,?)";
+        String insertQuery = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setInt(1, this.id);
@@ -124,6 +124,7 @@ public class Course implements Comparable<Course> {
             pstmt.setInt(4, assignment.getValue());
             pstmt.setInt(5, assignment.getExtraCredit());
             pstmt.setString(6, assignment.getType());
+            pstmt.setInt(7,assignment.getTotalPoints());
             pstmt.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -163,12 +164,12 @@ public class Course implements Comparable<Course> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
+//
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
 
 
         Collections.sort(assignments);
