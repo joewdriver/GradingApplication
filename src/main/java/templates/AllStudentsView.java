@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class AllStudentsView extends View {
-    private DBManager db = new DBManager();
     private ArrayList<Student> students = new ArrayList<Student>();
     private JButton viewAllCoursesButton;
     private ActionListener alViewAllCourses;
@@ -168,13 +167,13 @@ public class AllStudentsView extends View {
     private void goToStudent(Student student) {
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void viewAllCourses() {
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
 }

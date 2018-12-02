@@ -26,11 +26,11 @@ public class EditAssignmentView extends View {
     // constructor for creating a new assignment
     public EditAssignmentView(Course course) {
         this.course = course;
-        this.assignment = new Assignment(course.getId(),"Assignment Name","Assignment Type",100);
+        this.assignment = new Assignment(course.getId(), "Assignment Name", "Assignment Type", 100);
 
         setup(1200, 800, "Add Assignment");
         createUIComponents();
-        buildLayout() ;
+        buildLayout();
     }
 
     // constructor for editing an existing assignment
@@ -38,7 +38,7 @@ public class EditAssignmentView extends View {
         this.assignment = assignment;
         setup(1200, 800, "Edit Assignment");
         createUIComponents();
-        buildLayout() ;
+        buildLayout();
     }
 
     private void createUIComponents() {
@@ -58,12 +58,12 @@ public class EditAssignmentView extends View {
 
         assignmentName = new JTextField(assignment.getName());
         Course tempCourse = assignment.getCourse();
-        if(tempCourse == null)//the case where we are adding a assignment that is not tied to a class
+        if (tempCourse == null)//the case where we are adding a assignment that is not tied to a class
             courseId = new JTextField("Section Number");
         else
             courseId = new JTextField(assignment.getCourse().getSectionNumber());
         assignmentType = new JTextField(assignment.getType());
-        assignmentType.setMinimumSize(new Dimension(200,10));
+        assignmentType.setMinimumSize(new Dimension(200, 10));
         totalPoints = new JTextField(assignment.getTotalPoints());
         description = new JTextField(assignment.getDescription());
 
@@ -104,15 +104,26 @@ public class EditAssignmentView extends View {
     }
 
     // TODO: this needs to take us to the newly created assignment
+
     private void createAssignment(String name, String type, String desc) {
         System.out.println("in go to students");
-        Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
-
-        this.course.addAssignment(assignment);
+        if(this.course == null) {
+            //creating a new assignment
+            Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
+            this.course.addAssignment(assignment);
+        }
+        else {
+            //updating an existing assignment
+            Course tempCourse = new Course(this.assignment.getClassId());
+            tempCourse.deleteAssignment(this.assignment);
+            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, 100);
+            tempCourse.addAssignment(assignment);
+        }
 
 
         CourseView editAssignmentView = new CourseView(this.course);
         editAssignmentView.setVisible(true);
         dispose();
+        end();
     }
 }

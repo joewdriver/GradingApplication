@@ -200,6 +200,6 @@ public class AssignmentView extends View {
     private void editAssignment() {
         EditAssignmentView editAssignmentView = new EditAssignmentView(this.assignment);
         editAssignmentView.setVisible(true);
-        dispose();
+        end();
     }
 }

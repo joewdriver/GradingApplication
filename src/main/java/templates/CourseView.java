@@ -21,7 +21,7 @@ public class CourseView extends View {
     private ContextButton addStudentButton;
     private ContextButton importStudentsButton;
     private ContextButton editClassSettings;
-    private JButton saveButton;
+    private JButton closeButton;
     private JButton deleteButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
@@ -31,7 +31,7 @@ public class CourseView extends View {
     private Course course;
     private ActionListener alStudentView;
     private ActionListener alAssignmentView;
-    private ActionListener alSave;
+    private ActionListener alClose;
     private ActionListener alDelete;
     private ActionListener alSettings;
     private ActionListener alAddStudent;
@@ -53,14 +53,17 @@ public class CourseView extends View {
         assignments = course.getAssignments();
         students = course.getStudents();
 
-        classNameHeader = new JLabel("Editing grades for " + course.getName());
+        if (this.course.getActive()) {
+            classNameHeader = new JLabel("Viewing grades for " + course.getName());
+        } else {
+            classNameHeader = new JLabel("Viewing grades for " + course.getName() + " -- COURSE CLOSED");
+        }
 
-        saveButton = new JButton("Save");
-        alSave = new ActionListener() {
+        closeButton = new JButton("Close Course");
+        alClose = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                //
-                save();
+                System.out.println("checkpoint 1");
+                closeCourse();
             }
         };
 
@@ -144,6 +147,7 @@ public class CourseView extends View {
         viewAllCoursesButton.addActionListener(alViewAllCourses);
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
+        closeButton.addActionListener(alClose);
     }
 
     /**
@@ -344,7 +348,7 @@ public class CourseView extends View {
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton)
+                .addComponent(closeButton)
                 .addComponent(deleteButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
@@ -352,7 +356,7 @@ public class CourseView extends View {
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton)
+                .addComponent(closeButton)
                 .addComponent(deleteButton));
 
 
@@ -370,7 +374,7 @@ public class CourseView extends View {
     private void addStudent(Course course) {
         EditStudentView editStudentView = new EditStudentView();
         editStudentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void importStudents(Course course) {
@@ -385,11 +389,13 @@ public class CourseView extends View {
             System.out.println("File name "+filename.getName());
     }
 
-    private void save() {
-        //TODO: save function needs to read the scores, update the db, then reload the app
-        CourseView courseView = new CourseView(this.course);
-        courseView.setVisible(true);
-        dispose();
+    private void closeCourse() {
+        System.out.println("checkpoint 2");
+        this.course.setActive(0);
+        this.course.save();
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
+        end();
     }
 
     private void delete(){
@@ -397,30 +403,36 @@ public class CourseView extends View {
 
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToStudent(Student student) {
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToAssignment(Assignment assignment) {
         AssignmentView assignmentView = new AssignmentView(assignment);
         assignmentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void viewAllCourses() {
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void addAssignment(Course course) {
         EditAssignmentView editAssignmentView = new EditAssignmentView(course);
         editAssignmentView.setVisible(true);
-        dispose();
+        end();
     }
+
+//    private void editAssignment() {
+//        EditAssignmentView editAssignmentView = new EditAssignmentView();
+//        editAssignmentView.setVisible(true);
+//        end();
+//    }
 }

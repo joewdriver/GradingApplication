@@ -17,6 +17,7 @@ public class Course implements Comparable<Course> {
     private String name;
     private String year;
     private String season;
+    private int active;
 
     private String semester;
     private DBManager db = new DBManager();
@@ -28,14 +29,12 @@ public class Course implements Comparable<Course> {
             this.name = rs.getString("name");
             this.year = rs.getString("year");
             this.season = rs.getString("semester");
+            this.active = rs.getInt("active");
 
         } catch(SQLException e) {
             e.printStackTrace();
         }
     }
-
-
-
 
     public Course(int id, String sectionNumber, String name, String year, String season) {
         this.id = id;
@@ -43,6 +42,10 @@ public class Course implements Comparable<Course> {
         this.name = name;
         this.year = year;
         this.season = season;
+    }
+
+    public Course(int id){
+        this.id = id;
     }
 
     public void deleteClass(){
@@ -75,6 +78,14 @@ public class Course implements Comparable<Course> {
         return sectionNumber;
     }
 
+    public boolean  getActive() {
+        return active == 1;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
     public String getYear(){ return year; }
 
     public String getSemester(){ return season;}
@@ -96,7 +107,7 @@ public class Course implements Comparable<Course> {
     public Group getGroup(Student student) {
         ArrayList<Assignment> groups = new ArrayList<Assignment>();
         String id = student.getBuId();
-        String selectQuery = "SELECT *  FROM `groups` WHERE  BU_ID = '" + id + "'";
+        String selectQuery = "SELECT * FROM `groups` WHERE  BU_ID = '" + id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -152,7 +163,7 @@ public class Course implements Comparable<Course> {
     public ArrayList<Assignment> getAssignments() {
         //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -245,13 +256,12 @@ public class Course implements Comparable<Course> {
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
             System.out.println(query);
-            this.db.executeQuery(query);
-            //this.db.addCourse(this);
+            this.db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
-            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            this.db.executeQuery(query);
-//            this.db.addCourse(this);
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
+            this.db.executeUpdate(query);
         }
+        this.db.closeDB();
     }
 }

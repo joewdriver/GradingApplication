@@ -148,24 +148,24 @@ public class StudentView extends View {
     private void goToCourse(Course course) {
         CourseView classes = new CourseView(course);
         classes.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToGroup(Group group) {
         GroupView groupView = new GroupView(group);
         groupView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToEditStudent(Student student) {
         EditStudentView editView = new EditStudentView(student);
         editView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void seeAllStudents() {
         AllStudentsView allStudentsView = new AllStudentsView();
         allStudentsView.setVisible(true);
-        dispose();
+        end();
     }
 }
