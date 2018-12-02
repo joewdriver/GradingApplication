@@ -7,12 +7,13 @@ public class Strings {
     public static final String getAllCourses = "SELECT * FROM class";
 
     public static final String createCourse = "INSERT INTO class (\n" +
-            " class, semester, name, year, is_active)\n" +
+            " class, semester, name, year, active)\n" +
             "VALUES\n" +
-            " (\"%s\",\"%s\",\"%s\",\"%s\",\"%d\");";
+            " (\"%s\",\"%s\",\"%s\",\"%s\",%d);";
+
 
     public static final String updateCourse = "UPDATE class SET " +
-            "class=\"%s\", semester=\"%s\", name=\"%s\", year=\"%s\" " +
+            "class=\"%s\", semester=\"%s\", name=\"%s\", year=\"%s\", active=%d " +
             "WHERE ID=\"%s\";";
 
     public static final String getStudentFromId = "SELECT * FROM student where BU_ID=\"%s\"";

@@ -124,6 +124,6 @@ public class EditCourseView extends View {
 
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 }

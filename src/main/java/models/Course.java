@@ -17,6 +17,7 @@ public class Course implements Comparable<Course> {
     private String name;
     private String year;
     private String season;
+    private int active;
 
     private String semester;
     private DBManager db = new DBManager();
@@ -28,6 +29,7 @@ public class Course implements Comparable<Course> {
             this.name = rs.getString("name");
             this.year = rs.getString("year");
             this.season = rs.getString("semester");
+            this.active = rs.getInt("active");
 
         } catch(SQLException e) {
             e.printStackTrace();
@@ -73,6 +75,18 @@ public class Course implements Comparable<Course> {
 
     public String getSectionNumber() {
         return sectionNumber;
+    }
+
+    public boolean  getActive() {
+        if (active==1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setActive(int active) {
+        this.active = active;
     }
 
     public String getYear(){ return year; }
@@ -244,13 +258,12 @@ public class Course implements Comparable<Course> {
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
             System.out.println(query);
-            this.db.executeQuery(query);
-            //this.db.addCourse(this);
+            this.db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
-            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.id);
-            this.db.executeQuery(query);
-//            this.db.addCourse(this);
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
+            this.db.executeUpdate(query);
         }
+        this.db.closeDB();
     }
 }
