@@ -20,12 +20,12 @@ import static javax.swing.GroupLayout.Alignment.CENTER;
 public class CourseView extends View {
     private ContextButton addStudentButton;
     private ContextButton importStudentsButton;
-    private ContextButton editClassSettings;
+    private ContextButton cloneCourse;
     private JButton closeButton;
     private JButton deleteButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
-    private JLabel classNameHeader;
+    private JLabel classNameHeader, meanScore, medianScore, highScore, lowScore;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
     private Course course;
@@ -33,7 +33,7 @@ public class CourseView extends View {
     private ActionListener alAssignmentView;
     private ActionListener alClose;
     private ActionListener alDelete;
-    private ActionListener alSettings;
+    private ActionListener alClone;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
     private ActionListener alViewAllCourses;
@@ -101,10 +101,10 @@ public class CourseView extends View {
             }
         };
 
-        alSettings = new ActionListener() {
+        alClone = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ContextButton btn = (ContextButton) e.getSource();
-                goToSettings((Course)btn.getContext());
+                cloneCourse();
             }
         };
 
@@ -136,18 +136,23 @@ public class CourseView extends View {
 
 
         addStudentButton = new ContextButton("Add A Student", this.course);
-        editClassSettings = new ContextButton("Class Settings", this.course);
+        cloneCourse = new ContextButton("Clone Course", this.course);
         importStudentsButton = new ContextButton("Import Student List", this.course);
         viewAllCoursesButton = new JButton("View all Courses");
         addAssignment = new JButton("Add Assignment");
 
         addStudentButton.addActionListener(alAddStudent);
-        editClassSettings.addActionListener(alSettings);
+        cloneCourse.addActionListener(alClone);
         importStudentsButton.addActionListener(alImportStudents);
         viewAllCoursesButton.addActionListener(alViewAllCourses);
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
         closeButton.addActionListener(alClose);
+        
+        meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
+        medianScore = new JLabel("Average Score: " + course.getMedianScore());
+        highScore = new JLabel("High Score: " + course.getHighScore());
+        lowScore = new JLabel("Low Score: " + course.getLowScore());
     }
 
     /**
@@ -170,10 +175,13 @@ public class CourseView extends View {
         // this is the overall parent
         Container pane = getContentPane();
 
+        // our vertically stored children
         JPanel framePanel = new JPanel();
         JPanel headerPanel =  new JPanel();
         JPanel footerPanel =  new JPanel();
         JPanel spacePanel =  new JPanel();
+        JPanel statsPanel = new JPanel();
+
         //JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size() + 3,assignments.size() + 1));
         JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size()+4,assignments.size()+3));
         JPanel graduatePanel = new JPanel(new GridLayout(graduates.size() + 4,assignments.size() + 3));
@@ -185,6 +193,7 @@ public class CourseView extends View {
         // core layout grouping to order our member panels high to low
         coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -193,6 +202,7 @@ public class CourseView extends View {
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -211,6 +221,22 @@ public class CourseView extends View {
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(classNameHeader)
                 .addComponent(viewAllCoursesButton));
+
+        GroupLayout statLayout = new GroupLayout(statsPanel);
+
+        statLayout.setHorizontalGroup(statLayout.createSequentialGroup()
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
+
+        statLayout.setVerticalGroup(statLayout.createParallelGroup(CENTER)
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
 
 
         // Undergrad set-up
@@ -238,7 +264,7 @@ public class CourseView extends View {
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 //TODO dynamically pull the weights
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel("100"));
                 tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
@@ -257,7 +283,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         undergraduatePanel.add(new JLabel("  Total Grade"));
 
@@ -274,10 +300,9 @@ public class CourseView extends View {
             //TODO: add the average calculation here based on db call
             //undergraduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
-                // TODO: resolve this based on db call of student assignment join
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel("100"));
         }
 
         // adding in the graduate stuff
@@ -301,7 +326,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Integer.toString(assignments.get(i).getTotalPoints())));
                 tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
@@ -320,7 +345,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            graduatePanel.add(new TextField("100"));
+            graduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         graduatePanel.add(new JLabel("  Total Grade"));
 
@@ -331,20 +356,19 @@ public class CourseView extends View {
             ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
-            //TODO: add the average calculation here based on db call
-            //graduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            graduatePanel.add(new TextField("100"));
+            // TODO resolve average grade
+            graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
 
         // footer layout for various functional buttons
         GroupLayout footerLayout = new GroupLayout(footerPanel);
 
         footerLayout.setVerticalGroup(footerLayout.createParallelGroup(CENTER)
-                .addComponent(editClassSettings)
+                .addComponent(cloneCourse)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
@@ -352,7 +376,7 @@ public class CourseView extends View {
                 .addComponent(deleteButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
-                .addComponent(editClassSettings)
+                .addComponent(cloneCourse)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
@@ -366,9 +390,10 @@ public class CourseView extends View {
         pane.add(framePanel);
     }
 
-    private void goToSettings(Course course) {
-        //TODO: install view transition here
-        System.exit(0);
+    private void cloneCourse() {
+        Course newCourse = this.course.cloneCourse();
+        CourseView courseView = new CourseView(newCourse);
+        dispose();
     }
 
     private void addStudent(Course course) {
