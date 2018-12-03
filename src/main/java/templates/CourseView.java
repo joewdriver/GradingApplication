@@ -21,17 +21,17 @@ public class CourseView extends View {
     private ContextButton addStudentButton;
     private ContextButton importStudentsButton;
     private ContextButton cloneCourse;
-    private JButton saveButton;
+    private JButton closeButton;
     private JButton deleteButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
-    private JLabel classNameHeader;
+    private JLabel classNameHeader, meanScore, medianScore, highScore, lowScore;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
     private Course course;
     private ActionListener alStudentView;
     private ActionListener alAssignmentView;
-    private ActionListener alSave;
+    private ActionListener alClose;
     private ActionListener alDelete;
     private ActionListener alClone;
     private ActionListener alAddStudent;
@@ -53,14 +53,17 @@ public class CourseView extends View {
         assignments = course.getAssignments();
         students = course.getStudents();
 
-        classNameHeader = new JLabel("Editing grades for " + course.getName());
+        if (this.course.getActive()) {
+            classNameHeader = new JLabel("Viewing grades for " + course.getName());
+        } else {
+            classNameHeader = new JLabel("Viewing grades for " + course.getName() + " -- COURSE CLOSED");
+        }
 
-        saveButton = new JButton("Save");
-        alSave = new ActionListener() {
+        closeButton = new JButton("Close Course");
+        alClose = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                //
-                save();
+                System.out.println("checkpoint 1");
+                closeCourse();
             }
         };
 
@@ -144,6 +147,12 @@ public class CourseView extends View {
         viewAllCoursesButton.addActionListener(alViewAllCourses);
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
+        closeButton.addActionListener(alClose);
+        
+        meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
+        medianScore = new JLabel("Average Score: " + course.getMedianScore());
+        highScore = new JLabel("High Score: " + course.getHighScore());
+        lowScore = new JLabel("Low Score: " + course.getLowScore());
     }
 
     /**
@@ -166,10 +175,13 @@ public class CourseView extends View {
         // this is the overall parent
         Container pane = getContentPane();
 
+        // our vertically stored children
         JPanel framePanel = new JPanel();
         JPanel headerPanel =  new JPanel();
         JPanel footerPanel =  new JPanel();
         JPanel spacePanel =  new JPanel();
+        JPanel statsPanel = new JPanel();
+
         //JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size() + 3,assignments.size() + 1));
         JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size()+4,assignments.size()+3));
         JPanel graduatePanel = new JPanel(new GridLayout(graduates.size() + 4,assignments.size() + 3));
@@ -181,6 +193,7 @@ public class CourseView extends View {
         // core layout grouping to order our member panels high to low
         coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -189,6 +202,7 @@ public class CourseView extends View {
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -207,6 +221,22 @@ public class CourseView extends View {
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(classNameHeader)
                 .addComponent(viewAllCoursesButton));
+
+        GroupLayout statLayout = new GroupLayout(statsPanel);
+
+        statLayout.setHorizontalGroup(statLayout.createSequentialGroup()
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
+
+        statLayout.setVerticalGroup(statLayout.createParallelGroup(CENTER)
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
 
 
         // Undergrad set-up
@@ -234,7 +264,7 @@ public class CourseView extends View {
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 //TODO dynamically pull the weights
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel("100"));
                 tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
@@ -253,7 +283,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         undergraduatePanel.add(new JLabel("  Total Grade"));
 
@@ -270,10 +300,9 @@ public class CourseView extends View {
             //TODO: add the average calculation here based on db call
             //undergraduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
-                // TODO: resolve this based on db call of student assignment join
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel("100"));
         }
 
         // adding in the graduate stuff
@@ -297,7 +326,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Integer.toString(assignments.get(i).getTotalPoints())));
                 tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
@@ -316,7 +345,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            graduatePanel.add(new TextField("100"));
+            graduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         graduatePanel.add(new JLabel("  Total Grade"));
 
@@ -327,13 +356,12 @@ public class CourseView extends View {
             ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
-            //TODO: add the average calculation here based on db call
-            //graduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            graduatePanel.add(new TextField("100"));
+            // TODO resolve average grade
+            graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
 
         // footer layout for various functional buttons
@@ -344,7 +372,7 @@ public class CourseView extends View {
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton)
+                .addComponent(closeButton)
                 .addComponent(deleteButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
@@ -352,7 +380,7 @@ public class CourseView extends View {
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
-                .addComponent(saveButton)
+                .addComponent(closeButton)
                 .addComponent(deleteButton));
 
 
@@ -371,7 +399,7 @@ public class CourseView extends View {
     private void addStudent(Course course) {
         EditStudentView editStudentView = new EditStudentView();
         editStudentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void importStudents(Course course) {
@@ -386,11 +414,13 @@ public class CourseView extends View {
             System.out.println("File name "+filename.getName());
     }
 
-    private void save() {
-        //TODO: save function needs to read the scores, update the db, then reload the app
-        CourseView courseView = new CourseView(this.course);
-        courseView.setVisible(true);
-        dispose();
+    private void closeCourse() {
+        System.out.println("checkpoint 2");
+        this.course.setActive(0);
+        this.course.save();
+        CoursesView coursesView = new CoursesView();
+        coursesView.setVisible(true);
+        end();
     }
 
     private void delete(){
@@ -398,30 +428,30 @@ public class CourseView extends View {
 
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToStudent(Student student) {
         StudentView studentView = new StudentView(student);
         studentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void goToAssignment(Assignment assignment) {
         AssignmentView assignmentView = new AssignmentView(assignment);
         assignmentView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void viewAllCourses() {
         CoursesView coursesView = new CoursesView();
         coursesView.setVisible(true);
-        dispose();
+        end();
     }
 
     private void addAssignment(Course course) {
         EditAssignmentView editAssignmentView = new EditAssignmentView(course);
         editAssignmentView.setVisible(true);
-        dispose();
+        end();
     }
 }

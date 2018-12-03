@@ -16,7 +16,6 @@ public class LoginView extends View {
     private JLabel authPrompt = new JLabel("");
     private JTextField username;
     private JPasswordField password;
-    private DBManager db = new DBManager();
 
     public LoginView() {
         setup(700,400, "Gradium Login");
@@ -32,13 +31,13 @@ public class LoginView extends View {
                     db.register(username.getText(), String.valueOf(password.getPassword()));
                     CoursesView classes = new CoursesView();
                     classes.setVisible(true);
-                    dispose();
+                    end();
                 }
                 else {
                     if(db.checkAuth(username.getText(), String.valueOf(password.getPassword())) == true){
                         CoursesView classes = new CoursesView();
                         classes.setVisible(true);
-                        dispose();
+                        end();
                     }else{
                       System.out.println("login failed");
                         authPrompt = new JLabel("Authentication failed");

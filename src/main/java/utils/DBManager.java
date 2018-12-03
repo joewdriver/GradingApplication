@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.File;
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,11 +32,13 @@ public class DBManager {
             Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
             conn = DriverManager.getConnection(dbPath);
+            System.out.println("connection retrieved");
 //            Course ex = new Course("2", "example", "2012", "Fall");
             //this.addCourse(ex);
 
         }catch(Exception e){
             e.printStackTrace();
+            closeDB();
         }
     }
 
@@ -49,6 +52,7 @@ public class DBManager {
      */
     public void buildDB() {
 
+        File db = new File("gradium.db");
         System.out.println("Building the tables");
         final String studentQuery = "CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_initial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
         final String classQuery = "CREATE TABLE `class` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , `class` VARCHAR(400) NOT NULL , `semester` VARCHAR(400) NOT NULL , `name` VARCHAR(400) NOT NULL , `year` VARCHAR(400) NOT NULL, `active` INTEGER NOT NULL )";
@@ -70,7 +74,8 @@ public class DBManager {
             stmt.execute(auth);
 
         }catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            closeDB();
         }
     }
     public void dropAllTables() {
@@ -94,7 +99,8 @@ public class DBManager {
             stmt.execute(weight);
 
         }catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            closeDB();
         }
         System.out.println("All tables dropped");
     }
@@ -108,7 +114,8 @@ public class DBManager {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            closeDB();
         }
         return false;
     }
@@ -124,6 +131,7 @@ public class DBManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            closeDB();
         }
     }
 
@@ -141,7 +149,8 @@ public class DBManager {
                     return true;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            closeDB();
         }
 
         return false;
@@ -152,6 +161,8 @@ public class DBManager {
     public void closeDB() {
         try {
             conn.close();
+            System.out.println("connection closed");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -172,6 +183,7 @@ public class DBManager {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            closeDB();
         }
     }
 
@@ -187,7 +199,8 @@ public class DBManager {
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            closeDB();
         }
 
     }
@@ -200,6 +213,7 @@ public class DBManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            closeDB();
         }
     }
 
@@ -210,6 +224,7 @@ public class DBManager {
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
+            closeDB();
         }
         return rs;
     }
@@ -223,8 +238,8 @@ public class DBManager {
                 courses.add(new Course(rs));
             }
         } catch (SQLException e) {
-
             e.printStackTrace();
+            closeDB();
         }
 
         return courses;
@@ -239,8 +254,8 @@ public class DBManager {
                 students.add(new Student(rs));
             }
         } catch (SQLException e) {
-
             e.printStackTrace();
+            closeDB();
         }
 
         return students;
