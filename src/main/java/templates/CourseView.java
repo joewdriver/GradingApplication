@@ -20,7 +20,7 @@ import static javax.swing.GroupLayout.Alignment.CENTER;
 public class CourseView extends View {
     private ContextButton addStudentButton;
     private ContextButton importStudentsButton;
-    private ContextButton editClassSettings;
+    private ContextButton cloneCourse;
     private JButton saveButton;
     private JButton deleteButton;
     private JButton viewAllCoursesButton;
@@ -33,7 +33,7 @@ public class CourseView extends View {
     private ActionListener alAssignmentView;
     private ActionListener alSave;
     private ActionListener alDelete;
-    private ActionListener alSettings;
+    private ActionListener alClone;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
     private ActionListener alViewAllCourses;
@@ -98,10 +98,10 @@ public class CourseView extends View {
             }
         };
 
-        alSettings = new ActionListener() {
+        alClone = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ContextButton btn = (ContextButton) e.getSource();
-                goToSettings((Course)btn.getContext());
+                cloneCourse();
             }
         };
 
@@ -133,13 +133,13 @@ public class CourseView extends View {
 
 
         addStudentButton = new ContextButton("Add A Student", this.course);
-        editClassSettings = new ContextButton("Class Settings", this.course);
+        cloneCourse = new ContextButton("Clone Course", this.course);
         importStudentsButton = new ContextButton("Import Student List", this.course);
         viewAllCoursesButton = new JButton("View all Courses");
         addAssignment = new JButton("Add Assignment");
 
         addStudentButton.addActionListener(alAddStudent);
-        editClassSettings.addActionListener(alSettings);
+        cloneCourse.addActionListener(alClone);
         importStudentsButton.addActionListener(alImportStudents);
         viewAllCoursesButton.addActionListener(alViewAllCourses);
         addAssignment.addActionListener(alAddAssignment);
@@ -340,7 +340,7 @@ public class CourseView extends View {
         GroupLayout footerLayout = new GroupLayout(footerPanel);
 
         footerLayout.setVerticalGroup(footerLayout.createParallelGroup(CENTER)
-                .addComponent(editClassSettings)
+                .addComponent(cloneCourse)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
@@ -348,7 +348,7 @@ public class CourseView extends View {
                 .addComponent(deleteButton));
 
         footerLayout.setHorizontalGroup(footerLayout.createSequentialGroup()
-                .addComponent(editClassSettings)
+                .addComponent(cloneCourse)
                 .addComponent(addStudentButton)
                 .addComponent(importStudentsButton)
                 .addComponent(addAssignment)
@@ -362,9 +362,10 @@ public class CourseView extends View {
         pane.add(framePanel);
     }
 
-    private void goToSettings(Course course) {
-        //TODO: install view transition here
-        System.exit(0);
+    private void cloneCourse() {
+        Course newCourse = this.course.cloneCourse();
+        CourseView courseView = new CourseView(newCourse);
+        dispose();
     }
 
     private void addStudent(Course course) {

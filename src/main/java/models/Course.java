@@ -36,15 +36,17 @@ public class Course implements Comparable<Course> {
         }
     }
 
-
-
-
     public Course(int id, String sectionNumber, String name, String year, String season) {
         this.id = id;
         this.sectionNumber = sectionNumber;
         this.name = name;
         this.year = year;
         this.season = season;
+    }
+
+    public Course cloneCourse() {
+        //TODO resolve db work for clone a course.  Should include assignments, but not students.
+        return this;
     }
 
     public void deleteClass(){
