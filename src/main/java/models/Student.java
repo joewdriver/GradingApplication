@@ -13,12 +13,12 @@ import utils.DBManager;
 
 public class Student {
     private String buId;
-
     private String firstName;
     private String middleInitial;
     private String familyName;
     private String graduateLevel;
     private String email;
+    private String type;
     private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
@@ -28,6 +28,7 @@ public class Student {
             this.familyName = rs.getString("family_name");
             this.graduateLevel = rs.getString("type");
             this.email = rs.getString("email");
+            this.type = rs.getString("type");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -38,7 +39,6 @@ public class Student {
         this.firstName = first_name;
         this.middleInitial = middle_name;
         this.familyName = family_name;
-
         this.graduateLevel = graduateLevel;
         this.email = email;
     }
@@ -55,6 +55,8 @@ public class Student {
     public String getMiddleInitial() {
         return middleInitial;
     }
+
+    public String getType(){return type;}
 
     public String getFullName() {
         return firstName + " " + middleInitial + " " + familyName;
@@ -139,8 +141,6 @@ public class Student {
         }
         return rsum;
     }
-
-
 
     //TODO: turn this into an actual query instead of mocked data
     public ArrayList<Course> getClasses() {

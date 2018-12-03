@@ -188,14 +188,10 @@ public class Course implements Comparable<Course> {
     }
 
     public ArrayList<Student> getStudents() {
-        //CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))"
-        //"CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
-        //TODO: db call to retrieve and build a student list
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student` AS A" +
-                "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID" +
-                " WHERE B.Class_ID = '" + this.id + "'";
-
+        String selectQuery = "SELECT A.first_name, A.middle_intial, A.family_name, A.type, A.email FROM student AS A" +
+                "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID " +
+                " WHERE B.class_ID = '" + this.id + "'";
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
@@ -240,6 +236,20 @@ public class Course implements Comparable<Course> {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
             pstmt.setInt(2, this.id);
+            pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email)  VALUES(?,?,?,?,?,?)";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            pstmt.setString(1, student.getBuId());
+            pstmt.setString(2, student.getFamilyName());
+            pstmt.setString(3, student.getMiddleInitial());
+            pstmt.setString(4, student.getFamilyName());
+            pstmt.setString(5, student.getGraduateLevel());
+            pstmt.setString(6, student.getEmail());
             pstmt.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();

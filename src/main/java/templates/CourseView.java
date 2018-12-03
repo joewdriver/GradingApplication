@@ -372,7 +372,7 @@ public class CourseView extends View {
     }
 
     private void addStudent(Course course) {
-        EditStudentView editStudentView = new EditStudentView();
+        EditStudentView editStudentView = new EditStudentView(course);
         editStudentView.setVisible(true);
         end();
     }
@@ -413,8 +413,10 @@ public class CourseView extends View {
     }
 
     private void goToAssignment(Assignment assignment) {
-        AssignmentView assignmentView = new AssignmentView(assignment);
-        assignmentView.setVisible(true);
+//        AssignmentView assignmentView = new AssignmentView(assignment);
+//        assignmentView.setVisible(true);
+        EditAssignmentView editAssignmentView = new EditAssignmentView(assignment);
+        editAssignmentView.setVisible(true);
         end();
     }
 

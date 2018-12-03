@@ -33,13 +33,7 @@ public class AllStudentsView extends View {
     }
 
     private void createUIComponents() {
-        ArrayList<Student> students = this.db.getAllStudents();
-
-        // TODO: remove this and make it actually pull from the db
-        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
-
+        this.students = this.db.getAllStudents();
         alViewAllCourses = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 viewAllCourses();
@@ -61,6 +55,7 @@ public class AllStudentsView extends View {
     }
 
     private void buildLayout() {
+
         // this is the overall parent
         Container pane = getContentPane();
 

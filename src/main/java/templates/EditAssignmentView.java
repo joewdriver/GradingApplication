@@ -107,19 +107,18 @@ public class EditAssignmentView extends View {
 
     private void createAssignment(String name, String type, String desc) {
         System.out.println("in go to students");
+        System.out.println(this.course);
         if(this.course == null) {
             //creating a new assignment
             Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
             this.course.addAssignment(assignment);
-        }
-        else {
+        } else {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
             Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, 100);
             tempCourse.addAssignment(assignment);
         }
-
 
         CourseView editAssignmentView = new CourseView(this.course);
         editAssignmentView.setVisible(true);
