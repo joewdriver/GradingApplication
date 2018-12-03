@@ -25,7 +25,7 @@ public class CourseView extends View {
     private JButton deleteButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
-    private JLabel classNameHeader;
+    private JLabel classNameHeader, meanScore, medianScore, highScore, lowScore;
     private ArrayList<Assignment> assignments;
     private ArrayList<Student> students = new ArrayList<Student>();
     private Course course;
@@ -148,6 +148,12 @@ public class CourseView extends View {
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
         closeButton.addActionListener(alClose);
+
+        // TODO: replace with DB calls
+        meanScore = new JLabel("mean Score");
+        medianScore = new JLabel("average Score");
+        highScore = new JLabel("high score");
+        lowScore = new JLabel("low score");
     }
 
     /**
@@ -170,10 +176,13 @@ public class CourseView extends View {
         // this is the overall parent
         Container pane = getContentPane();
 
+        // our vertically stored children
         JPanel framePanel = new JPanel();
         JPanel headerPanel =  new JPanel();
         JPanel footerPanel =  new JPanel();
         JPanel spacePanel =  new JPanel();
+        JPanel statsPanel = new JPanel();
+
         //JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size() + 3,assignments.size() + 1));
         JPanel undergraduatePanel = new JPanel(new GridLayout(undergraduates.size()+4,assignments.size()+3));
         JPanel graduatePanel = new JPanel(new GridLayout(graduates.size() + 4,assignments.size() + 3));
@@ -185,6 +194,7 @@ public class CourseView extends View {
         // core layout grouping to order our member panels high to low
         coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -193,6 +203,7 @@ public class CourseView extends View {
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(headerPanel)
+                .addComponent(statsPanel)
                 .addComponent(undergraduatePanel)
                 .addComponent(spacePanel)
                 .addComponent(graduatePanel)
@@ -211,6 +222,22 @@ public class CourseView extends View {
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(classNameHeader)
                 .addComponent(viewAllCoursesButton));
+
+        GroupLayout statLayout = new GroupLayout(statsPanel);
+
+        statLayout.setHorizontalGroup(statLayout.createSequentialGroup()
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
+
+        statLayout.setVerticalGroup(statLayout.createParallelGroup(CENTER)
+                .addComponent(meanScore)
+                .addComponent(medianScore)
+                .addComponent(highScore)
+                .addComponent(lowScore)
+        );
 
 
         // Undergrad set-up
@@ -238,7 +265,7 @@ public class CourseView extends View {
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 //TODO dynamically pull the weights
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel("100"));
                 tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
@@ -257,7 +284,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         undergraduatePanel.add(new JLabel("  Total Grade"));
 
@@ -274,10 +301,9 @@ public class CourseView extends View {
             //TODO: add the average calculation here based on db call
             //undergraduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
-                // TODO: resolve this based on db call of student assignment join
-                undergraduatePanel.add(new TextField("100"));
+                undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            undergraduatePanel.add(new TextField("100"));
+            undergraduatePanel.add(new JLabel("100"));
         }
 
         // adding in the graduate stuff
@@ -301,7 +327,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Integer.toString(assignments.get(i).getTotalPoints())));
                 tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
@@ -320,7 +346,7 @@ public class CourseView extends View {
 
         // next the assignment list in the top row
         for(Assignment assignment:assignments) {
-            graduatePanel.add(new TextField("100"));
+            graduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
         }
         graduatePanel.add(new JLabel("  Total Grade"));
 
@@ -331,13 +357,12 @@ public class CourseView extends View {
             ContextButton btn = new ContextButton(student.getFullName(), student);
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
-            //TODO: add the average calculation here based on db call
-            //graduatePanel.add(new TextField("100"));
             for(Assignment assignment:assignments) {
                 // TODO: resolve this based on db call of student assignment join
-                graduatePanel.add(new TextField("100"));
+                graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
-            graduatePanel.add(new TextField("100"));
+            // TODO resolve average grade
+            graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
 
         // footer layout for various functional buttons
