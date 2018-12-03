@@ -74,7 +74,7 @@ public class DBManager {
             stmt.execute(auth);
 
         }catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             closeDB();
         }
     }
@@ -99,7 +99,7 @@ public class DBManager {
             stmt.execute(weight);
 
         }catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             closeDB();
         }
         System.out.println("All tables dropped");
@@ -114,7 +114,7 @@ public class DBManager {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             closeDB();
         }
         return false;
@@ -149,7 +149,7 @@ public class DBManager {
                     return true;
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             closeDB();
         }
 
@@ -199,7 +199,7 @@ public class DBManager {
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             closeDB();
         }
 

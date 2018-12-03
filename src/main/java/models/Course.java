@@ -44,8 +44,12 @@ public class Course implements Comparable<Course> {
         this.season = season;
     }
 
-    public Course(int id){
+    public Course(int id) {
         this.id = id;
+    }
+    public Course cloneCourse() {
+        //TODO resolve db work for clone a course.  Should include assignments, but not students.
+        return this;
     }
 
     public void deleteClass(){
@@ -187,6 +191,7 @@ public class Course implements Comparable<Course> {
         return assignments;
     }
 
+    // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
         ArrayList<Student> students = new ArrayList<Student>();
         String selectQuery = "SELECT A.first_name, A.middle_intial, A.family_name, A.type, A.email FROM student AS A" +
@@ -273,5 +278,54 @@ public class Course implements Comparable<Course> {
             this.db.executeUpdate(query);
         }
         this.db.closeDB();
+    }
+
+    public double getMeanScore() {
+        ArrayList<Student> students = getStudents();
+        int count = 0;
+        double total = 0.0;
+        for(Student student:students) {
+//            total += student.getGrade(sectionNumber);
+            count++;
+        }
+        double mean = total/count;
+        //return total;
+        return 0.0;
+    }
+
+    public double getMedianScore() {
+        ArrayList<Student> students = getStudents();
+        ArrayList<Double> scores = new ArrayList<Double>();
+        for(Student student:students) {
+//            scores.add(student.getGrade(sectionNumber));
+        }
+        Collections.sort(scores);
+        int middle = scores.size()/2;
+//        return scores.get(2);
+        return 0.0;
+    }
+
+    public double getHighScore() {
+        ArrayList<Student> students = getStudents();
+        ArrayList<Double> scores = new ArrayList<Double>();
+        for(Student student:students) {
+//            scores.add(student.getGrade(sectionNumber));
+        }
+        Collections.sort(scores);
+//        return scores.get(0);
+        return 0.0;
+    }
+
+    public double getLowScore() {
+        ArrayList<Student> students = getStudents();
+        ArrayList<Double> scores = new ArrayList<Double>();
+        for(Student student:students) {
+//            scores.add(student.getGrade(sectionNumber));
+        }
+        Collections.sort(scores);
+        Collections.reverse(scores);
+       // return scores.get(0);
+        return 0.0;
+
     }
 }

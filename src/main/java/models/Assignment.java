@@ -108,7 +108,8 @@ public class Assignment implements Comparable<Assignment>{
     }
 
     public double getScore(Student student) {
-        return student.getGrade(this.classId);
+        //TODO replace this with a call to the student assignment join table
+        return 100.0;
     }
 
     /**
