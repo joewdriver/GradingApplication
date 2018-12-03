@@ -148,12 +148,11 @@ public class CourseView extends View {
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
         closeButton.addActionListener(alClose);
-
-        // TODO: replace with DB calls
-        meanScore = new JLabel("mean Score");
-        medianScore = new JLabel("average Score");
-        highScore = new JLabel("high score");
-        lowScore = new JLabel("low score");
+        
+        meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
+        medianScore = new JLabel("Average Score: " + course.getMedianScore());
+        highScore = new JLabel("High Score: " + course.getHighScore());
+        lowScore = new JLabel("Low Score: " + course.getLowScore());
     }
 
     /**
