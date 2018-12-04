@@ -142,13 +142,12 @@ public class Student {
         return rsum;
     }
 
-    //TODO: turn this into an actual query instead of mocked data
     public ArrayList<Course> getClasses() {
         ArrayList<Course> courses = new ArrayList<Course>();
+        String selectQuery = "SELECT * FROM class as A " +
+                "INNER JOIN class_assignments AS B on B.class_ID = A.ID " +
+                "WHERE B.BU_ID = '" + this.buId + "'";
 
-        String selectQuery = "SELECT ID, class, semester, name, year  FROM `class` as A " +
-                "INNER JOIN `class_assignments` as B on B.Class_ID = A.ID" +
-                "WHERE B.BU_ID = " + this.buId;
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
@@ -161,9 +160,9 @@ public class Student {
         }
 
 
-        courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
-        courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
-        courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));
+//        courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
+//        courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
+//        courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));
 
         return courses;
     }
