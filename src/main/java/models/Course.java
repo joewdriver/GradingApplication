@@ -194,14 +194,15 @@ public class Course implements Comparable<Course> {
     // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT A.first_name, A.middle_intial, A.family_name, A.type, A.email FROM student AS A" +
-                "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID " +
+        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email FROM student AS A " +
+                "INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
+                System.out.println("got one");
                 students.add(new Student(rs));
             }
         } catch (SQLException e) {
@@ -209,9 +210,9 @@ public class Course implements Comparable<Course> {
         }
 
 
-        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
+//        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
+//        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
+//        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
 
 
         return students;
