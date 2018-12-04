@@ -49,6 +49,21 @@ public class Course implements Comparable<Course> {
     }
     public Course cloneCourse() {
         //TODO resolve db work for clone a course.  Should include assignments, but not students.
+        // first add a new course identical to this one
+        int active = getActive() ? 1 : 0;
+        String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), active);
+        db.executeUpdate(courseInsert);
+        // next retrieve the new course id
+        String courseQuery = Strings.getLastCreatedCourse;
+
+        ResultSet rs = db.executeQuery(courseQuery);
+        try {
+            rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        // finally add each assignment to the new course
         return this;
     }
 
