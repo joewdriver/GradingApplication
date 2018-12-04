@@ -225,7 +225,6 @@ public class Course implements Comparable<Course> {
             System.out.println(e.getMessage());
         }
 
-
 //        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
 //        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
 //        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));

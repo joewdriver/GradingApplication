@@ -146,9 +146,10 @@ public class Student {
     public ArrayList<Course> getClasses() {
         ArrayList<Course> courses = new ArrayList<Course>();
         // TODO: move query to strings
-        String selectQuery = "SELECT ID, class, semester, name, year  FROM `class` as A " +
-                "INNER JOIN `class_assignments` as B on B.Class_ID = A.ID" +
-                "WHERE B.BU_ID = " + this.buId;
+        String selectQuery = "SELECT * FROM class as A " +
+                "INNER JOIN class_assignments AS B on B.class_ID = A.ID " +
+                "WHERE B.BU_ID = '" + this.buId + "'";
+
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
@@ -159,11 +160,6 @@ public class Student {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-        // TODO: remove the mock data here once we have db object for student
-        courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
-        courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
-        courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));
 
         return courses;
     }

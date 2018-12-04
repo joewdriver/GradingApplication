@@ -43,7 +43,11 @@ public class CourseView extends View {
 
     public CourseView(Course course) {
         this.course = course;
-        setup(1200, 800, "Gradium Records " + course.getName());
+        try {
+            setup(1200, 800, "Gradium Records " + course.getName());
+        }catch (Exception e){
+            setup(1200, 800, "Gradium Records ");
+        }
         createUIComponents();
         buildLayout() ;
     }
@@ -258,9 +262,9 @@ public class CourseView extends View {
                 undergraduatePanel.add(new JLabel(""));
         }
         undergraduatePanel.add(new JLabel(""));
-
         undergraduatePanel.add(new JLabel(""));
         tmpName = "";
+
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 //TODO dynamically pull the weights
@@ -440,7 +444,7 @@ public class CourseView extends View {
     private void goToAssignment(Assignment assignment) {
 //        AssignmentView assignmentView = new AssignmentView(assignment);
 //        assignmentView.setVisible(true);
-        EditAssignmentView editAssignmentView = new EditAssignmentView(assignment);
+        EditAssignmentView editAssignmentView = new EditAssignmentView(this.course);
         editAssignmentView.setVisible(true);
         end();
     }

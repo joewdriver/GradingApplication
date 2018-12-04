@@ -108,11 +108,11 @@ public class EditAssignmentView extends View {
     private void createAssignment(String name, String type, String desc) {
         System.out.println("in go to students");
         System.out.println(this.course);
-        if(this.course == null) {
+        try{
             //creating a new assignment
             Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
             this.course.addAssignment(assignment);
-        } else {
+        } catch(Exception e) {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
