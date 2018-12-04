@@ -20,6 +20,7 @@ public class EditStudentView extends View {
     private JTextField email;
     private JButton submitButton;
     private Student student;
+    private Course course;
 
     // constructor for creating a new student
     public EditStudentView() {
@@ -37,6 +38,13 @@ public class EditStudentView extends View {
         buildLayout() ;
     }
 
+    public EditStudentView(Course course) {
+        this.course = course;
+        setup(700, 400, "Add Student");
+        createUIComponents();
+        buildLayout() ;
+    }
+
     private void createUIComponents() {
 
         ActionListener al = new ActionListener() {
@@ -48,17 +56,17 @@ public class EditStudentView extends View {
         submitButton.addActionListener(al);
 
 
-        familyName = new JTextField(student.getFamilyName());
+        familyName = new JTextField("Family name");
         familyName.setPreferredSize(new Dimension(200,10));
-        firstName = new JTextField(student.getFirstName());
+        firstName = new JTextField("First name");
         firstName.setPreferredSize(new Dimension(200,10));
-        middleInitial = new JTextField(student.getMiddleInitial());
+        middleInitial = new JTextField("Middle initial");
         middleInitial.setPreferredSize(new Dimension(20,10));
 
 
-        buId = new JTextField(student.getBuId());
+        buId = new JTextField("BU ID");
         buId.setPreferredSize(new Dimension(200,10));
-        email = new JTextField(student.getEmail());
+        email = new JTextField("Email");
         email.setPreferredSize(new Dimension(200,10));
 
         String[] gradLevels = new String[] {"Undergraduate","Graduate"};
@@ -109,12 +117,16 @@ public class EditStudentView extends View {
     }
 
     private void goToStudent() {
-        this.student.setBuId(buId.getText());
-        this.student.setEmail(email.getText());
-        this.student.setGraduateLevel((String)gradLevel.getSelectedItem());
-        this.student.setFamilyName(familyName.getText());
-        this.student.save();
-        StudentView studentView = new StudentView(student);
+//        this.student.setBuId(buId.getText());
+//        this.student.setEmail(email.getText());
+//        this.student.setGraduateLevel((String)gradLevel.getSelectedItem());
+//        this.student.setFamilyName(familyName.getText());
+        //this.student.save();
+        //public Student(String buId, String first_name, String middle_name, String family_name, String graduateLevel, String email) {
+        Student tempStudent = new Student(buId.getText(), firstName.getText(), middleInitial.getText(), familyName.getText(), gradLevel.getSelectedItem().toString(), email.getText());
+        this.course.addStudent(tempStudent);
+
+        StudentView studentView = new StudentView(tempStudent);
         studentView.setVisible(true);
         end();
     }

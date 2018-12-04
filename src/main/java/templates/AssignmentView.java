@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -23,7 +24,7 @@ public class AssignmentView extends View {
 
     // constructor for creating a new assignment
     public AssignmentView() {
-        this.assignment = new Assignment("Course ID","Assignment Name","Assignment Type",100);
+        this.assignment = new Assignment(0,"Assignment Name","Assignment Type",100);
         setup(1200, 800, "Add Assignment");
         createUIComponents();
         buildLayout() ;
@@ -48,7 +49,8 @@ public class AssignmentView extends View {
         editButton.addActionListener(al);
 
         assignmentName = new JLabel(assignment.getName());
-        courseId = new JLabel(assignment.getCourse().getSectionNumber());
+//        courseId = new JLabel(assignment.getCourse().getSectionNumber());
+        courseId = new JLabel("111");
         assignmentType = new JLabel(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200,10));
         totalPoints = new JLabel(Integer.toString(assignment.getTotalPoints()));
@@ -106,10 +108,57 @@ public class AssignmentView extends View {
 
         // loop through all students in the course
         int i = 0;
-        for(Student student:assignment.getCourse().getStudents()) {
-            // add a new column after the fifth entry
-            if(i >= 5) {
-                // each fifth iteration we assign the temporary containers to the score layout
+        Object temp = assignment.getCourse();
+        if(temp != null){
+            ArrayList<Student> students = assignment.getCourse().getStudents();
+            for(Student student: students) {
+                // add a new column after the fifth entry
+                if(i >= 5) {
+                    // each fifth iteration we assign the temporary containers to the score layout
+                    tmpLayout.setVerticalGroup(tmpSeqScoreGroup);
+                    tmpLayout.setHorizontalGroup(tmpParScoreGroup);
+                    tmpPanel.setLayout(tmpLayout);
+                    seqScoreGroup.addComponent(tmpPanel);
+                    parScoreGroup.addComponent(tmpPanel);
+                    seqScoreGroup.addComponent(spacerPanelH);
+                    parScoreGroup.addComponent(spacerPanelH);
+
+                    // then we rebuild the temporary containers from scratch
+                    tmpPanel = new JPanel();
+                    tmpPanel.setBorder(BorderFactory.createLineBorder(Color.gray));
+                    tmpLayout = new GroupLayout(tmpPanel);
+                    tmpSeqScoreGroup = tmpLayout.createSequentialGroup();
+                    tmpParScoreGroup = tmpLayout.createParallelGroup(CENTER);
+                    i=0;
+                }
+
+                // add the student and score to the temporary panel
+                // first set up a mini student panel
+                JPanel studentPanel = new JPanel();
+                GroupLayout studentLayout = new GroupLayout(studentPanel);
+                JLabel studentName = new JLabel(student.getFullName());
+                JTextField score = new JTextField(Double.toString(assignment.getScore(student)));
+                score.setMinimumSize(new Dimension(40,15));
+                studentName.setMinimumSize(new Dimension(200, 15));
+
+                studentLayout.setHorizontalGroup(studentLayout.createSequentialGroup()
+                        .addComponent(studentName)
+                        .addComponent(score)
+                );
+                studentLayout.setVerticalGroup(studentLayout.createParallelGroup(CENTER)
+                        .addComponent(studentName)
+                        .addComponent(score)
+                );
+                studentPanel.setLayout(studentLayout);
+
+                // now add the student panel to the temporary column layout
+                tmpSeqScoreGroup.addComponent(studentPanel);
+                tmpParScoreGroup.addComponent(studentPanel);
+                i++;
+            }
+
+            // finalize the last column
+            if(i>0) {
                 tmpLayout.setVerticalGroup(tmpSeqScoreGroup);
                 tmpLayout.setHorizontalGroup(tmpParScoreGroup);
                 tmpPanel.setLayout(tmpLayout);
@@ -118,57 +167,12 @@ public class AssignmentView extends View {
                 seqScoreGroup.addComponent(spacerPanelH);
                 parScoreGroup.addComponent(spacerPanelH);
 
-                // then we rebuild the temporary containers from scratch
-                tmpPanel = new JPanel();
-                tmpPanel.setBorder(BorderFactory.createLineBorder(Color.gray));
-                tmpLayout = new GroupLayout(tmpPanel);
-                tmpSeqScoreGroup = tmpLayout.createSequentialGroup();
-                tmpParScoreGroup = tmpLayout.createParallelGroup(CENTER);
-                i=0;
+                // place the columns into the score container
+                scoreLayout.setHorizontalGroup(seqScoreGroup);
+                scoreLayout.setVerticalGroup(parScoreGroup);
+                scorePanel.setLayout(scoreLayout);
             }
-
-            // add the student and score to the temporary panel
-            // first set up a mini student panel
-            JPanel studentPanel = new JPanel();
-            GroupLayout studentLayout = new GroupLayout(studentPanel);
-            JLabel studentName = new JLabel(student.getFullName());
-            JTextField score = new JTextField(Double.toString(assignment.getScore(student)));
-            score.setMinimumSize(new Dimension(40,15));
-            studentName.setMinimumSize(new Dimension(200, 15));
-
-            studentLayout.setHorizontalGroup(studentLayout.createSequentialGroup()
-                    .addComponent(studentName)
-                    .addComponent(score)
-            );
-            studentLayout.setVerticalGroup(studentLayout.createParallelGroup(CENTER)
-                    .addComponent(studentName)
-                    .addComponent(score)
-            );
-            studentPanel.setLayout(studentLayout);
-
-            // now add the student panel to the temporary column layout
-            tmpSeqScoreGroup.addComponent(studentPanel);
-            tmpParScoreGroup.addComponent(studentPanel);
-            i++;
         }
-
-        // finalize the last column
-        if(i>0) {
-            tmpLayout.setVerticalGroup(tmpSeqScoreGroup);
-            tmpLayout.setHorizontalGroup(tmpParScoreGroup);
-            tmpPanel.setLayout(tmpLayout);
-            seqScoreGroup.addComponent(tmpPanel);
-            parScoreGroup.addComponent(tmpPanel);
-            seqScoreGroup.addComponent(spacerPanelH);
-            parScoreGroup.addComponent(spacerPanelH);
-
-            // place the columns into the score container
-            scoreLayout.setHorizontalGroup(seqScoreGroup);
-            scoreLayout.setVerticalGroup(parScoreGroup);
-            scorePanel.setLayout(scoreLayout);
-        }
-
-
         // assembles everything into the parent grouping
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
                 .addComponent(headerPanel)

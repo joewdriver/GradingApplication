@@ -61,7 +61,7 @@ public class EditCourseView extends View {
 
         year = new JTextField("year");
         year.setPreferredSize(new Dimension(40,30));
-        
+
         String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
         season.setSelectedIndex(Arrays.asList(seasons).indexOf(course.getSeason()));

@@ -8,7 +8,7 @@ import utils.DBManager;
 public class Assignment implements Comparable<Assignment>{
     private int id;
     private int totalPoints;
-    private String classId;
+    private int classId;
     private String name;
     private String description;
 
@@ -25,7 +25,7 @@ public class Assignment implements Comparable<Assignment>{
      */
     public Assignment(ResultSet rs) {
         try {
-            this.classId = rs.getString("class_ID");
+            this.classId = rs.getInt("class_ID");
             this.id = rs.getInt("ID");
             this.name = rs.getString("name");
             this.type = rs.getString("type");
@@ -35,6 +35,18 @@ public class Assignment implements Comparable<Assignment>{
         }
     }
 
+    /**
+     * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
+     * the created assignment object.  can call the other constructor
+     */
+    public Assignment(int classId, String name, String type, int totalPoints) {
+        this.classId = classId;
+        this.name = name;
+        this.type = type;
+        this.totalPoints = totalPoints;
+    }
+
+
     public int getExtraCredit() {
         return extraCredit;
     }
@@ -43,7 +55,7 @@ public class Assignment implements Comparable<Assignment>{
         return id;
     }
 
-    public String getClassId() {
+    public int getClassId() {
         return classId;
     }
 
@@ -55,21 +67,9 @@ public class Assignment implements Comparable<Assignment>{
 
 
     /**
-     * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
-     * the created assignment object.  can call the other constructor
-     */
-    public Assignment(String classId, String name, String type, int totalPoints) {
-        this.classId = classId;
-        this.name = name;
-        this.type = type;
-        this.totalPoints = totalPoints;
-    }
-
-
-    /**
      * a constructor that handles a default type setting to homework
      */
-    public Assignment(String classId, String name) {
+    public Assignment(int classId, String name) {
         this.classId = classId;
         this.name = name;
         this.type = "Homework";
@@ -128,6 +128,7 @@ public class Assignment implements Comparable<Assignment>{
             ResultSet rs = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
+
                 return new Course(rs); //should only be one course
             }
         } catch (SQLException e) {

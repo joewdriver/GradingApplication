@@ -165,6 +165,7 @@ public class CourseView extends View {
 
         // populate each list accordingly
         for(Student student : students) {
+            System.out.println("email: " + student.getEmail());
             if(student.getGraduateLevel().equals("Undergrad"))
                 undergraduates.add(student);
             else
@@ -361,7 +362,7 @@ public class CourseView extends View {
                 graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
             // TODO resolve average grade
-            graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
+            //graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
 
         // footer layout for various functional buttons
@@ -397,7 +398,7 @@ public class CourseView extends View {
     }
 
     private void addStudent(Course course) {
-        EditStudentView editStudentView = new EditStudentView();
+        EditStudentView editStudentView = new EditStudentView(course);
         editStudentView.setVisible(true);
         end();
     }
@@ -437,8 +438,10 @@ public class CourseView extends View {
     }
 
     private void goToAssignment(Assignment assignment) {
-        AssignmentView assignmentView = new AssignmentView(assignment);
-        assignmentView.setVisible(true);
+//        AssignmentView assignmentView = new AssignmentView(assignment);
+//        assignmentView.setVisible(true);
+        EditAssignmentView editAssignmentView = new EditAssignmentView(assignment);
+        editAssignmentView.setVisible(true);
         end();
     }
 
@@ -453,4 +456,10 @@ public class CourseView extends View {
         editAssignmentView.setVisible(true);
         end();
     }
+
+//    private void editAssignment() {
+//        EditAssignmentView editAssignmentView = new EditAssignmentView();
+//        editAssignmentView.setVisible(true);
+//        end();
+//    }
 }

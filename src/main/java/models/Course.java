@@ -44,6 +44,9 @@ public class Course implements Comparable<Course> {
         this.season = season;
     }
 
+    public Course(int id) {
+        this.id = id;
+    }
     public Course cloneCourse() {
         //TODO resolve db work for clone a course.  Should include assignments, but not students.
         return this;
@@ -80,11 +83,7 @@ public class Course implements Comparable<Course> {
     }
 
     public boolean  getActive() {
-        if (active==1) {
-            return true;
-        } else {
-            return false;
-        }
+        return active == 1;
     }
 
     public void setActive(int active) {
@@ -131,7 +130,7 @@ public class Course implements Comparable<Course> {
     }
 
     public void addAssignment(Assignment assignment){
-        String insertQuery = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type) VALUES(?,?,?,?,?,?)";
+        String insertQuery = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setInt(1, this.id);
@@ -140,6 +139,7 @@ public class Course implements Comparable<Course> {
             pstmt.setInt(4, assignment.getValue());
             pstmt.setInt(5, assignment.getExtraCredit());
             pstmt.setString(6, assignment.getType());
+            pstmt.setInt(7,assignment.getTotalPoints());
             pstmt.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();
@@ -167,7 +167,7 @@ public class Course implements Comparable<Course> {
     public ArrayList<Assignment> getAssignments() {
         //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -179,12 +179,12 @@ public class Course implements Comparable<Course> {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
-        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
+//
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
+//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
 
 
         Collections.sort(assignments);
@@ -195,15 +195,15 @@ public class Course implements Comparable<Course> {
     public ArrayList<Student> getStudents() {
         //TODO: this db call is failing -- needs to be corrected, appears to be an issue with aliasing
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student` AS A" +
-                "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID" +
-                " WHERE B.Class_ID = '" + this.id + "'";
-
+        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email FROM student AS A " +
+                "INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
+                " WHERE B.class_ID = '" + this.id + "'";
         try {
             Statement stmt  = this.db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
+                System.out.println("got one");
                 students.add(new Student(rs));
             }
         } catch (SQLException e) {
@@ -211,9 +211,9 @@ public class Course implements Comparable<Course> {
         }
 
 
-        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
-        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
-        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
+//        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
+//        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
+//        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
 
 
         return students;
@@ -247,6 +247,20 @@ public class Course implements Comparable<Course> {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email)  VALUES(?,?,?,?,?,?)";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            pstmt.setString(1, student.getBuId());
+            pstmt.setString(2, student.getFamilyName());
+            pstmt.setString(3, student.getMiddleInitial());
+            pstmt.setString(4, student.getFamilyName());
+            pstmt.setString(5, student.getGraduateLevel());
+            pstmt.setString(6, student.getEmail());
+            pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -273,42 +287,47 @@ public class Course implements Comparable<Course> {
         int count = 0;
         double total = 0.0;
         for(Student student:students) {
-            total += student.getGrade(sectionNumber);
+//            total += student.getGrade(sectionNumber);
             count++;
         }
         double mean = total/count;
-        return total;
+        //return total;
+        return 0.0;
     }
 
     public double getMedianScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
-            scores.add(student.getGrade(sectionNumber));
+//            scores.add(student.getGrade(sectionNumber));
         }
         Collections.sort(scores);
         int middle = scores.size()/2;
-        return scores.get(2);
+//        return scores.get(2);
+        return 0.0;
     }
 
     public double getHighScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
-            scores.add(student.getGrade(sectionNumber));
+//            scores.add(student.getGrade(sectionNumber));
         }
         Collections.sort(scores);
-        return scores.get(0);
+//        return scores.get(0);
+        return 0.0;
     }
 
     public double getLowScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
-            scores.add(student.getGrade(sectionNumber));
+//            scores.add(student.getGrade(sectionNumber));
         }
         Collections.sort(scores);
         Collections.reverse(scores);
-        return scores.get(0);
+       // return scores.get(0);
+        return 0.0;
+
     }
 }

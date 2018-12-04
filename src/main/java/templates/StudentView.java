@@ -131,7 +131,7 @@ public class StudentView extends View {
             bottomPanel.add(tempClass);
 
             // display the grade as a non-editable label
-            bottomPanel.add(new Label(Double.toString(student.getGrade(section.getSectionNumber())),JLabel.CENTER));
+            bottomPanel.add(new Label(Double.toString(student.getGrade(section.getId())),JLabel.CENTER));
 
             // add an action listener to the group
             ContextButton tempGroup = new ContextButton(section.getGroup(student).getName(),section.getGroup(student));
