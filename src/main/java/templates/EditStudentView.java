@@ -23,7 +23,7 @@ public class EditStudentView extends View {
 
     // constructor for creating a new student
     public EditStudentView() {
-        this.student = new Student("BU ID","Joe","W","Driver","Grad Level","student email");
+        this.student = new Student("BU ID","First","MI","Last","Grad Level","student email");
         setup(700, 400, "Add Student");
         createUIComponents();
         buildLayout();

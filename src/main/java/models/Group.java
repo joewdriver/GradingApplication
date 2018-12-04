@@ -58,7 +58,7 @@ public class Group {
     }
 
     public ArrayList<Student> getStudents() {
-        //TODO: replace this with a db call
+        //TODO: move to strings file
         ArrayList<Student> students = new ArrayList<Student>();
         String selectQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student` AS A" +
                 "INNER JOIN `groups` AS B ON B.BU_ID = A.BU_ID" +

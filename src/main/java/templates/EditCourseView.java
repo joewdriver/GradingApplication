@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Array;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
@@ -54,10 +55,13 @@ public class EditCourseView extends View {
         courseName.setPreferredSize(new Dimension(200,10));
         courseId = new JTextField(course.getSectionNumber());
         courseId.setPreferredSize(new Dimension(200,10));
-        year = new JTextField(course.getYear());
-        year.setPreferredSize(new Dimension(40,30));
 
-        // TODO: populate default value based on course being edited
+        NumberFormat integerFieldFormatter = NumberFormat.getIntegerInstance();
+        integerFieldFormatter.setMaximumFractionDigits(0);
+
+        year = new JTextField("year");
+        year.setPreferredSize(new Dimension(40,30));
+        
         String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
         season.setSelectedIndex(Arrays.asList(seasons).indexOf(course.getSeason()));
@@ -115,15 +119,31 @@ public class EditCourseView extends View {
     }
 
     private void goToCourse() {
+
+
         // first rebuild the course object with the new values
         this.course.setName(courseName.getText());
         this.course.setYear(year.getText());
         this.course.setSeason((String)season.getSelectedItem());
         this.course.setSectionNumber(courseId.getText());
-        this.course.save();
 
-        CoursesView coursesView = new CoursesView();
-        coursesView.setVisible(true);
-        end();
+        boolean success = false;
+        try {
+            Integer.parseInt(year.getText());
+            success = true;
+        } catch (Exception e) {
+            System.out.println("checkpoint A");
+            EditCourseView editCourseView = new EditCourseView(this.course);
+            editCourseView.setVisible(true);
+            end();
+        }
+
+        if(success) {
+            System.out.println("checkpoint B");
+            this.course.save();
+            CoursesView coursesView = new CoursesView();
+            coursesView.setVisible(true);
+            end();
+        }
     }
 }

@@ -11,6 +11,8 @@ public class Assignment implements Comparable<Assignment>{
     private String classId;
     private String name;
     private String description;
+
+    //TODO: what is the plan for these two values?
     private int value;
     private int extraCredit;
     private String type;

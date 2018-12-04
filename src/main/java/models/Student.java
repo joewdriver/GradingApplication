@@ -122,6 +122,7 @@ public class Student {
         int scoreIdx = 0;
         for (Assignment assign : assignments){
             int assignIdx = 0;
+            // TODO: move to strings
             selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
                 Statement stmt  = this.db.getConn().createStatement();
@@ -140,12 +141,9 @@ public class Student {
         return rsum;
     }
 
-
-
-    //TODO: turn this into an actual query instead of mocked data
     public ArrayList<Course> getClasses() {
         ArrayList<Course> courses = new ArrayList<Course>();
-
+        // TODO: move query to strings
         String selectQuery = "SELECT ID, class, semester, name, year  FROM `class` as A " +
                 "INNER JOIN `class_assignments` as B on B.Class_ID = A.ID" +
                 "WHERE B.BU_ID = " + this.buId;
@@ -160,7 +158,7 @@ public class Student {
             System.out.println(e.getMessage());
         }
 
-
+        // TODO: remove the mock data here once we have db object for student
         courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
         courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
         courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));

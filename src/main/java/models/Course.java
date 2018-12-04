@@ -193,9 +193,7 @@ public class Course implements Comparable<Course> {
 
     // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
-        //CREATE TABLE `student` ( `BU_ID` VARCHAR(200) NOT NULL , `first_name` VARCHAR(200) NOT NULL , `middle_intial` VARCHAR(1) NOT NULL , `family_name` VARCHAR(200) NOT NULL , `type` VARCHAR(20) NOT NULL , `email` VARCHAR(200) NOT NULL , PRIMARY KEY (`BU_ID`))"
-        //"CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `Class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
-        //TODO: db call to retrieve and build a student list
+        //TODO: this db call is failing -- needs to be corrected, appears to be an issue with aliasing
         ArrayList<Student> students = new ArrayList<Student>();
         String selectQuery = "SELECT first_name, middle_intial, family_name, type, email FROM `student` AS A" +
                 "INNER JOIN `class_assignments` AS B ON B.BU_ID = A.BU_ID" +
