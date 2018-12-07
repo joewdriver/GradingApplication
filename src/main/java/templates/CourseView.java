@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.io.File;
+import java.util.Scanner;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -170,10 +171,11 @@ public class CourseView extends View {
         // populate each list accordingly
         for(Student student : students) {
             System.out.println("email: " + student.getEmail());
-            if(student.getGraduateLevel().equals("Undergrad"))
+            if(student.getGraduateLevel().equals("Undergraduate")) {
                 undergraduates.add(student);
-            else
+            } else {
                 graduates.add(student);
+            }
         }
 
         // this is the overall parent
@@ -365,6 +367,7 @@ public class CourseView extends View {
                 // TODO: resolve this based on db call of student assignment join
                 graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
+            graduatePanel.add(new JLabel("100"));
             // TODO resolve average grade
             //graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
@@ -415,9 +418,50 @@ public class CourseView extends View {
         fileChooser.setFileFilter(filter);
         fileChooser.showDialog(null,"Please Select the File");
         fileChooser.setVisible(true);
-        File filename = fileChooser.getSelectedFile();
-        if(filename != null)
-            System.out.println("File name "+filename.getName());
+        File studentList = fileChooser.getSelectedFile();
+        if(studentList != null)
+            System.out.println("File name "+studentList.getName());
+
+        //System.out.println("File name "+studentList.getName());
+
+        // Now let's parse the file
+        // we expect to input to be as such: BU ID, first name, middle initial, last name
+        // graduate level, email
+        try {
+            Scanner scanner = new Scanner(studentList);
+            scanner.useDelimiter(",");
+            while (scanner.hasNextLine()) {
+                String str = scanner.nextLine();
+                String[] data = str.split(",");
+                if (data.length == 6) {
+                    //TODO: this is harcoded, make it better
+                    String buId = data[0];
+                    String firstName = data[1];
+                    String middleInitial = data[2];
+                    String familyName = data[3];
+                    String graduateLevel = data[4];
+                    String email = data[5];
+
+                    Student student = new Student(buId, firstName, middleInitial, familyName,
+                            graduateLevel, email);
+
+                    //student.save();
+                    course.addStudent(student);
+                    ArrayList<Course> list = student.getClasses();
+                    for (Course blah : list) {
+                        System.out.println(blah.getName());
+                    }
+                    System.out.println("Print here");
+                } else {
+                    System.out.println("you're wrong");
+                }
+
+            }
+            scanner.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     private void closeCourse() {

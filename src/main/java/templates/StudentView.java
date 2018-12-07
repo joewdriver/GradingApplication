@@ -35,7 +35,7 @@ public class StudentView extends View {
 
     private void createUIComponents() {
 
-        name = new JLabel(student.getFullName());
+        name = new JLabel(student.getFullName()+" \t");
         graduateLevel = new JLabel(student.getGraduateLevel());
 
         ActionListener al = new ActionListener() {
