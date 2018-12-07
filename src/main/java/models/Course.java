@@ -48,23 +48,31 @@ public class Course implements Comparable<Course> {
         this.id = id;
     }
     public Course cloneCourse() {
-        //TODO resolve db work for clone a course.  Should include assignments, but not students.
         // first add a new course identical to this one
-        int active = getActive() ? 1 : 0;
-        String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), active);
+        String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), 1);
         db.executeUpdate(courseInsert);
         // next retrieve the new course id
         String courseQuery = Strings.getLastCreatedCourse;
+        int courseId = 0;
 
         ResultSet rs = db.executeQuery(courseQuery);
         try {
             rs.next();
+            courseId = rs.getInt(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
+        // once the new course has been created, represent it as a data object
+        Course newCourse = new Course(courseId);
+
         // finally add each assignment to the new course
-        return this;
+        for(Assignment assignment:getAssignments()) {
+            newCourse.addAssignment(assignment);
+        }
+
+        // return the newly created course
+        return newCourse;
     }
 
     public void deleteClass(){
@@ -145,7 +153,7 @@ public class Course implements Comparable<Course> {
     }
 
     public void addAssignment(Assignment assignment){
-        String insertQuery = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
+        String insertQuery = Strings.addAssignmentToCourse;
         try {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setInt(1, this.id);

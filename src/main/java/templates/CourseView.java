@@ -398,6 +398,7 @@ public class CourseView extends View {
     private void cloneCourse() {
         Course newCourse = this.course.cloneCourse();
         CourseView courseView = new CourseView(newCourse);
+        courseView.setVisible(true);
         dispose();
     }
 

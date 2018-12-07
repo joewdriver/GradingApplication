@@ -27,5 +27,8 @@ public class Strings {
             "first_name=\"%s\", middle_initial=\"%s\", family_name=\"%s\", type=\"%s\", email=\"%s\" " +
             "WHERE BU_ID = \"%s\"";
 
-    public static final String getLastCreatedCourse = "SELECT last_insert_rowid()";
+    public static final String getLastCreatedCourse = "select seq from sqlite_sequence where name=\"class\"\n";
+
+    public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
+
 }
