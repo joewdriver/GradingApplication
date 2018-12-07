@@ -158,12 +158,6 @@ public class Student {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-
-//        courses.add(new Course(-1, "ID101", "Fake Course", "2022","Fall"));
-//        courses.add(new Course(-1, "ID102", "Fake Course", "2023","Spring"));
-//        courses.add(new Course(-1, "ID103", "Fake Course", "2024", "Summer"));
-
         return courses;
     }
 
