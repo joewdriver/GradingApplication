@@ -249,7 +249,7 @@ public class Course implements Comparable<Course> {
         try {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
-            pstmt.setString(2, student.getFamilyName());
+            pstmt.setString(2, student.getFirstName());
             pstmt.setString(3, student.getMiddleInitial());
             pstmt.setString(4, student.getFamilyName());
             pstmt.setString(5, student.getGraduateLevel());
