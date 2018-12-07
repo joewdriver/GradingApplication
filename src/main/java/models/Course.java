@@ -145,6 +145,18 @@ public class Course implements Comparable<Course> {
             e.printStackTrace();
         }
 
+        for(Student tempStudent : this.getStudents()){
+            insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID)  VALUES(?,?)";
+            try {
+                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+                pstmt.setString(1, tempStudent.getBuId());
+                pstmt.setInt(2, assignment.getClassId());
+                pstmt.executeUpdate();
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void deleteAssignment(Assignment assignment){

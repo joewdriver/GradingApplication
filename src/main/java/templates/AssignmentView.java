@@ -237,15 +237,15 @@ public class AssignmentView extends View {
     private void saveAssignment(){
         /*Save the assignment*/
         Student tempStudent;
-        int tempScore;
+        float tempScore;
         for(ContextField ctx : contextFields){
             tempStudent = (Student) ctx.getContext();
-            tempScore = Integer.parseInt(ctx.getText());
-            System.out.println(tempStudent.getBuId());
+            tempScore = (float)Double.parseDouble(ctx.getText());
 
-
-
+            tempStudent.setScore(this.assignment, tempScore);
         }
+
+
 
         Course tempCourse = assignment.getCourse();
         CourseView courseView = new CourseView(tempCourse);

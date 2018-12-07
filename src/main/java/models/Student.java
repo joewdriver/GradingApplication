@@ -142,6 +142,22 @@ public class Student {
         return rsum;
     }
 
+    public void setScore(Assignment assignment, float score){
+        String updateQuery = "UPDATE assignments  " +
+                "SET score = ? " +
+                "WHERE (SELECT BU_ID FROM course_assignments WHERE assignment_ID = ?) = '" + this.buId + "'" +
+                "AND assignments.ID = ?";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(updateQuery);
+            pstmt.setFloat(1, score);
+            pstmt.setFloat(2, assignment.getClassId());
+            pstmt.setInt(3, assignment.getClassId());
+            pstmt.executeUpdate();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<Course> getClasses() {
         ArrayList<Course> courses = new ArrayList<Course>();
         String selectQuery = "SELECT * FROM class as A " +
