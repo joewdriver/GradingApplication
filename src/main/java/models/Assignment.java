@@ -116,17 +116,23 @@ public class Assignment implements Comparable<Assignment>{
      * retrieves the course name and ID in which the assignment exists
      */
     public Course getCourse() {
+    /*ID");
+            this.sectionNumber = rs.getString("class");
+            this.name = rs.getString("name");
+            this.year = rs.getString("year");
+            this.season = rs.getString("semester");
+            this.active = rs.getInt("active");*/
+        String selectQuery = "SELECT A.class, A.name, A.year, A.semester, A.ID, A.active  FROM class AS A " +
+                "INNER JOIN assignments AS B ON A.ID = B.class_id " +
+                "WHERE B.class_id = '" + this.classId + "'";
 
-        String selectQuery = "ID, class, semester, name, year  FROM `class` AS A " +
-                "INNER JOIN `assignments` AS B ON A.class_ID = B.class_ID " +
-                "WHERE B.class_ID = '" + this.classId + "'";
+        System.out.println(selectQuery);
 
         try {
             Statement stmt = this.db.getConn().createStatement();
             ResultSet rs = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
-
                 return new Course(rs); //should only be one course
             }
         } catch (SQLException e) {

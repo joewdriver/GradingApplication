@@ -167,7 +167,7 @@ public class Course implements Comparable<Course> {
     public ArrayList<Assignment> getAssignments() {
         //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name, type FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -202,7 +202,6 @@ public class Course implements Comparable<Course> {
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
-                System.out.println("got one");
                 students.add(new Student(rs));
             }
         } catch (SQLException e) {
