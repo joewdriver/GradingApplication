@@ -172,10 +172,11 @@ public class CourseView extends View {
         // populate each list accordingly
         for(Student student : students) {
             System.out.println("email: " + student.getEmail());
-            if(student.getGraduateLevel().equals("Undergrad"))
+            if(student.getGraduateLevel().equals("Undergraduate")) {
                 undergraduates.add(student);
-            else
+            } else {
                 graduates.add(student);
+            }
         }
 
         // this is the overall parent
@@ -366,6 +367,7 @@ public class CourseView extends View {
                 // TODO: resolve this based on db call of student assignment join
                 graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
+            graduatePanel.add(new JLabel("100"));
             // TODO resolve average grade
             //graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }
