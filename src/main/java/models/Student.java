@@ -118,6 +118,27 @@ public class Student {
         this.notes = notes;
     }
 
+    public double getScore(int assignmentId){
+        DBManager db = new DBManager();
+        double score = 0.0;
+        String selectQuery = "SELECT score FROM `course_assignments` WHERE BU_ID = '"+this.buId+"' AND assignment_ID = "+assignmentId+" ";
+        try {
+            Statement stmt  = db.getConn().createStatement();
+            ResultSet rs = stmt.executeQuery(selectQuery);
+            while(rs.next()){
+                score = rs.getDouble("score");
+            }
+            rs.close();
+            stmt.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            db.closeDB();
+        }
+
+        db.closeDB();
+        return score;
+    }
+
     public double getGrade(int classId) {
 
         /*
@@ -130,8 +151,8 @@ public class Student {
         ArrayList<Integer> totals = new ArrayList<Integer>();
         double rsum = 0.0;
 
-        String selectQuery = "SELECT A.ID, A.class_ID, A.name, A.type, A.totalPoints, A.score  FROM `assignments` as A " +
-                "INNER JOIN `class_assignments` as B on B.class_ID = A.ID " +
+        String selectQuery = "SELECT A.totalPoints, B.score  FROM `assignments` as A " +
+                "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
 
         try {
@@ -178,7 +199,7 @@ public class Student {
 
     public void setScore(Assignment assignment, Student student, float score){
         DBManager db = new DBManager();
-        String selectQuery = "UPDATE course_assignments SET score = '"+score+"' WHERE assignment_ID = '" + assignment.getClassId() +"' AND BU_ID = '"+student.getBuId()+"'";
+        String selectQuery = "UPDATE course_assignments SET score = '"+score+"' WHERE assignment_ID = '" + assignment.getId() +"' AND BU_ID = '"+student.getBuId()+"'";
         System.out.println(selectQuery);
         try {
             Statement stmt  = db.getConn().createStatement();

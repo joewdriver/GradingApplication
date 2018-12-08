@@ -73,13 +73,12 @@ public class AssignmentView extends View {
         backButton = new JButton("Back");
         backButton.addActionListener(backAl);
 
-
+        totalPoints = new JLabel("Total Points: " + Integer.toString(assignment.getTotalPoints()));
         assignmentName = new JLabel(assignment.getName());
         courseId = new JLabel(assignment.getCourse().getSectionNumber());
         //courseId = new JLabel("111");
         assignmentType = new JLabel(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200,10));
-        totalPoints = new JLabel(Integer.toString(assignment.getTotalPoints()));
         averageScore = new JLabel(Double.toString(assignment.getAverageScore()));
         description = new JLabel(assignment.getDescription());
     }
@@ -108,6 +107,7 @@ public class AssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
+                .addComponent(totalPoints)
         );
         // Course ID and assignment header in the same row
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
@@ -116,6 +116,7 @@ public class AssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
+                .addComponent(totalPoints)
         );
 
 
@@ -162,7 +163,7 @@ public class AssignmentView extends View {
                 JPanel studentPanel = new JPanel();
                 GroupLayout studentLayout = new GroupLayout(studentPanel);
                 JLabel studentName = new JLabel(student.getFullName());
-                ContextField score = new ContextField(Double.toString(student.getGrade(assignment.getClassId())), student);
+                ContextField score = new ContextField(Double.toString(student.getScore(assignment.getId())), student);
                 //keep track of all the scores we are adding and the student associated with them
                 contextFields.add(score);
 
