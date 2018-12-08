@@ -19,6 +19,7 @@ public class Student {
     private String graduateLevel;
     private String email;
     private String type;
+    private String notes;
     private DBManager db = new DBManager();
     public Student(ResultSet rs) {
         try {
@@ -29,6 +30,7 @@ public class Student {
             this.graduateLevel = rs.getString("type");
             this.email = rs.getString("email");
             this.type = rs.getString("type");
+            this.notes = rs.getString("notes");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -41,8 +43,19 @@ public class Student {
         this.familyName = family_name;
         this.graduateLevel = graduateLevel;
         this.email = email;
+        this.notes = "";
     }
 
+    public Student(String buId, String first_name, String middle_name, String family_name, String graduateLevel,
+                   String email, String notes) {
+        this.buId = buId;
+        this.firstName = first_name;
+        this.middleInitial = middle_name;
+        this.familyName = family_name;
+        this.graduateLevel = graduateLevel;
+        this.email = email;
+        this.notes = notes;
+    }
 
     public String getFirstName() {
         return this.firstName;
@@ -60,6 +73,10 @@ public class Student {
 
     public String getFullName() {
         return firstName + " " + middleInitial + " " + familyName;
+    }
+
+    public String getNotes() {
+        return notes;
     }
 
     public void setFamilyName(String familyName) {
@@ -94,6 +111,10 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public double getGrade(int classId) {
@@ -182,11 +203,11 @@ public class Student {
             // if we run this as an insert
             if(insert) {
                 db.executeUpdate(String.format(Strings.insertStudent,buId,firstName,middleInitial,
-                        familyName,graduateLevel,email));
+                        familyName,graduateLevel,email,notes));
             // if we run as an update
             } else {
                 db.executeUpdate(String.format(Strings.updateStudent, firstName, middleInitial, familyName,
-                        graduateLevel, email, buId));
+                        graduateLevel, email, notes, buId));
             }
 
         } catch (SQLException e) {

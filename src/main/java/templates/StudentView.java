@@ -15,14 +15,18 @@ import java.util.ArrayList;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class StudentView extends View {
+    private static final int NOTE_ROWS = 4;
+    private static final int NOTE_COLUMNS = 50;
+
     private ArrayList<Course> courses;
     private JLabel name;
     private JLabel graduateLevel;
+    private JTextArea notes;
     private JComboBox groups;
     private Student student;
     private ContextButton editStudent;
-    private JButton allStudentsButton;
-    private ActionListener alAllStudents;
+    private JButton allStudentsButton, saveButton;
+    private ActionListener alAllStudents, alSaveNotes;
 
     public StudentView(Student student) {
         this.student = student;
@@ -37,6 +41,7 @@ public class StudentView extends View {
 
         name = new JLabel(student.getFullName()+" \t");
         graduateLevel = new JLabel(student.getGraduateLevel());
+        notes = new JTextArea(student.getNotes(), NOTE_ROWS, NOTE_COLUMNS);
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -56,6 +61,14 @@ public class StudentView extends View {
         };
         allStudentsButton.addActionListener(alAllStudents);
 
+        // save notes for a student
+        saveButton = new JButton("Save Notes");
+        alSaveNotes = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveNotes();
+            }
+        };
+        saveButton.addActionListener(alSaveNotes);
     }
 
     private void buildLayout() {
@@ -64,6 +77,7 @@ public class StudentView extends View {
         JPanel corePanel = new JPanel();
         JPanel topPanel = new JPanel();
         JPanel bottomPanel = new JPanel(new GridLayout(courses.size() + 1,3));
+        JPanel notePanel = new JPanel();
 
         // top level vertical container for two sub-panels
         GroupLayout coreLayout = new GroupLayout(corePanel);
@@ -71,11 +85,15 @@ public class StudentView extends View {
         coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
                 .addComponent(topPanel)
                 .addComponent(bottomPanel)
+                .addComponent(notePanel)
+                .addComponent(saveButton)
         );
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
                 .addComponent(topPanel)
                 .addComponent(bottomPanel)
+                .addComponent(notePanel)
+                .addComponent(saveButton)
         );
 
         corePanel.setLayout(coreLayout);
@@ -139,6 +157,9 @@ public class StudentView extends View {
             bottomPanel.add(tempGroup);
         }
 
+        // for student notes
+        notePanel.add(notes);
+
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
         pane.setLayout(new GridBagLayout());
@@ -166,6 +187,15 @@ public class StudentView extends View {
     private void seeAllStudents() {
         AllStudentsView allStudentsView = new AllStudentsView();
         allStudentsView.setVisible(true);
+        end();
+    }
+
+    private void saveNotes() {
+        String newNotes = notes.getText();
+        student.setNotes(newNotes);
+        student.save();
+        StudentView studentView = new StudentView(student);
+        studentView.setVisible(true);
         end();
     }
 }
