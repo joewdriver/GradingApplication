@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import models.Group;
+import org.sqlite.core.DB;
 import utils.DBManager;
 import utils.Strings;
 
@@ -20,7 +21,7 @@ public class Course implements Comparable<Course> {
     private int active;
 
     private String semester;
-    private DBManager db = new DBManager();
+//    private DBManager db = new DBManager();
 
     public Course(ResultSet rs) {
         try {
@@ -50,17 +51,19 @@ public class Course implements Comparable<Course> {
     public Course cloneCourse() {
         // first add a new course identical to this one
         String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), 1);
-        db.executeUpdate(courseInsert);
+        DBManager tempdb = new DBManager();
+        tempdb.executeUpdate(courseInsert);
         // next retrieve the new course id
         String courseQuery = Strings.getLastCreatedCourse;
         int courseId = 0;
 
-        ResultSet rs = db.executeQuery(courseQuery);
+        tempdb = new DBManager();
+        ResultSet rs = tempdb.executeQuery(courseQuery);
         try {
-            rs.next();
             courseId = rs.getInt(0);
         } catch (SQLException e) {
             e.printStackTrace();
+            tempdb.closeDB();
         }
 
         // once the new course has been created, represent it as a data object
@@ -68,6 +71,7 @@ public class Course implements Comparable<Course> {
 
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
+            System.out.println("Checkpoint Alpha");
             newCourse.addAssignment(assignment);
         }
 
@@ -76,7 +80,9 @@ public class Course implements Comparable<Course> {
     }
 
     public void deleteClass(){
-        this.db.deleteCourse(this);
+        DBManager db = new DBManager();
+        db.deleteCourse(this);
+        db.closeDB();
     }
 
     public int compareTo(Course course) {
@@ -137,12 +143,14 @@ public class Course implements Comparable<Course> {
         String selectQuery = "SELECT * FROM `groups` WHERE  BU_ID = '" + id + "'";
 
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            DBManager db = new DBManager();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 groups.add(new Assignment(rs));
             }
+            db.closeDB();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -155,7 +163,8 @@ public class Course implements Comparable<Course> {
     public void addAssignment(Assignment assignment){
         String insertQuery = Strings.addAssignmentToCourse;
         try {
-            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            DBManager tempdb = new DBManager();
+            PreparedStatement pstmt = tempdb.getConn().prepareStatement(insertQuery);
             pstmt.setInt(1, this.id);
             pstmt.setString(2, assignment.getName());
             pstmt.setString(3, assignment.getDescription());
@@ -164,6 +173,7 @@ public class Course implements Comparable<Course> {
             pstmt.setString(6, assignment.getType());
             pstmt.setInt(7,assignment.getTotalPoints());
             pstmt.executeUpdate();
+            tempdb.closeDB();
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -174,12 +184,14 @@ public class Course implements Comparable<Course> {
         int id = assignment.getId();
         String deleteQuery = "DELETE FROM `assignments` WHERE class_ID = ?";
         try {
-             PreparedStatement pstmt = this.db.getConn().prepareStatement(deleteQuery);
+             DBManager db = new DBManager();
+             PreparedStatement pstmt = db.getConn().prepareStatement(deleteQuery);
 
             // set the corresponding param
             pstmt.setInt(1, id);
             // execute the delete statement
             pstmt.executeUpdate();
+            db.closeDB();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -188,27 +200,21 @@ public class Course implements Comparable<Course> {
     }
 
     public ArrayList<Assignment> getAssignments() {
-        //TODO: db call to retrieve and build an assignment list
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         String selectQuery = "SELECT class_ID, ID, name, type FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            DBManager db = new DBManager();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 assignments.add(new Assignment(rs));
             }
+            db.closeDB();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-//
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 1"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 2"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 3"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 4"));
-//        assignments.add(new Assignment(this.getSectionNumber(),"Assignment 5"));
-
 
         Collections.sort(assignments);
         return assignments;
@@ -222,21 +228,18 @@ public class Course implements Comparable<Course> {
                 "INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            DBManager db = new DBManager();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 System.out.println("got one");
                 students.add(new Student(rs));
             }
+            db.closeDB();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-//        students.add(new Student("ID101", "Joe", "m", " Driver", "Graduate", "Sample1"));
-//        students.add(new Student("ID102", "Armin", "n", " Sabouri", "Undergrad", "Sample2"));
-//        students.add(new Student("ID103", "Katie", "", " Quirk", "Graduate", "Sample3"));
-
 
         return students;
     }
@@ -245,13 +248,15 @@ public class Course implements Comparable<Course> {
         String id = student.getBuId();
         String deleteQuery = "DELETE FROM `class_assignments` WHERE class_ID = ? AND BU_ID = ?";
         try {
-            PreparedStatement pstmt = this.db.getConn().prepareStatement(deleteQuery);
+            DBManager db = new DBManager();
+            PreparedStatement pstmt = db.getConn().prepareStatement(deleteQuery);
 
             // set the corresponding param
             pstmt.setInt(1, this.id);
             pstmt.setString(2, id);
             // execute the delete statement
             pstmt.executeUpdate();
+            db.closeDB();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -262,16 +267,19 @@ public class Course implements Comparable<Course> {
     public void addStudent(Student student){
         String insertQuery = "INSERT INTO `class_assignments` (BU_ID, Class_ID) VALUES(?,?)";
         try {
+            DBManager db = new DBManager();
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
             pstmt.setInt(2, this.id);
             pstmt.executeUpdate();
+            db.closeDB();
         }catch (SQLException e) {
             e.printStackTrace();
         }
 
         insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email)  VALUES(?,?,?,?,?,?)";
         try {
+            DBManager db = new DBManager();
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
             pstmt.setString(2, student.getFirstName());
@@ -280,6 +288,7 @@ public class Course implements Comparable<Course> {
             pstmt.setString(5, student.getGraduateLevel());
             pstmt.setString(6, student.getEmail());
             pstmt.executeUpdate();
+            db.closeDB();
         }catch (SQLException e) {
             e.printStackTrace();
         }
@@ -291,17 +300,18 @@ public class Course implements Comparable<Course> {
      */
     public void save() {
         String query;
+        DBManager db = new DBManager();
         // first, if this is a new course we run an insert
         if(this.id == -1) {
             query = String.format(Strings.createCourse,this.sectionNumber, this.season, this.name, this.year, 1);
             System.out.println(query);
-            this.db.executeUpdate(query);
+            db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
             query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
-            this.db.executeUpdate(query);
+            db.executeUpdate(query);
         }
-        this.db.closeDB();
+        db.closeDB();
     }
 
     public double getMeanScore() {
