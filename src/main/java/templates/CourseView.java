@@ -43,8 +43,6 @@ public class CourseView extends View {
     private ActionListener alViewAllCourses;
     private ActionListener alAddAssignment;
 
-
-
     public CourseView(Course course) {
         this.course = course;
         try {
@@ -57,7 +55,6 @@ public class CourseView extends View {
     }
 
     private void createUIComponents() {
-
         assignments = course.getAssignments();
         students = course.getStudents();
 
@@ -508,10 +505,8 @@ public class CourseView extends View {
     }
 
     private void goToAssignment(Assignment assignment) {
-//        AssignmentView assignmentView = new AssignmentView(assignment);
-//        assignmentView.setVisible(true);
-        EditAssignmentView editAssignmentView = new EditAssignmentView(this.course);
-        editAssignmentView.setVisible(true);
+        AssignmentView assignmentView = new AssignmentView(assignment);
+        assignmentView.setVisible(true);
         end();
     }
 

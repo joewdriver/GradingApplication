@@ -103,11 +103,7 @@ public class EditAssignmentView extends View {
         pane.add(panel);
     }
 
-    // TODO: this needs to take us to the newly created assignment
-
     private void createAssignment(String name, String type, String desc) {
-        System.out.println("in go to students");
-        System.out.println(this.course);
         try{
             //creating a new assignment
             Assignment assignment = new Assignment(this.course.getId(), name, type, 100);

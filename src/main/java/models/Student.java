@@ -19,8 +19,9 @@ public class Student {
     private String graduateLevel;
     private String email;
     private String type;
+
     private String notes;
-    private DBManager db = new DBManager();
+
     public Student(ResultSet rs) {
         try {
             this.buId = rs.getString("BU_ID");
@@ -118,19 +119,25 @@ public class Student {
     }
 
     public double getGrade(int classId) {
+
         /*
         * @details: provide the average grade
         * */
+        DBManager db = new DBManager();
+        System.out.println("in get score");
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
         ArrayList<Integer> totals = new ArrayList<Integer>();
         double rsum = 0.0;
 
-        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints, score  FROM `assignments` as A " +
-                "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
-                "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
+        String selectQuery = "SELECT A.ID, A.class_ID, A.name, A.type, A.totalPoints, A.score  FROM `assignments` as A " +
+                "INNER JOIN `class_assignments` as B on B.class_ID = A.ID " +
+                "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
+
+        System.out.println(selectQuery);
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
@@ -138,6 +145,7 @@ public class Student {
                 totals.add(rs.getInt("totalPoints"));
                 assignments.add(new Assignment(rs));
             }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -146,9 +154,10 @@ public class Student {
         for (Assignment assign : assignments){
             int assignIdx = 0;
             // TODO: move to strings
-            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
+            selectQuery = "SELECT weight FROM `weight` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
-                Statement stmt  = this.db.getConn().createStatement();
+
+                Statement stmt  = db.getConn().createStatement();
                 ResultSet rs    = stmt.executeQuery(selectQuery);
                 while (rs.next() ) {
                     if(totals.get(scoreIdx) != 0)
@@ -156,15 +165,31 @@ public class Student {
                     else
                         rsum += 0 ;
                 }
+
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
             scoreIdx++;
         }
+        db.closeDB();
         return rsum;
     }
 
+    public void setScore(Assignment assignment, Student student, float score){
+        DBManager db = new DBManager();
+        String selectQuery = "UPDATE course_assignments SET score = '"+score+"' WHERE assignment_ID = '" + assignment.getClassId() +"' AND BU_ID = '"+student.getBuId()+"'";
+        System.out.println(selectQuery);
+        try {
+            Statement stmt  = db.getConn().createStatement();
+            stmt.executeUpdate(selectQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        db.closeDB();
+    }
+
     public ArrayList<Course> getClasses() {
+        DBManager db = new DBManager();
         ArrayList<Course> courses = new ArrayList<Course>();
         // TODO: move query to strings
         String selectQuery = "SELECT * FROM class as A " +
@@ -172,7 +197,7 @@ public class Student {
                 "WHERE B.BU_ID = '" + this.buId + "'";
 
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
@@ -181,7 +206,7 @@ public class Student {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
+        db.closeDB();
         return courses;
     }
 

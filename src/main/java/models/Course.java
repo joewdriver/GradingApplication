@@ -141,29 +141,30 @@ public class Course implements Comparable<Course> {
         ArrayList<Assignment> groups = new ArrayList<Assignment>();
         String id = student.getBuId();
         String selectQuery = "SELECT * FROM `groups` WHERE  BU_ID = '" + id + "'";
-
+        DBManager db = new DBManager();
         try {
-            DBManager db = new DBManager();
+
             Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 groups.add(new Assignment(rs));
             }
-            db.closeDB();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
-
+        db.closeDB();
         //not sure what name is going to look like
         return new Group(1, "Sample Group", this);
     }
 
     public void addAssignment(Assignment assignment){
+        DBManager tempdb = new DBManager();
         String insertQuery = Strings.addAssignmentToCourse;
         try {
-            DBManager tempdb = new DBManager();
+
             PreparedStatement pstmt = tempdb.getConn().prepareStatement(insertQuery);
             pstmt.setInt(1, this.id);
             pstmt.setString(2, assignment.getName());
@@ -173,48 +174,72 @@ public class Course implements Comparable<Course> {
             pstmt.setString(6, assignment.getType());
             pstmt.setInt(7,assignment.getTotalPoints());
             pstmt.executeUpdate();
-            tempdb.closeDB();
+
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        tempdb.closeDB();
+        DBManager db = new DBManager();
+        for(Student tempStudent : this.getStudents()){
+            insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
+            try {
+
+                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+                pstmt.setString(1, tempStudent.getBuId());
+                pstmt.setInt(2, assignment.getClassId());
+                pstmt.setFloat(3,0);
+                pstmt.executeUpdate();
+
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        db.closeDB();
 
     }
 
     public void deleteAssignment(Assignment assignment){
+        DBManager db = new DBManager();
         int id = assignment.getId();
         String deleteQuery = "DELETE FROM `assignments` WHERE class_ID = ?";
         try {
-             DBManager db = new DBManager();
+
              PreparedStatement pstmt = db.getConn().prepareStatement(deleteQuery);
 
             // set the corresponding param
             pstmt.setInt(1, id);
             // execute the delete statement
             pstmt.executeUpdate();
-            db.closeDB();
+
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
+        db.closeDB();
+
     }
 
     public ArrayList<Assignment> getAssignments() {
+        DBManager db = new DBManager();
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name, type FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
-            DBManager db = new DBManager();
+
             Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 assignments.add(new Assignment(rs));
             }
-            db.closeDB();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        db.closeDB();
 
         Collections.sort(assignments);
         return assignments;
@@ -222,25 +247,25 @@ public class Course implements Comparable<Course> {
 
     // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
+        DBManager db = new DBManager();
         //TODO: this db call is failing -- needs to be corrected, appears to be an issue with aliasing
         ArrayList<Student> students = new ArrayList<Student>();
         String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email, " +
                 "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
-            DBManager db = new DBManager();
+
             Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
-                System.out.println("got one");
                 students.add(new Student(rs));
             }
-            db.closeDB();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
+        db.closeDB();
         return students;
     }
 

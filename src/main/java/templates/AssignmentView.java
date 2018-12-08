@@ -1,6 +1,7 @@
 package templates;
 
 import models.Assignment;
+import models.Course;
 import models.Student;
 import utils.View;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import utils.ContextField;
 
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
@@ -20,10 +22,15 @@ public class AssignmentView extends View {
     private JLabel averageScore;
     private JLabel description;
     private JButton editButton;
+    private JButton saveButton;
+    private JButton backButton;
+    private ArrayList<ContextField> contextFields;
+
     private Assignment assignment;
 
     // constructor for creating a new assignment
     public AssignmentView() {
+        this.contextFields = new ArrayList<ContextField>();
         this.assignment = new Assignment(0,"Assignment Name","Assignment Type",100);
         setup(1200, 800, "Add Assignment");
         createUIComponents();
@@ -32,6 +39,7 @@ public class AssignmentView extends View {
 
     // constructor for editing an existing assignment
     public AssignmentView(Assignment assignment) {
+        this.contextFields = new ArrayList<ContextField>();
         this.assignment = assignment;
         setup(1200, 800, "Edit Assignment");
         createUIComponents();
@@ -45,18 +53,34 @@ public class AssignmentView extends View {
                 editAssignment();
             }
         };
-        editButton = new JButton("Submit");
+        editButton = new JButton("Edit this assignment");
         editButton.addActionListener(al);
 
+        ActionListener saveAl = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                saveAssignment();
+            }
+        };
+        saveButton = new JButton("Save this assignment");
+        saveButton.addActionListener(saveAl);
+
+        ActionListener backAl = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                back();
+            }
+        };
+        backButton = new JButton("Back");
+        backButton.addActionListener(backAl);
+
+
         assignmentName = new JLabel(assignment.getName());
-//        courseId = new JLabel(assignment.getCourse().getSectionNumber());
-        courseId = new JLabel("111");
+        courseId = new JLabel(assignment.getCourse().getSectionNumber());
+        //courseId = new JLabel("111");
         assignmentType = new JLabel(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200,10));
         totalPoints = new JLabel(Integer.toString(assignment.getTotalPoints()));
         averageScore = new JLabel(Double.toString(assignment.getAverageScore()));
         description = new JLabel(assignment.getDescription());
-
     }
 
     private void buildLayout() {
@@ -137,7 +161,10 @@ public class AssignmentView extends View {
                 JPanel studentPanel = new JPanel();
                 GroupLayout studentLayout = new GroupLayout(studentPanel);
                 JLabel studentName = new JLabel(student.getFullName());
-                JTextField score = new JTextField(Double.toString(assignment.getScore(student)));
+                ContextField score = new ContextField(Double.toString(student.getGrade(assignment.getClassId())), student);
+                //keep track of all the scores we are adding and the student associated with them
+                contextFields.add(score);
+
                 score.setMinimumSize(new Dimension(40,15));
                 studentName.setMinimumSize(new Dimension(200, 15));
 
@@ -179,6 +206,8 @@ public class AssignmentView extends View {
                 .addComponent(description)
                 .addComponent(scorePanel)
                 .addComponent(editButton)
+                .addComponent(saveButton)
+                .addComponent(backButton)
         );
 
         // by making the vertical group sequential, we order the products top to bottom
@@ -187,6 +216,8 @@ public class AssignmentView extends View {
                 .addComponent(description)
                 .addComponent(scorePanel)
                 .addComponent(editButton)
+                .addComponent(saveButton)
+                .addComponent(backButton)
         );
 
         panel.setLayout(layout);
@@ -200,6 +231,29 @@ public class AssignmentView extends View {
     private void editAssignment() {
         EditAssignmentView editAssignmentView = new EditAssignmentView(this.assignment);
         editAssignmentView.setVisible(true);
+        end();
+    }
+
+    private void saveAssignment(){
+        /*Save the assignment*/
+
+        float tempScore;
+        for(ContextField ctx : contextFields){
+            Student tempStudent = (Student) ctx.getContext();
+            tempScore = (float)Double.parseDouble(ctx.getText());
+            tempStudent.setScore(this.assignment, tempStudent, tempScore);
+        }
+
+        Course tempCourse = assignment.getCourse();
+        CourseView courseView = new CourseView(tempCourse);
+        courseView.setVisible(true);
+        end();
+    }
+
+    private void back(){
+        Course tempCourse = assignment.getCourse();
+        CourseView courseView = new CourseView(tempCourse);
+        courseView.setVisible(true);
         end();
     }
 }

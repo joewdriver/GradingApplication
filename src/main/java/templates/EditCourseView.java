@@ -133,6 +133,7 @@ public class EditCourseView extends View {
             Integer.parseInt(year.getText());
             success = true;
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("checkpoint A");
             EditCourseView editCourseView = new EditCourseView(this.course);
             editCourseView.setVisible(true);
