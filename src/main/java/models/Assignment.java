@@ -11,10 +11,12 @@ public class Assignment implements Comparable<Assignment>{
     private int classId;
     private String name;
     private String description;
+
+    //TODO: what is the plan for these two values?
     private int value;
     private int extraCredit;
     private String type;
-    private DBManager db = new DBManager();
+
 
 
     /**
@@ -57,7 +59,9 @@ public class Assignment implements Comparable<Assignment>{
         return classId;
     }
 
-
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
 
     public int getValue() {
         return value;
@@ -116,6 +120,7 @@ public class Assignment implements Comparable<Assignment>{
      * retrieves the course name and ID in which the assignment exists
      */
     public Course getCourse() {
+        DBManager db = new DBManager();
     /*ID");
             this.sectionNumber = rs.getString("class");
             this.name = rs.getString("name");
@@ -129,7 +134,7 @@ public class Assignment implements Comparable<Assignment>{
         System.out.println(selectQuery);
 
         try {
-            Statement stmt = this.db.getConn().createStatement();
+            Statement stmt = db.getConn().createStatement();
             ResultSet rs = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
@@ -138,6 +143,8 @@ public class Assignment implements Comparable<Assignment>{
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        db.closeDB();
         return null;
 
     }

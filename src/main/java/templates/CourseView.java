@@ -64,7 +64,6 @@ public class CourseView extends View {
         closeButton = new JButton("Close Course");
         alClose = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("checkpoint 1");
                 closeCourse();
             }
         };
@@ -306,6 +305,7 @@ public class CourseView extends View {
             for(Assignment assignment:assignments) {
                 undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
             }
+            //TODO: replace mocked data
             undergraduatePanel.add(new JLabel("100"));
         }
 
@@ -398,6 +398,7 @@ public class CourseView extends View {
     private void cloneCourse() {
         Course newCourse = this.course.cloneCourse();
         CourseView courseView = new CourseView(newCourse);
+        courseView.setVisible(true);
         dispose();
     }
 
@@ -461,7 +462,6 @@ public class CourseView extends View {
     }
 
     private void closeCourse() {
-        System.out.println("checkpoint 2");
         this.course.setActive(0);
         this.course.save();
         CoursesView coursesView = new CoursesView();

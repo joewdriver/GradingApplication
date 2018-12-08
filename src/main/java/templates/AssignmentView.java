@@ -245,8 +245,6 @@ public class AssignmentView extends View {
             tempStudent.setScore(this.assignment, tempScore);
         }
 
-
-
         Course tempCourse = assignment.getCourse();
         CourseView courseView = new CourseView(tempCourse);
         courseView.setVisible(true);

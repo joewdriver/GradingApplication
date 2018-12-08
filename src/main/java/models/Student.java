@@ -19,7 +19,7 @@ public class Student {
     private String graduateLevel;
     private String email;
     private String type;
-    private DBManager db = new DBManager();
+
     public Student(ResultSet rs) {
         try {
             this.buId = rs.getString("BU_ID");
@@ -97,6 +97,7 @@ public class Student {
     }
 
     public double getGrade(int classId) {
+
         /*
         * @details: provide the average grade
         * */
@@ -109,7 +110,8 @@ public class Student {
                 "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
                 "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            DBManager db = new DBManager();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
@@ -117,6 +119,7 @@ public class Student {
                 totals.add(rs.getInt("totalPoints"));
                 assignments.add(new Assignment(rs));
             }
+            db.closeDB();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -124,9 +127,11 @@ public class Student {
         int scoreIdx = 0;
         for (Assignment assign : assignments){
             int assignIdx = 0;
+            // TODO: move to strings
             selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
-                Statement stmt  = this.db.getConn().createStatement();
+                DBManager db = new DBManager();
+                Statement stmt  = db.getConn().createStatement();
                 ResultSet rs    = stmt.executeQuery(selectQuery);
                 while (rs.next() ) {
                     if(totals.get(scoreIdx) != 0)
@@ -134,11 +139,14 @@ public class Student {
                     else
                         rsum += 0 ;
                 }
+                db.closeDB();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
             scoreIdx++;
         }
+
+
         return rsum;
     }
 
@@ -148,24 +156,30 @@ public class Student {
                 "WHERE (SELECT BU_ID FROM course_assignments WHERE assignment_ID = ?) = '" + this.buId + "'" +
                 "AND assignments.ID = ?";
         try {
+            DBManager db = new DBManager();
             PreparedStatement pstmt = db.getConn().prepareStatement(updateQuery);
             pstmt.setFloat(1, score);
             pstmt.setFloat(2, assignment.getClassId());
             pstmt.setInt(3, assignment.getClassId());
             pstmt.executeUpdate();
+            db.closeDB();
         }catch (SQLException e) {
             e.printStackTrace();
         }
+
+
     }
 
     public ArrayList<Course> getClasses() {
+        DBManager db = new DBManager();
         ArrayList<Course> courses = new ArrayList<Course>();
+        // TODO: move query to strings
         String selectQuery = "SELECT * FROM class as A " +
                 "INNER JOIN class_assignments AS B on B.class_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "'";
 
         try {
-            Statement stmt  = this.db.getConn().createStatement();
+            Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
@@ -174,6 +188,8 @@ public class Student {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        db.closeDB();
         return courses;
     }
 
