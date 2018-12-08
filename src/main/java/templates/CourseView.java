@@ -25,6 +25,7 @@ public class CourseView extends View {
     private ContextButton cloneCourse;
     private JButton closeButton;
     private JButton deleteButton;
+    private JButton editButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
     private JLabel classNameHeader, meanScore, medianScore, highScore, lowScore;
@@ -36,6 +37,7 @@ public class CourseView extends View {
     private ActionListener alClose;
     private ActionListener alDelete;
     private ActionListener alClone;
+    private ActionListener alEdit;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
     private ActionListener alViewAllCourses;
@@ -76,6 +78,13 @@ public class CourseView extends View {
         alDelete = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete();
+            }
+        };
+
+        editButton = new JButton("Edit Class");
+        alEdit = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                editClass();
             }
         };
 
@@ -153,7 +162,8 @@ public class CourseView extends View {
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
         closeButton.addActionListener(alClose);
-        
+        editButton.addActionListener(alEdit);
+
         meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
         medianScore = new JLabel("Average Score: " + course.getMedianScore());
         highScore = new JLabel("High Score: " + course.getHighScore());
@@ -223,10 +233,12 @@ public class CourseView extends View {
 
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
                 .addComponent(classNameHeader)
+                .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(classNameHeader)
+                .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
         GroupLayout statLayout = new GroupLayout(statsPanel);
@@ -512,6 +524,12 @@ public class CourseView extends View {
     private void addAssignment(Course course) {
         EditAssignmentView editAssignmentView = new EditAssignmentView(course);
         editAssignmentView.setVisible(true);
+        end();
+    }
+
+    private void editClass() {
+        EditCourseView editCourseView = new EditCourseView(course);
+        editCourseView.setVisible(true);
         end();
     }
 

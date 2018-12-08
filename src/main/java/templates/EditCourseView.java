@@ -59,8 +59,9 @@ public class EditCourseView extends View {
         NumberFormat integerFieldFormatter = NumberFormat.getIntegerInstance();
         integerFieldFormatter.setMaximumFractionDigits(0);
 
-        year = new JTextField("year");
-        year.setPreferredSize(new Dimension(40,30));
+        year = new JTextField(course.getYear());
+        year.setPreferredSize(new Dimension(50,30));
+        year.setHorizontalAlignment(JLabel.CENTER);
 
         String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
