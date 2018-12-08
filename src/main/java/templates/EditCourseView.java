@@ -24,7 +24,7 @@ public class EditCourseView extends View {
     private Course course;
 
     public EditCourseView() {
-        this.course = new Course(-1,"Section","Course Name","Year","Fall");
+        this.course = new Course(-1,"Section","Course Name","2000","Fall");
         headerData = "Create a new Course";
         setup(700, 400, "Gradium - Add Course");
         createUIComponents();
@@ -59,8 +59,9 @@ public class EditCourseView extends View {
         NumberFormat integerFieldFormatter = NumberFormat.getIntegerInstance();
         integerFieldFormatter.setMaximumFractionDigits(0);
 
-        year = new JTextField("2000");
-        year.setPreferredSize(new Dimension(40,30));
+        year = new JTextField(course.getYear());
+        year.setPreferredSize(new Dimension(50,30));
+        year.setHorizontalAlignment(JLabel.CENTER);
 
         String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};
         season = new JComboBox(seasons);
