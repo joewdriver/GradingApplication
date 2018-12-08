@@ -59,7 +59,7 @@ public class EditCourseView extends View {
         NumberFormat integerFieldFormatter = NumberFormat.getIntegerInstance();
         integerFieldFormatter.setMaximumFractionDigits(0);
 
-        year = new JTextField("year");
+        year = new JTextField("2000");
         year.setPreferredSize(new Dimension(40,30));
 
         String[] seasons = new String[] {"Spring","Summer","Fall","Winter"};

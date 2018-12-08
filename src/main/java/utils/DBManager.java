@@ -32,7 +32,6 @@ public class DBManager {
             Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
             conn = DriverManager.getConnection(dbPath);
-            System.out.println("connection retrieved");
             //Course ex = new Course("2", "example", "2012", "Fall");
             //this.addCourse(ex);
 
@@ -165,8 +164,6 @@ public class DBManager {
     public void closeDB() {
         try {
             conn.close();
-            System.out.println("connection closed");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
