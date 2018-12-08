@@ -11,6 +11,8 @@ public class Assignment implements Comparable<Assignment>{
     private int classId;
     private String name;
     private String description;
+
+    //TODO: what is the plan for these two values?
     private int value;
     private int extraCredit;
     private String type;
@@ -57,7 +59,9 @@ public class Assignment implements Comparable<Assignment>{
         return classId;
     }
 
-
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
 
     public int getValue() {
         return value;
