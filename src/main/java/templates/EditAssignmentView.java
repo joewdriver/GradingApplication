@@ -19,6 +19,7 @@ public class EditAssignmentView extends View {
     private JTextField assignmentType;
     private JTextField totalPoints;
     private JTextField description;
+    private JTextField weight;
     private JButton submitButton;
     private Assignment assignment;
     private Course course;
@@ -49,13 +50,16 @@ public class EditAssignmentView extends View {
                 String name = assignmentName.getText();
                 String desc = description.getText();
                 String type = assignmentType.getText();
-                System.out.println(name + desc + type);
-                createAssignment(name, type, desc);
+                String assignmentWeight = weight.getText();
+
+                createAssignment(name, type, desc, assignmentWeight);
             }
         };
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
+
+        weight = new JTextField("Weight");
         assignmentName = new JTextField(assignment.getName());
         Course tempCourse = assignment.getCourse();
         if (tempCourse == null)//the case where we are adding a assignment that is not tied to a class
@@ -66,6 +70,7 @@ public class EditAssignmentView extends View {
         assignmentType.setMinimumSize(new Dimension(200, 10));
         totalPoints = new JTextField(assignment.getTotalPoints());
         description = new JTextField(assignment.getDescription());
+
 
     }
 
@@ -84,6 +89,7 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
+                .addComponent(weight)
                 .addComponent(submitButton)
         );
 
@@ -92,6 +98,7 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
+                .addComponent(weight)
                 .addComponent(submitButton)
         );
 
@@ -103,17 +110,18 @@ public class EditAssignmentView extends View {
         pane.add(panel);
     }
 
-    private void createAssignment(String name, String type, String desc) {
+    private void createAssignment(String name, String type, String desc, String weight) {
+        float assignmentWeight = Float.parseFloat(weight);
         try{
             //creating a new assignment
             Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
-            this.course.addAssignment(assignment);
+            this.course.addAssignment(assignment, assignmentWeight);
         } catch(Exception e) {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
             Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, 100);
-            tempCourse.addAssignment(assignment);
+            tempCourse.addAssignment(assignment, assignmentWeight);
         }
 
         CourseView editAssignmentView = new CourseView(this.course);
