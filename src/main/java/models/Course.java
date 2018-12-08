@@ -112,7 +112,7 @@ public class Course implements Comparable<Course> {
     }
 
     public boolean  getActive() {
-        return active == 1;
+        return this.active == 1;
     }
 
     public void setActive(int active) {
@@ -250,8 +250,8 @@ public class Course implements Comparable<Course> {
         DBManager db = new DBManager();
         //TODO: this db call is failing -- needs to be corrected, appears to be an issue with aliasing
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email FROM student AS A " +
-                "INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
+        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email, " +
+                "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
 
@@ -302,7 +302,8 @@ public class Course implements Comparable<Course> {
             e.printStackTrace();
         }
 
-        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email)  VALUES(?,?,?,?,?,?)";
+        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email, notes) "+
+                "VALUES(?,?,?,?,?,?,?)";
         try {
             DBManager db = new DBManager();
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
@@ -312,6 +313,7 @@ public class Course implements Comparable<Course> {
             pstmt.setString(4, student.getFamilyName());
             pstmt.setString(5, student.getGraduateLevel());
             pstmt.setString(6, student.getEmail());
+            pstmt.setString(7, student.getNotes());
             pstmt.executeUpdate();
             db.closeDB();
         }catch (SQLException e) {

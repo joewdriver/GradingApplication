@@ -6,6 +6,7 @@ import models.Student;
 import utils.ContextButton;
 import utils.View;
 
+import javax.naming.Context;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -24,6 +25,7 @@ public class CourseView extends View {
     private ContextButton cloneCourse;
     private JButton closeButton;
     private JButton deleteButton;
+    private JButton editButton;
     private JButton viewAllCoursesButton;
     private JButton addAssignment;
     private JLabel classNameHeader, meanScore, medianScore, highScore, lowScore;
@@ -35,6 +37,7 @@ public class CourseView extends View {
     private ActionListener alClose;
     private ActionListener alDelete;
     private ActionListener alClone;
+    private ActionListener alEdit;
     private ActionListener alAddStudent;
     private ActionListener alImportStudents;
     private ActionListener alViewAllCourses;
@@ -72,6 +75,13 @@ public class CourseView extends View {
         alDelete = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 delete();
+            }
+        };
+
+        editButton = new JButton("Edit Class");
+        alEdit = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                editClass();
             }
         };
 
@@ -149,7 +159,8 @@ public class CourseView extends View {
         addAssignment.addActionListener(alAddAssignment);
         deleteButton.addActionListener(alDelete);
         closeButton.addActionListener(alClose);
-        
+        editButton.addActionListener(alEdit);
+
         meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
         medianScore = new JLabel("Average Score: " + course.getMedianScore());
         highScore = new JLabel("High Score: " + course.getHighScore());
@@ -219,10 +230,12 @@ public class CourseView extends View {
 
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
                 .addComponent(classNameHeader)
+                .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
                 .addComponent(classNameHeader)
+                .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
         GroupLayout statLayout = new GroupLayout(statsPanel);
@@ -297,6 +310,9 @@ public class CourseView extends View {
         for(Student student: undergraduates) {
             System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
+            if(!student.getNotes().equals("")) {
+                btn.setForeground(Color.RED);
+            }
 
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
@@ -358,6 +374,10 @@ public class CourseView extends View {
         for(Student student: graduates) {
             System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
+            if(!student.getNotes().equals("")) {
+                btn.setForeground(Color.RED);
+            }
+
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
             for(Assignment assignment:assignments) {
@@ -419,8 +439,6 @@ public class CourseView extends View {
         if(studentList != null)
             System.out.println("File name "+studentList.getName());
 
-        //System.out.println("File name "+studentList.getName());
-
         // Now let's parse the file
         // we expect to input to be as such: BU ID, first name, middle initial, last name
         // graduate level, email
@@ -442,7 +460,6 @@ public class CourseView extends View {
                     Student student = new Student(buId, firstName, middleInitial, familyName,
                             graduateLevel, email);
 
-                    //student.save();
                     course.addStudent(student);
                     ArrayList<Course> list = student.getClasses();
                     for (Course blah : list) {
@@ -459,6 +476,10 @@ public class CourseView extends View {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+
+        CourseView classes = new CourseView(course);
+        classes.setVisible(true);
+        end();
     }
 
     private void closeCourse() {
@@ -498,6 +519,12 @@ public class CourseView extends View {
     private void addAssignment(Course course) {
         EditAssignmentView editAssignmentView = new EditAssignmentView(course);
         editAssignmentView.setVisible(true);
+        end();
+    }
+
+    private void editClass() {
+        EditCourseView editCourseView = new EditCourseView(course);
+        editCourseView.setVisible(true);
         end();
     }
 
