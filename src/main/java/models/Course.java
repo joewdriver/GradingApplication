@@ -60,7 +60,8 @@ public class Course implements Comparable<Course> {
         tempdb = new DBManager();
         ResultSet rs = tempdb.executeQuery(courseQuery);
         try {
-            courseId = rs.getInt(0);
+            rs.next();
+            courseId = rs.getInt("seq");
         } catch (SQLException e) {
             e.printStackTrace();
             tempdb.closeDB();
@@ -254,9 +255,7 @@ public class Course implements Comparable<Course> {
                 "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
-
-            Statement stmt  = db.getConn().createStatement();
-            ResultSet rs    = stmt.executeQuery(selectQuery);
+            ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 students.add(new Student(rs));
@@ -264,8 +263,8 @@ public class Course implements Comparable<Course> {
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            db.closeDB();
         }
-        db.closeDB();
         return students;
     }
 

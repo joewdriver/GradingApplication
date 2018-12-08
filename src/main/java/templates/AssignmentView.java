@@ -42,6 +42,7 @@ public class AssignmentView extends View {
         this.contextFields = new ArrayList<ContextField>();
         this.assignment = assignment;
         setup(1200, 800, "Edit Assignment");
+        this.db.closeDB();
         createUIComponents();
         buildLayout() ;
     }

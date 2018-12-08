@@ -130,19 +130,18 @@ public class Assignment implements Comparable<Assignment>{
                 "INNER JOIN assignments AS B ON A.ID = B.class_id " +
                 "WHERE B.class_id = '" + this.classId + "'";
 
-        System.out.println(selectQuery);
-
         try {
-            Statement stmt = db.getConn().createStatement();
-            ResultSet rs = stmt.executeQuery(selectQuery);
+            ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
-                return new Course(rs); //should only be one course
+                Course course = new Course(rs);
+                db.closeDB();
+                return course; //should only be one course
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            db.closeDB();
         }
-
         db.closeDB();
         return null;
 

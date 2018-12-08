@@ -134,11 +134,9 @@ public class Student {
                 "INNER JOIN `class_assignments` as B on B.class_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
 
-        System.out.println(selectQuery);
         try {
 
-            Statement stmt  = db.getConn().createStatement();
-            ResultSet rs    = stmt.executeQuery(selectQuery);
+            ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 scores.add(rs.getInt("score"));
@@ -147,8 +145,12 @@ public class Student {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+            db.closeDB();
         }
+        System.out.println("should close db here");
+        db.closeDB();
+        db = new DBManager();
 
         int scoreIdx = 0;
         for (Assignment assign : assignments){
@@ -157,8 +159,7 @@ public class Student {
             selectQuery = "SELECT weight FROM `weight` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
 
-                Statement stmt  = db.getConn().createStatement();
-                ResultSet rs    = stmt.executeQuery(selectQuery);
+                ResultSet rs = db.executeQuery(selectQuery);
                 while (rs.next() ) {
                     if(totals.get(scoreIdx) != 0)
                         rsum += rs.getInt("weight") * (scores.get(scoreIdx) / totals.get(scoreIdx));
@@ -168,10 +169,10 @@ public class Student {
 
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+                db.closeDB();
             }
             scoreIdx++;
         }
-        db.closeDB();
         return rsum;
     }
 
@@ -184,6 +185,7 @@ public class Student {
             stmt.executeUpdate(selectQuery);
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeDB();
         }
         db.closeDB();
     }
