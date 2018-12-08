@@ -101,16 +101,20 @@ public class Student {
         /*
         * @details: provide the average grade
         * */
+        DBManager db = new DBManager();
+        System.out.println("in get score");
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
         ArrayList<Integer> totals = new ArrayList<Integer>();
         double rsum = 0.0;
 
-        String selectQuery = "SELECT ID, class_ID, name, type, totalPoints, score  FROM `assignments` as A " +
-                "INNER JOIN `course_assignments` as B on B.Class_ID = A.ID" +
-                "WHERE B.BU_ID = " + this.buId + " AND A.class_ID = '" + classId + "'";
+        String selectQuery = "SELECT A.ID, A.class_ID, A.name, A.type, A.totalPoints, A.score  FROM `assignments` as A " +
+                "INNER JOIN `class_assignments` as B on B.class_ID = A.ID " +
+                "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
+
+        System.out.println(selectQuery);
         try {
-            DBManager db = new DBManager();
+
             Statement stmt  = db.getConn().createStatement();
             ResultSet rs    = stmt.executeQuery(selectQuery);
             // loop through the result set
@@ -119,7 +123,7 @@ public class Student {
                 totals.add(rs.getInt("totalPoints"));
                 assignments.add(new Assignment(rs));
             }
-            db.closeDB();
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -128,9 +132,9 @@ public class Student {
         for (Assignment assign : assignments){
             int assignIdx = 0;
             // TODO: move to strings
-            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
+            selectQuery = "SELECT weight FROM `weight` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
-                DBManager db = new DBManager();
+
                 Statement stmt  = db.getConn().createStatement();
                 ResultSet rs    = stmt.executeQuery(selectQuery);
                 while (rs.next() ) {
@@ -139,35 +143,27 @@ public class Student {
                     else
                         rsum += 0 ;
                 }
-                db.closeDB();
+
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
             scoreIdx++;
         }
-
-
+        db.closeDB();
         return rsum;
     }
 
-    public void setScore(Assignment assignment, float score){
-        String updateQuery = "UPDATE assignments  " +
-                "SET score = ? " +
-                "WHERE (SELECT BU_ID FROM course_assignments WHERE assignment_ID = ?) = '" + this.buId + "'" +
-                "AND assignments.ID = ?";
+    public void setScore(Assignment assignment, Student student, float score){
+        DBManager db = new DBManager();
+        String selectQuery = "UPDATE course_assignments SET score = '"+score+"' WHERE assignment_ID = '" + assignment.getClassId() +"' AND BU_ID = '"+student.getBuId()+"'";
+        System.out.println(selectQuery);
         try {
-            DBManager db = new DBManager();
-            PreparedStatement pstmt = db.getConn().prepareStatement(updateQuery);
-            pstmt.setFloat(1, score);
-            pstmt.setFloat(2, assignment.getClassId());
-            pstmt.setInt(3, assignment.getClassId());
-            pstmt.executeUpdate();
-            db.closeDB();
-        }catch (SQLException e) {
+            Statement stmt  = db.getConn().createStatement();
+            stmt.executeUpdate(selectQuery);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
+        db.closeDB();
     }
 
     public ArrayList<Course> getClasses() {
@@ -188,7 +184,6 @@ public class Student {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
         db.closeDB();
         return courses;
     }

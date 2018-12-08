@@ -67,7 +67,6 @@ public class Assignment implements Comparable<Assignment>{
         return value;
     }
 
-
     /**
      * a constructor that handles a default type setting to homework
      */

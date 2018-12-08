@@ -161,7 +161,7 @@ public class AssignmentView extends View {
                 JPanel studentPanel = new JPanel();
                 GroupLayout studentLayout = new GroupLayout(studentPanel);
                 JLabel studentName = new JLabel(student.getFullName());
-                ContextField score = new ContextField(Double.toString(assignment.getScore(student)), student);
+                ContextField score = new ContextField(Double.toString(student.getGrade(assignment.getClassId())), student);
                 //keep track of all the scores we are adding and the student associated with them
                 contextFields.add(score);
 
@@ -236,13 +236,12 @@ public class AssignmentView extends View {
 
     private void saveAssignment(){
         /*Save the assignment*/
-        Student tempStudent;
+
         float tempScore;
         for(ContextField ctx : contextFields){
-            tempStudent = (Student) ctx.getContext();
+            Student tempStudent = (Student) ctx.getContext();
             tempScore = (float)Double.parseDouble(ctx.getText());
-
-            tempStudent.setScore(this.assignment, tempScore);
+            tempStudent.setScore(this.assignment, tempStudent, tempScore);
         }
 
         Course tempCourse = assignment.getCourse();
