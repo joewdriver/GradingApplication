@@ -19,11 +19,11 @@ public class Strings {
     public static final String getStudentFromId = "SELECT * FROM student where BU_ID=\"%s\"";
 
     public static final String insertStudent = "INSERT INTO student (" +
-            "BU_ID, first_name, middle_initial, family_name, type, email) " +
+            "BU_ID, first_name, middle_initial, family_name, type, email, notes) " +
             "VALUES" +
-            "(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")";
+            "(\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\")";
 
     public static final String updateStudent = "UPDATE student SET " +
-            "first_name=\"%s\", middle_initial=\"%s\", family_name=\"%s\", type=\"%s\", email=\"%s\" " +
-            "WHERE BU_ID = \"%s\"";
+            "first_name=\"%s\", middle_initial=\"%s\", family_name=\"%s\", type=\"%s\", email=\"%s\", "+
+            "notes=\"%s\" WHERE BU_ID = \"%s\"";
 }

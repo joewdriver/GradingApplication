@@ -194,8 +194,8 @@ public class Course implements Comparable<Course> {
     // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email FROM student AS A " +
-                "INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
+        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email, " +
+                "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
                 " WHERE B.class_ID = '" + this.id + "'";
         try {
             Statement stmt  = this.db.getConn().createStatement();
@@ -246,7 +246,8 @@ public class Course implements Comparable<Course> {
             e.printStackTrace();
         }
 
-        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email)  VALUES(?,?,?,?,?,?)";
+        insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email, notes) "+
+                "VALUES(?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
@@ -255,6 +256,7 @@ public class Course implements Comparable<Course> {
             pstmt.setString(4, student.getFamilyName());
             pstmt.setString(5, student.getGraduateLevel());
             pstmt.setString(6, student.getEmail());
+            pstmt.setString(7, student.getNotes());
             pstmt.executeUpdate();
         }catch (SQLException e) {
             e.printStackTrace();

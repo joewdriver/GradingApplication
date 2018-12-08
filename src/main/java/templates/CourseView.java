@@ -6,6 +6,7 @@ import models.Student;
 import utils.ContextButton;
 import utils.View;
 
+import javax.naming.Context;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -301,6 +302,9 @@ public class CourseView extends View {
         for(Student student: undergraduates) {
             System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
+            if(!student.getNotes().equals("")) {
+                btn.setForeground(Color.RED);
+            }
 
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
@@ -361,6 +365,10 @@ public class CourseView extends View {
         for(Student student: graduates) {
             System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
+            if(!student.getNotes().equals("")) {
+                btn.setForeground(Color.RED);
+            }
+
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
             for(Assignment assignment:assignments) {
@@ -421,8 +429,6 @@ public class CourseView extends View {
         if(studentList != null)
             System.out.println("File name "+studentList.getName());
 
-        //System.out.println("File name "+studentList.getName());
-
         // Now let's parse the file
         // we expect to input to be as such: BU ID, first name, middle initial, last name
         // graduate level, email
@@ -444,7 +450,6 @@ public class CourseView extends View {
                     Student student = new Student(buId, firstName, middleInitial, familyName,
                             graduateLevel, email);
 
-                    //student.save();
                     course.addStudent(student);
                     ArrayList<Course> list = student.getClasses();
                     for (Course blah : list) {
@@ -461,6 +466,10 @@ public class CourseView extends View {
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+
+        CourseView classes = new CourseView(course);
+        classes.setVisible(true);
+        end();
     }
 
     private void closeCourse() {
