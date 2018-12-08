@@ -24,7 +24,7 @@ public class EditCourseView extends View {
     private Course course;
 
     public EditCourseView() {
-        this.course = new Course(-1,"Section","Course Name","Year","Fall");
+        this.course = new Course(-1,"Section","Course Name","2000","Fall");
         headerData = "Create a new Course";
         setup(700, 400, "Gradium - Add Course");
         createUIComponents();

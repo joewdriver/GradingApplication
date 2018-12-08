@@ -61,6 +61,8 @@ public class CoursesView extends View {
         buildLayout();
     }
 
+
+
     private void createUIComponents() {
 
         //quick label for the header
@@ -143,6 +145,7 @@ public class CoursesView extends View {
         sortOldest.addActionListener(alSort);
         reset.addActionListener(alSort);
         search.addActionListener(alSearch);
+        sortActive.addActionListener(alActive);
 
     }
 
@@ -208,6 +211,8 @@ public class CoursesView extends View {
         listVertical.addComponent(headerPanel);
         listHorizontal.addComponent(sortPanel);
         listVertical.addComponent(sortPanel);
+        listHorizontal.addComponent(sortActive);
+        listVertical.addComponent(sortActive);
 
         for(Course course: courses) {
             // first check if the course is active or if we require active courses.
@@ -266,7 +271,7 @@ public class CoursesView extends View {
     }
 
     private void activeCourses() {
-        CoursesView coursesView = new CoursesView(sortCondition, searchField.getText(), active);
+        CoursesView coursesView = new CoursesView(sortCondition, searchField.getText(), !active);
         coursesView.setVisible(true);
         end();
     }

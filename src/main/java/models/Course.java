@@ -112,7 +112,7 @@ public class Course implements Comparable<Course> {
     }
 
     public boolean  getActive() {
-        return active == 1;
+        return this.active == 1;
     }
 
     public void setActive(int active) {
