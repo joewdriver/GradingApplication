@@ -258,14 +258,11 @@ public class Course implements Comparable<Course> {
         return assignments;
     }
 
-    // TODO: move query into strings.  Query is causing SQLite exception.
     public ArrayList<Student> getStudents() {
         DBManager db = new DBManager();
-        //TODO: this db call is failing -- needs to be corrected, appears to be an issue with aliasing
         ArrayList<Student> students = new ArrayList<Student>();
-        String selectQuery = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email, " +
-                "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
-                " WHERE B.class_ID = '" + this.id + "'";
+        String selectQuery = String.format(Strings.getStudentsInClass, this.id);
+
         try {
             ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
