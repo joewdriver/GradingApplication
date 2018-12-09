@@ -294,14 +294,17 @@ public class CourseView extends View {
             btn.addActionListener(alAssignmentView);
             undergraduatePanel.add(btn);
         }
-        undergraduatePanel.add(new JLabel(""));
-        undergraduatePanel.add(new JLabel(""));
+        undergraduatePanel.add(new JLabel("Total Points"));
+        undergraduatePanel.add(new JLabel("Out Of:"));
 
         // next the assignment list in the top row
+        int sum = 0;
         for(Assignment assignment:assignments) {
-            undergraduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
+            int totalPoints = assignment.getTotalPoints();
+            undergraduatePanel.add(new JLabel(Integer.toString(totalPoints)));
+            sum += totalPoints;
         }
-        undergraduatePanel.add(new JLabel("  Total Grade"));
+        undergraduatePanel.add(new JLabel(Integer.toString(sum)));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
@@ -318,11 +321,12 @@ public class CourseView extends View {
             undergraduatePanel.add(btn);
             //TODO: add the average calculation here based on db call
             //undergraduatePanel.add(new TextField("100"));
+            double totalScore = 0.0;
             for(Assignment assignment:assignments) {
                 undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
+                totalScore += assignment.getScore(student);
             }
-            //TODO: replace mocked data
-            undergraduatePanel.add(new JLabel("100"));
+            undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
         }
 
         // adding in the graduate stuff
@@ -360,14 +364,17 @@ public class CourseView extends View {
             btn.addActionListener(alAssignmentView);
             graduatePanel.add(btn);
         }
-        graduatePanel.add(new JLabel(""));
-        graduatePanel.add(new JLabel(""));
+        graduatePanel.add(new JLabel("Total Points"));
+        graduatePanel.add(new JLabel("Out Of"));
 
         // next the assignment list in the top row
+        sum = 0;
         for(Assignment assignment:assignments) {
-            graduatePanel.add(new JLabel(Integer.toString(assignment.getTotalPoints())));
+            int totalPoints = assignment.getTotalPoints();
+            graduatePanel.add(new JLabel(Integer.toString(totalPoints)));
+            sum += totalPoints;
         }
-        graduatePanel.add(new JLabel("  Total Grade"));
+        graduatePanel.add(new JLabel(Integer.toString(sum)));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
@@ -380,11 +387,13 @@ public class CourseView extends View {
 
             btn.addActionListener(this.alStudentView);
             graduatePanel.add(btn);
+            double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                // TODO: resolve this based on db call of student assignment join
-                graduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
+                double score = assignment.getScore(student);
+                graduatePanel.add(new JLabel(Double.toString(score)));
+                totalScore = totalScore + score;
             }
-            graduatePanel.add(new JLabel("100"));
+            graduatePanel.add(new JLabel(Double.toString(totalScore)));
             // TODO resolve average grade
             //graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
         }

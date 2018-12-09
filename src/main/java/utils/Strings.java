@@ -31,4 +31,10 @@ public class Strings {
 
     public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
 
+    public static final String getAssignmentScores = "SELECT score from course_assignments where assignment_ID=%d";
+
+    public static final String getStudentsInClass = "SELECT A.BU_ID, A.first_name, A.middle_initial, A.family_name, A.type, A.email, " +
+            "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
+            " WHERE B.class_ID = %d";
+
 }

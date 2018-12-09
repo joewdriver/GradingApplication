@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import utils.DBManager;
+import utils.Strings;
 
 public class Assignment implements Comparable<Assignment>{
     private int id;
@@ -12,7 +13,7 @@ public class Assignment implements Comparable<Assignment>{
     private String name;
     private String description;
 
-    //TODO: what is the plan for these two values?
+    //TODO: still need to be added
     private int value;
     private int extraCredit;
     private String type;
@@ -147,8 +148,28 @@ public class Assignment implements Comparable<Assignment>{
 
     }
 
+    /**
+     * averages the scores for this assignment across all students
+     * @return the average score
+     */
     public double getAverageScore() {
-        //TODO: this needs to be replaced with a db call
-        return 95.5;
+        String query = String.format(Strings.getAssignmentScores, this.id);
+        DBManager db = new DBManager();
+        int score = 0;
+        int count = 0;
+
+        try {
+            ResultSet rs = db.executeQuery(query);
+            while (rs.next()) {
+                count++;
+                score = score + rs.getInt("score");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            db.closeDB();
+        }
+        db.closeDB();
+        int result = score/count;
+        return result;
     }
 }
