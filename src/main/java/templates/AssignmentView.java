@@ -20,6 +20,7 @@ public class AssignmentView extends View {
     private JLabel assignmentType;
     private JLabel totalPoints;
     private JLabel averageScore;
+    private JLabel weight;
     private JLabel description;
     private JButton editButton;
     private JButton saveButton;
@@ -74,6 +75,8 @@ public class AssignmentView extends View {
         backButton.addActionListener(backAl);
 
         totalPoints = new JLabel("Total Points: " + Integer.toString(assignment.getTotalPoints()));
+
+        weight = new JLabel("Weight of assignment: " + Float.toString(assignment.getWeight()));
         assignmentName = new JLabel(assignment.getName());
         courseId = new JLabel(assignment.getCourse().getSectionNumber());
         //courseId = new JLabel("111");
@@ -108,6 +111,7 @@ public class AssignmentView extends View {
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
                 .addComponent(totalPoints)
+                .addComponent(weight)
         );
         // Course ID and assignment header in the same row
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
@@ -117,6 +121,7 @@ public class AssignmentView extends View {
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
                 .addComponent(totalPoints)
+                .addComponent(weight)
         );
 
 

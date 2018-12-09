@@ -67,6 +67,27 @@ public class Assignment implements Comparable<Assignment>{
         return value;
     }
 
+    public float getWeight(){
+        DBManager db = new DBManager();
+        float weight = 0;
+        String selectQuery = "SELECT weight FROM `weight` WHERE assignment_ID = "+this.getId()+" LIMIT 1";
+        try {
+            Statement stmt  = db.getConn().createStatement();
+
+            ResultSet rs = stmt.executeQuery(selectQuery);
+            weight += rs.getFloat("weight");
+            rs.close();
+            stmt.close();
+        }catch (Exception e) {
+            e.printStackTrace();
+            db.closeDB();
+        }
+
+        db.closeDB();
+        return weight;
+
+    }
+
     /**
      * a constructor that handles a default type setting to homework
      */
