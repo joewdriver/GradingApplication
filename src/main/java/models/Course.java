@@ -73,7 +73,7 @@ public class Course implements Comparable<Course> {
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
             System.out.println("Checkpoint Alpha");
-            newCourse.addAssignment(assignment);
+            newCourse.addAssignment(assignment, 0);
         }
 
         // return the newly created course
@@ -161,7 +161,7 @@ public class Course implements Comparable<Course> {
         return new Group(1, "Sample Group", this);
     }
 
-    public void addAssignment(Assignment assignment){
+    public void addAssignment(Assignment assignment, float weight){
         DBManager tempdb = new DBManager();
         String insertQuery = Strings.addAssignmentToCourse;
         try {
@@ -195,9 +195,21 @@ public class Course implements Comparable<Course> {
                 e.printStackTrace();
             }
         }
-
         db.closeDB();
 
+        db = new DBManager();
+            insertQuery = "INSERT INTO weight ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
+            try {
+                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+                pstmt.setInt(1, -1);
+                pstmt.setInt(2, assignment.getId());
+                pstmt.setFloat(3,weight);
+                pstmt.executeUpdate();
+
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+        db.closeDB();
     }
 
     public void deleteAssignment(Assignment assignment){
