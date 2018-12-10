@@ -69,7 +69,7 @@ public class EditAssignmentView extends View {
         assignmentType = new JTextField(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200, 10));
         totalPoints = new JTextField(assignment.getTotalPoints());
-        description = new JTextField(assignment.getDescription());
+        description = new JTextField((assignment.getDescription() == null ? "Description" : assignment.getDescription()));
 
 
     }

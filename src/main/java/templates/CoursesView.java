@@ -105,10 +105,10 @@ public class CoursesView extends View {
         courses = db.getCourses();
         db.closeDB();
 
-        if (sortCondition.equals("newest")) {
+        if (sortCondition.equals("oldest")) {
             Collections.sort(courses);
         }
-        if (sortCondition.equals("oldest")) {
+        if (sortCondition.equals("newest")) {
             Collections.sort(courses);
             Collections.reverse(courses);
         }

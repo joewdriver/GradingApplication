@@ -53,6 +53,7 @@ public class Course implements Comparable<Course> {
         String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), 1);
         DBManager tempdb = new DBManager();
         tempdb.executeUpdate(courseInsert);
+        tempdb.closeDB();
         // next retrieve the new course id
         String courseQuery = Strings.getLastCreatedCourse;
         int courseId = 0;
@@ -66,6 +67,7 @@ public class Course implements Comparable<Course> {
             e.printStackTrace();
             tempdb.closeDB();
         }
+        tempdb.closeDB();
 
         // once the new course has been created, represent it as a data object
         Course newCourse = new Course(courseId);
