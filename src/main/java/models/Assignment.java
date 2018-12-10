@@ -190,7 +190,7 @@ public class Assignment implements Comparable<Assignment>{
             db.closeDB();
         }
         db.closeDB();
-        count = (count == 0) ? 1:score;
+        count = (count == 0) ? 1:count;
         int result = score/count;
         return result;
     }
