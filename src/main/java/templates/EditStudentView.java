@@ -56,17 +56,17 @@ public class EditStudentView extends View {
         submitButton.addActionListener(al);
 
 
-        familyName = new JTextField("Family name");
+        familyName = new JTextField(student.getFamilyName());
         familyName.setPreferredSize(new Dimension(200,10));
-        firstName = new JTextField("First name");
+        firstName = new JTextField(student.getFirstName());
         firstName.setPreferredSize(new Dimension(200,10));
-        middleInitial = new JTextField("Middle initial");
+        middleInitial = new JTextField(student.getMiddleInitial());
         middleInitial.setPreferredSize(new Dimension(20,10));
 
 
-        buId = new JTextField("BU ID");
+        buId = new JTextField(student.getBuId());
         buId.setPreferredSize(new Dimension(200,10));
-        email = new JTextField("Email");
+        email = new JTextField(student.getEmail());
         email.setPreferredSize(new Dimension(200,10));
 
         String[] gradLevels = new String[] {"Undergraduate","Graduate"};
