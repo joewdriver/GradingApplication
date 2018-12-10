@@ -60,11 +60,11 @@ public class DBManager {
 
         //TODO Primary keys for these tables are inappropriate.  table names could be improved as both  deal with student ids
         final String class_assignments = "CREATE TABLE `class_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `class_ID` INT(200) NOT NULL , PRIMARY KEY (`BU_ID`))";
-        final String course_assignments = "CREATE TABLE `course_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `score` INT(11) NOT NULL, PRIMARY KEY (`BU_ID`))";
+        final String course_assignments = "CREATE TABLE `course_assignments` ( `BU_ID` VARCHAR(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `score` INT(11) NOT NULL, PRIMARY KEY (`BU_ID`,`assignment_ID`))";
 
         final String assignments = "CREATE TABLE `assignments` ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT , `totalPoints` INT(200) NOT NULL , `class_ID` INT(200) NOT NULL , `name` INT(200) NOT NULL, `description` VARCHAR(700) NULL , `score` INT(11) NOT NULL , `extra_credit` INT(11) NOT NULL, `type` VARCHAR(200) NULL )";
         final String group = "CREATE TABLE `groups` ( `group_id` INT(200) NOT NULL , `BU_ID` VARCHAR(200) NOT NULL , `class_id` INT(200) NOT NULL, `weight` INT(200) , PRIMARY KEY (`BU_ID`))";
-        final String weight = "CREATE TABLE `weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`group_id`))";
+        final String weight = "CREATE TABLE `weight` ( `group_id` INT(200) NOT NULL , `assignment_ID` INT(200) NOT NULL , `weight` INT(11) NOT NULL , PRIMARY KEY (`assignment_ID`,`group_id`))";
         final String auth = "CREATE TABLE `auth` (`username` VARCHAR(200) NOT NULL, `password` VARCHAR(200) NOT NULL)";
         try {
             Statement stmt = this.conn.createStatement();

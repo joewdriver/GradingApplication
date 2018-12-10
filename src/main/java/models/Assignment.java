@@ -194,4 +194,13 @@ public class Assignment implements Comparable<Assignment>{
         int result = score/count;
         return result;
     }
+
+    public void save() {
+        DBManager db = new DBManager();
+        String query = String.format(Strings.updateAssignment,this.totalPoints,
+                this.name, this.description, this.type, this.id);
+        db.executeUpdate(query);
+        db.closeDB();
+        //TODO find a way to save weighting, or remove weighting from assignment edit view
+    }
 }
