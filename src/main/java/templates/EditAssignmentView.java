@@ -18,16 +18,19 @@ public class EditAssignmentView extends View {
     private JTextField assignmentName;
     private JTextField assignmentType;
     private JTextField totalPoints;
+    private JLabel weightPrompt;
     private JTextField description;
     private JTextField weight;
     private JButton submitButton;
     private Assignment assignment;
     private Course course;
+    private boolean create;
 
     // constructor for creating a new assignment
     public EditAssignmentView(Course course) {
         this.course = course;
         this.assignment = new Assignment(course.getId(), "Assignment Name", "Assignment Type", 100);
+        this.create = true;
 
         setup(1200, 800, "Add Assignment");
         createUIComponents();
@@ -37,6 +40,7 @@ public class EditAssignmentView extends View {
     // constructor for editing an existing assignment
     public EditAssignmentView(Assignment assignment) {
         this.assignment = assignment;
+        this.create = false;
         setup(1200, 800, "Edit Assignment");
         createUIComponents();
         buildLayout();
@@ -52,25 +56,26 @@ public class EditAssignmentView extends View {
                 String type = assignmentType.getText();
                 String assignmentWeight = weight.getText();
 
-                createAssignment(name, type, desc, assignmentWeight);
+                if(create) {
+                    createAssignment(name, type, desc, assignmentWeight);
+                } else {
+                    editAssignment();
+                }
             }
         };
         submitButton = new JButton("Submit");
         submitButton.addActionListener(al);
 
 
-        weight = new JTextField("Weight");
+        weight = new JTextField("1");
+
         assignmentName = new JTextField(assignment.getName());
         Course tempCourse = assignment.getCourse();
-        if (tempCourse == null)//the case where we are adding a assignment that is not tied to a class
-            courseId = new JTextField("Section Number");
-        else
-            courseId = new JTextField(assignment.getCourse().getSectionNumber());
         assignmentType = new JTextField(assignment.getType());
         assignmentType.setMinimumSize(new Dimension(200, 10));
         totalPoints = new JTextField(assignment.getTotalPoints());
-        description = new JTextField(assignment.getDescription());
-
+        description = new JTextField((assignment.getDescription() == null ? "Description" : assignment.getDescription()));
+        weightPrompt = new JLabel("Weight: ");
 
     }
 
@@ -78,18 +83,22 @@ public class EditAssignmentView extends View {
         Container pane = getContentPane();
 
         JPanel panel = new JPanel();
+        JPanel weightPanel = new JPanel();
         JPanel spacerPanelV = new JPanel();
         spacerPanelV.add(Box.createVerticalStrut(10));
 
         // Group Layout helps us put things into a row or column
         GroupLayout layout = new GroupLayout(panel);
+        layout.setAutoCreateContainerGaps(true);
+        GroupLayout weightLayout = new GroupLayout(weightPanel);
+        weightLayout.setAutoCreateContainerGaps(true);
 
         // assembles everything into the parent grouping
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
-                .addComponent(weight)
+                .addComponent(weightPanel)
                 .addComponent(submitButton)
         );
 
@@ -98,11 +107,22 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
-                .addComponent(weight)
+                .addComponent(weightPanel)
                 .addComponent(submitButton)
         );
 
+        weightLayout.setVerticalGroup(weightLayout.createParallelGroup()
+                .addComponent(weightPrompt)
+                .addComponent(weight)
+        );
+
+        weightLayout.setHorizontalGroup(weightLayout.createSequentialGroup()
+                .addComponent(weightPrompt)
+                .addComponent(weight)
+        );
+
         panel.setLayout(layout);
+        weightPanel.setLayout(weightLayout);
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
@@ -126,7 +146,16 @@ public class EditAssignmentView extends View {
 
         CourseView editAssignmentView = new CourseView(this.course);
         editAssignmentView.setVisible(true);
-        dispose();
+        end();
+    }
+
+    private void editAssignment() {
+        this.assignment.setDescription(description.getText());
+        this.assignment.setName(assignmentName.getText());
+        this.assignment.setType(assignmentType.getText());
+        this.assignment.save();
+        AssignmentView assignmentView = new AssignmentView(this.assignment);
+        assignmentView.setVisible(true);
         end();
     }
 }

@@ -37,4 +37,8 @@ public class Strings {
             "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
             " WHERE B.class_ID = %d";
 
+    public static final String updateAssignment = "UPDATE assignment set totalPoints=%s, name=%s, description=%s, type=%s where ID=%d";
+
+    public static final String updateWeight = "UPDATE weight set weight =%s where group_id=%s and assignment_id=%s";
+
 }

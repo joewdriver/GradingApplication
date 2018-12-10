@@ -152,8 +152,7 @@ public class StudentView extends View {
             bottomPanel.add(new Label(Double.toString(student.getGrade(section.getId())),JLabel.CENTER));
 
             // add an action listener to the group
-            ContextButton tempGroup = new ContextButton(section.getGroup(student).getName(),section.getGroup(student));
-            tempGroup.addActionListener(alGoToGroup);
+            JLabel tempGroup = new JLabel(this.student.getGraduateLevel());
             bottomPanel.add(tempGroup);
         }
 
