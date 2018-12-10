@@ -161,7 +161,7 @@ public class CourseView extends View {
         closeButton.addActionListener(alClose);
         editButton.addActionListener(alEdit);
 
-        meanScore = new JLabel("Mean Acore: " + course.getMeanScore());
+        meanScore = new JLabel("Mean Score: " + course.getMeanScore());
         medianScore = new JLabel("Average Score: " + course.getMedianScore());
         highScore = new JLabel("High Score: " + course.getHighScore());
         lowScore = new JLabel("Low Score: " + course.getLowScore());

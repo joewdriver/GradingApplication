@@ -7,6 +7,7 @@ import utils.ContextButton;
 import utils.View;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -157,6 +158,10 @@ public class StudentView extends View {
         }
 
         // for student notes
+        TitledBorder noteBorder = new TitledBorder("Student Notes");
+        noteBorder.setTitleJustification(TitledBorder.CENTER);
+        noteBorder.setTitlePosition(TitledBorder.TOP);
+        notePanel.setBorder(noteBorder);
         notePanel.add(notes);
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
