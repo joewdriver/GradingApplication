@@ -68,17 +68,32 @@ public class Assignment implements Comparable<Assignment>{
         return value;
     }
 
+    public static int getLastId(){
+        String assignmentQuery = Strings.getLastCreatedAssignment;
+        int assignmentId = 0;
+
+        DBManager tempdb = new DBManager();
+        ResultSet rs = tempdb.executeQuery(assignmentQuery);
+        try {
+            rs.next();
+            assignmentId = rs.getInt("seq");
+            System.out.println("GET LAST ID::: " + assignmentId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            tempdb.closeDB();
+        }
+        tempdb.closeDB();
+
+        return assignmentId;
+    }
+
     public float getWeight(){
         DBManager db = new DBManager();
         float weight = 0;
-        String selectQuery = "SELECT weight FROM `weight` WHERE assignment_ID = "+this.getId()+" LIMIT 1";
+        String selectQuery = "SELECT weight FROM `weights` WHERE assignment_ID = "+this.getId()+" ";
         try {
-            Statement stmt  = db.getConn().createStatement();
-
-            ResultSet rs = stmt.executeQuery(selectQuery);
-            weight += rs.getFloat("weight");
-            rs.close();
-            stmt.close();
+            ResultSet rs = db.executeQuery(selectQuery);
+            weight += rs.getInt("weight");
         }catch (Exception e) {
             e.printStackTrace();
             db.closeDB();
@@ -133,7 +148,7 @@ public class Assignment implements Comparable<Assignment>{
     }
 
     public double getScore(Student student) {
-        //TODO replace this with a call to the student assignment join table
+        //TODO replace this with a call to the student assignment join table ARMIN IS DOING THIS DONT TOUCH
         return 100.0;
     }
 

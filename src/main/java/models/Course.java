@@ -75,7 +75,7 @@ public class Course implements Comparable<Course> {
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
             System.out.println("Checkpoint Alpha");
-            newCourse.addAssignment(assignment, 0);
+            newCourse.addAssignment(assignment, 0, assignment.getId());
         }
 
         // return the newly created course
@@ -163,7 +163,7 @@ public class Course implements Comparable<Course> {
         return new Group(1, "Sample Group", this);
     }
 
-    public void addAssignment(Assignment assignment, float weight){
+    public void addAssignment(Assignment assignment, float weight, int curr_assignmentID){
         DBManager tempdb = new DBManager();
         String insertQuery = Strings.addAssignmentToCourse;
         try {
@@ -186,10 +186,10 @@ public class Course implements Comparable<Course> {
         for(Student tempStudent : this.getStudents()){
             insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
             try {
-
+                System.out.println("THE  ID: "  + curr_assignmentID);
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
                 pstmt.setString(1, tempStudent.getBuId());
-                pstmt.setInt(2, assignment.getClassId());
+                pstmt.setInt(2, curr_assignmentID);
                 pstmt.setFloat(3,0);
                 pstmt.executeUpdate();
 
@@ -200,11 +200,11 @@ public class Course implements Comparable<Course> {
         db.closeDB();
 
         db = new DBManager();
-            insertQuery = "INSERT INTO weight ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
+            insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
             try {
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
                 pstmt.setInt(1, -1);
-                pstmt.setInt(2, assignment.getId());
+                pstmt.setInt(2, curr_assignmentID);
                 pstmt.setFloat(3,weight);
                 pstmt.executeUpdate();
 
