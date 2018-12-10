@@ -212,6 +212,24 @@ public class Course implements Comparable<Course> {
                 e.printStackTrace();
             }
         db.closeDB();
+
+        ArrayList<Student> students = this.getStudents();
+        for(Student student: students){
+            db = new DBManager();
+            insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
+            try {
+                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+                pstmt.setString(1,  student.getBuId());
+                pstmt.setInt(2, curr_assignmentID);
+                pstmt.setFloat(3,weight);
+                pstmt.executeUpdate();
+
+            }catch (SQLException e) {
+                e.printStackTrace();
+            }
+            db.closeDB();
+        }
+
     }
 
     public void deleteAssignment(Assignment assignment){
