@@ -55,9 +55,10 @@ public class EditAssignmentView extends View {
                 String desc = description.getText();
                 String type = assignmentType.getText();
                 String assignmentWeight = weight.getText();
+                int points = Integer.parseInt(totalPoints.getText());
 
                 if(create) {
-                    createAssignment(name, type, desc, assignmentWeight);
+                    createAssignment(name, type, desc, assignmentWeight, points);
                 } else {
                     editAssignment();
                 }
@@ -72,8 +73,7 @@ public class EditAssignmentView extends View {
         assignmentName = new JTextField(assignment.getName());
         Course tempCourse = assignment.getCourse();
         assignmentType = new JTextField(assignment.getType());
-        assignmentType.setMinimumSize(new Dimension(200, 10));
-        totalPoints = new JTextField(assignment.getTotalPoints());
+        totalPoints = new JTextField(String.valueOf(assignment.getTotalPoints()));
         description = new JTextField((assignment.getDescription() == null ? "Description" : assignment.getDescription()));
         weightPrompt = new JLabel("Weight: ");
 
@@ -85,7 +85,7 @@ public class EditAssignmentView extends View {
         JPanel panel = new JPanel();
         JPanel weightPanel = new JPanel();
         JPanel spacerPanelV = new JPanel();
-        spacerPanelV.add(Box.createVerticalStrut(10));
+        spacerPanelV.add(Box.createVerticalStrut(12));
 
         // Group Layout helps us put things into a row or column
         GroupLayout layout = new GroupLayout(panel);
@@ -98,6 +98,7 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
+                .addComponent(totalPoints)
                 .addComponent(weightPanel)
                 .addComponent(submitButton)
         );
@@ -107,6 +108,7 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentName)
                 .addComponent(assignmentType)
                 .addComponent(description)
+                .addComponent(totalPoints)
                 .addComponent(weightPanel)
                 .addComponent(submitButton)
         );
@@ -130,20 +132,20 @@ public class EditAssignmentView extends View {
         pane.add(panel);
     }
 
-    private void createAssignment(String name, String type, String desc, String weight) {
+    private void createAssignment(String name, String type, String desc, String weight, int points) {
         float assignmentWeight = Float.parseFloat(weight);
         try{
             //creating a new assignment
-            Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
+            Assignment assignment = new Assignment(this.course.getId(), name, type, points);
             this.course.addAssignment(assignment, assignmentWeight);
         } catch(Exception e) {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
-            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, 100);
+            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points);
             tempCourse.addAssignment(assignment, assignmentWeight);
         }
-
+        this.assignment.save();
         CourseView editAssignmentView = new CourseView(this.course);
         editAssignmentView.setVisible(true);
         end();
