@@ -29,6 +29,9 @@ public class Strings {
 
     public static final String getLastCreatedCourse = "select seq from sqlite_sequence where name=\"class\"\n";
 
+    public static final String getLastCreatedAssignment = "select seq from sqlite_sequence where name=\"assignments\"\n";
+
+
     public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
 
     public static final String getAssignmentScores = "SELECT score from course_assignments where assignment_ID=%d";
