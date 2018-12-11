@@ -40,6 +40,7 @@ public class EditStudentView extends View {
 
     public EditStudentView(Course course) {
         this.course = course;
+        this.student = new Student("BU ID", "First name", "Middle Name", "Last Name", "Graduate Level", "Email");
         setup(700, 400, "Add Student");
         createUIComponents();
         buildLayout() ;

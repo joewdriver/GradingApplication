@@ -32,7 +32,7 @@ public class Strings {
     public static final String getLastCreatedAssignment = "select seq from sqlite_sequence where name=\"assignments\"\n";
 
 
-    public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, score, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?,?)";
+    public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, extra_credit, type, totalPoints) VALUES(?,?,?,?,?,?)";
 
     public static final String getAssignmentScores = "SELECT score from course_assignments where assignment_ID=%d";
 
@@ -40,7 +40,7 @@ public class Strings {
             "A.notes FROM student AS A INNER JOIN class_assignments AS B ON B.BU_ID = A.BU_ID " +
             " WHERE B.class_ID = %d";
 
-    public static final String updateAssignment = "UPDATE assignment set totalPoints=%s, name=%s, description=%s, type=%s where ID=%d";
+    public static final String updateAssignment = "UPDATE assignments set totalPoints='%s', name='%s', description='%s', type='%s' where ID=%d";
 
     public static final String updateWeight = "UPDATE weight set weight =%s where group_id=%s and assignment_id=%s";
 

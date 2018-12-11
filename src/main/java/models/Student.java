@@ -151,12 +151,11 @@ public class Student {
         ArrayList<Integer> totals = new ArrayList<Integer>();
         double rsum = 0.0;
 
-        String selectQuery = "SELECT A.totalPoints, B.score  FROM `assignments` as A " +
+        String selectQuery = "SELECT *  FROM `assignments` as A " +
                 "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
-
+        System.out.println("getting my select: " + selectQuery + "and my bu id: " + this.buId);
         try {
-
             ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {

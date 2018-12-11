@@ -159,7 +159,6 @@ public class Course implements Comparable<Course> {
         }
 
         db.closeDB();
-        //not sure what name is going to look like
         return new Group(1, "Sample Group", this);
     }
 
@@ -172,10 +171,9 @@ public class Course implements Comparable<Course> {
             pstmt.setInt(1, this.id);
             pstmt.setString(2, assignment.getName());
             pstmt.setString(3, assignment.getDescription());
-            pstmt.setInt(4, assignment.getValue());
-            pstmt.setInt(5, assignment.getExtraCredit());
-            pstmt.setString(6, assignment.getType());
-            pstmt.setInt(7,assignment.getTotalPoints());
+            pstmt.setInt(4, assignment.getExtraCredit());
+            pstmt.setString(5, assignment.getType());
+            pstmt.setInt(6,assignment.getTotalPoints());
             pstmt.executeUpdate();
 
         }catch (SQLException e) {

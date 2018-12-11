@@ -77,7 +77,6 @@ public class Assignment implements Comparable<Assignment>{
         try {
             rs.next();
             assignmentId = rs.getInt("seq");
-            System.out.println("GET LAST ID::: " + assignmentId);
         } catch (SQLException e) {
             e.printStackTrace();
             tempdb.closeDB();
