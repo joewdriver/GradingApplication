@@ -177,7 +177,7 @@ public class Student {
         for (Assignment assign : assignments){
             int assignIdx = 0;
             // TODO: move to strings
-            selectQuery = "SELECT weight FROM `weight` WHERE  assignment_ID = '" + assign.getId() + "'";
+            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
 
                 ResultSet rs = db.executeQuery(selectQuery);
