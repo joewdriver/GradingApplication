@@ -328,10 +328,29 @@ public class Course implements Comparable<Course> {
             e.printStackTrace();
         }
 
+        for(Assignment assignment : this.getAssignments()){
+            insertQuery = "INSERT INTO `course_assignments` (BU_ID, assignment_ID, score) VALUES(?,?, ?)";
+            DBManager db = new DBManager();
+            try {
+
+                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+                pstmt.setString(1, student.getBuId());
+                pstmt.setInt(2, assignment.getId());
+                pstmt.setInt(3, 0);
+                pstmt.executeUpdate();
+                db.closeDB();
+            }catch (SQLException e) {
+                e.printStackTrace();
+                db.closeDB();
+            }
+        }
+
+
         insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email, notes) "+
                 "VALUES(?,?,?,?,?,?,?)";
+        DBManager db = new DBManager();
         try {
-            DBManager db = new DBManager();
+
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
             pstmt.setString(2, student.getFirstName());
@@ -345,6 +364,7 @@ public class Course implements Comparable<Course> {
         }catch (SQLException e) {
             e.printStackTrace();
         }
+        db.closeDB();
     }
 
     /**
