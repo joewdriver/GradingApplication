@@ -139,7 +139,7 @@ public class Student {
         return score;
     }
 
-    public double getGrade(int classId) {
+    public float getGrade(int classId) {
 
         /*
         * @details: provide the average grade
@@ -149,7 +149,7 @@ public class Student {
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
         ArrayList<Integer> totals = new ArrayList<Integer>();
-        double rsum = 0.0;
+        float rsum = 0;
 
         String selectQuery = "SELECT *  FROM `assignments` as A " +
                 "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
@@ -168,21 +168,22 @@ public class Student {
             e.printStackTrace();
             db.closeDB();
         }
-        System.out.println("should close db here");
         db.closeDB();
         db = new DBManager();
 
         int scoreIdx = 0;
         for (Assignment assign : assignments){
-            int assignIdx = 0;
+            int weight = 1;
             // TODO: move to strings
+
             selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
             try {
-
                 ResultSet rs = db.executeQuery(selectQuery);
-                while (rs.next() ) {
+                if (rs.next() ) {
+                    weight = rs.getInt("weight");
+                    System.out.println("getting my weights: "+ totals.get(scoreIdx));
                     if(totals.get(scoreIdx) != 0)
-                        rsum += rs.getInt("weight") * (scores.get(scoreIdx) / totals.get(scoreIdx));
+                        rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
                     else
                         rsum += 0 ;
                 }
