@@ -137,16 +137,14 @@ public class EditAssignmentView extends View {
         int assignmentID = Assignment.getLastId() + 1;
         try{
             //creating a new assignment
-            Assignment assignment = new Assignment( this.course.getId(), name, type, 100);
+            Assignment assignment = new Assignment(this.course.getId(), name, type, points);
             this.course.addAssignment(assignment, assignmentWeight, assignmentID);
-
         } catch(Exception e) {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
-            Assignment assignment = new Assignment(this.course.getId(), name, type, 100);
+            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points);
             tempCourse.addAssignment(assignment, assignmentWeight, assignmentID);
-
         }
         this.assignment.save();
         CourseView editAssignmentView = new CourseView(this.course);
