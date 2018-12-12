@@ -43,11 +43,22 @@ public class Course implements Comparable<Course> {
         this.name = name;
         this.year = year;
         this.season = season;
+        this.active = 1;
+    }
+
+    public Course(int id, String sectionNumber, String name, String year, String season, int active) {
+        this.id = id;
+        this.sectionNumber = sectionNumber;
+        this.name = name;
+        this.year = year;
+        this.season = season;
+        this.active = active;
     }
 
     public Course(int id) {
         this.id = id;
     }
+
     public Course cloneCourse() {
         // first add a new course identical to this one
         String courseInsert = String.format(Strings.createCourse, getSectionNumber(), getSeason(), getName(), getYear(), 1);

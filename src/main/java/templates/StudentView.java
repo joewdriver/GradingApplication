@@ -21,7 +21,7 @@ public class StudentView extends View {
 
     private ArrayList<Course> courses;
     private JLabel name;
-    private JLabel graduateLevel;
+    private JLabel graduateLevel, email, buID;
     private JTextArea notes;
     private JComboBox groups;
     private Student student;
@@ -41,7 +41,9 @@ public class StudentView extends View {
     private void createUIComponents() {
 
         name = new JLabel(student.getFullName()+" \t");
-        graduateLevel = new JLabel(student.getGraduateLevel());
+        graduateLevel = new JLabel("Graduate Level: "+student.getGraduateLevel());
+        email = new JLabel("Email: "+student.getEmail());
+        buID = new JLabel("BU_ID: "+student.getBuId());
         notes = new JTextArea(student.getNotes(), NOTE_ROWS, NOTE_COLUMNS);
 
         ActionListener al = new ActionListener() {
@@ -83,7 +85,10 @@ public class StudentView extends View {
         // top level vertical container for two sub-panels
         GroupLayout coreLayout = new GroupLayout(corePanel);
 
-        coreLayout.setHorizontalGroup(coreLayout.createParallelGroup()
+        coreLayout.setHorizontalGroup(coreLayout.createParallelGroup(CENTER)
+                .addComponent(buID)
+                .addComponent(email)
+                .addComponent(graduateLevel)
                 .addComponent(topPanel)
                 .addComponent(bottomPanel)
                 .addComponent(notePanel)
@@ -91,6 +96,9 @@ public class StudentView extends View {
         );
 
         coreLayout.setVerticalGroup(coreLayout.createSequentialGroup()
+                .addComponent(buID)
+                .addComponent(email)
+                .addComponent(graduateLevel)
                 .addComponent(topPanel)
                 .addComponent(bottomPanel)
                 .addComponent(notePanel)
@@ -101,15 +109,15 @@ public class StudentView extends View {
 
         GroupLayout topLayout = new GroupLayout(topPanel);
         topLayout.setHorizontalGroup(topLayout.createSequentialGroup()
-                .addComponent(name)
-                .addComponent(graduateLevel)
+                //.addComponent(name)
+                //.addComponent(graduateLevel)
                 .addComponent(editStudent)
                 .addComponent(allStudentsButton)
         );
 
         topLayout.setVerticalGroup(topLayout.createParallelGroup(CENTER)
-                .addComponent(name)
-                .addComponent(graduateLevel)
+                //.addComponent(name)
+                //.addComponent(graduateLevel)
                 .addComponent(editStudent)
                 .addComponent(allStudentsButton)
         );
@@ -166,6 +174,10 @@ public class StudentView extends View {
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
+        TitledBorder studentBorder = new TitledBorder(student.getFullName());
+        studentBorder.setTitleJustification(TitledBorder.CENTER);
+        studentBorder.setTitlePosition(TitledBorder.TOP);
+        corePanel.setBorder(studentBorder);
         pane.setLayout(new GridBagLayout());
         pane.add(corePanel);
     }

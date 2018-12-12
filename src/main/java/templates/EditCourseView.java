@@ -127,6 +127,8 @@ public class EditCourseView extends View {
         this.course.setYear(year.getText());
         this.course.setSeason((String)season.getSelectedItem());
         this.course.setSectionNumber(courseId.getText());
+        // if you are editing the course - it should be active
+        this.course.setActive(1);
 
         boolean success = false;
         try {
