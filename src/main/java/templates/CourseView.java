@@ -229,12 +229,12 @@ public class CourseView extends View {
         GroupLayout headerLayout = new GroupLayout(headerPanel);
 
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
-                .addComponent(classNameHeader)
+                //.addComponent(classNameHeader)
                 .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
         headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
-                .addComponent(classNameHeader)
+                //.addComponent(classNameHeader)
                 .addComponent(editButton)
                 .addComponent(viewAllCoursesButton));
 
@@ -420,6 +420,10 @@ public class CourseView extends View {
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
+        TitledBorder courseBorder = new TitledBorder(course.getName()+" "+course.getSectionNumber());
+        courseBorder.setTitleJustification(TitledBorder.CENTER);
+        courseBorder.setTitlePosition(TitledBorder.TOP);
+        framePanel.setBorder(courseBorder);
         pane.setLayout(new GridBagLayout());
         pane.add(framePanel);
     }
