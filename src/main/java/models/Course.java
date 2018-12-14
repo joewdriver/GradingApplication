@@ -293,21 +293,22 @@ public class Course implements Comparable<Course> {
 
     public void addStudent(Student student){
         String insertQuery = "INSERT INTO `class_assignments` (BU_ID, Class_ID) VALUES(?,?)";
+        DBManager db = new DBManager();
         try {
-            DBManager db = new DBManager();
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
             pstmt.setString(1, student.getBuId());
             pstmt.setInt(2, this.id);
             pstmt.executeUpdate();
             db.closeDB();
         }catch (SQLException e) {
+            db.closeDB();
             e.printStackTrace();
         }
 
         for(Assignment assignment : this.getAssignments()){
             System.out.println("CHECKPOINT A");
             insertQuery = "INSERT INTO `course_assignments` (BU_ID, assignment_ID, score) VALUES(?,?, ?)";
-            DBManager db = new DBManager();
+            db = new DBManager();
             try {
 
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
@@ -325,7 +326,7 @@ public class Course implements Comparable<Course> {
 
         insertQuery = "INSERT INTO student ( BU_ID, first_name, middle_initial, family_name, type, email, notes) "+
                 "VALUES(?,?,?,?,?,?,?)";
-        DBManager db = new DBManager();
+        db = new DBManager();
         try {
 
             PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);

@@ -51,7 +51,7 @@ public class EditStudentView extends View {
 
         ActionListener al = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                goToStudent();
+                addStudent();
             }
         };
         submitButton = new JButton("Submit");
@@ -118,16 +118,13 @@ public class EditStudentView extends View {
         pane.add(panel);
     }
 
-    private void goToStudent() {
-//        this.student.setBuId(buId.getText());
-//        this.student.setEmail(email.getText());
-//        this.student.setGraduateLevel((String)gradLevel.getSelectedItem());
-//        this.student.setFamilyName(familyName.getText());
-        //this.student.save();
-        //public Student(String buId, String first_name, String middle_name, String family_name, String graduateLevel, String email) {
+    private void addStudent() {
         Student tempStudent = new Student(buId.getText(), firstName.getText(), middleInitial.getText(), familyName.getText(), gradLevel.getSelectedItem().toString(), email.getText());
-        this.course.addStudent(tempStudent);
-
+        if(this.course != null) {
+            this.course.addStudent(tempStudent);
+        } else {
+            student.save();
+        }
         StudentView studentView = new StudentView(tempStudent);
         studentView.setVisible(true);
         end();

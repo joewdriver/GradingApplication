@@ -103,15 +103,6 @@ public class CourseView extends View {
             }
         };
 
-        // action listener for the row headers
-        alStudentView = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                ContextButton btn = (ContextButton) e.getSource();
-                goToStudent((Student)btn.getContext());
-            }
-        };
-
         alClone = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ContextButton btn = (ContextButton) e.getSource();
