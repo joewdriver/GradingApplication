@@ -310,8 +310,9 @@ public class CourseView extends View {
             undergraduatePanel.add(btn);
             double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                undergraduatePanel.add(new JLabel(Double.toString(student.getScore(assignment.getId()))));
-                totalScore += assignment.getScore(student);
+                double score = student.getScore(assignment.getId());
+                undergraduatePanel.add(new JLabel(Double.toString(score)));
+                totalScore += score;
             }
             undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
         }
