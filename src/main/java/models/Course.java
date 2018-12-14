@@ -174,7 +174,6 @@ public class Course implements Comparable<Course> {
     }
 
     public void addAssignment(Assignment assignment){
-
         DBManager db = new DBManager();
         for(Student tempStudent : this.getStudents()){
             String insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
@@ -189,20 +188,6 @@ public class Course implements Comparable<Course> {
                 e.printStackTrace();
             }
         }
-        db.closeDB();
-
-        db = new DBManager();
-            String insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
-            try {
-                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
-                pstmt.setInt(1, -1);
-                pstmt.setInt(2, assignment.getId());
-                pstmt.setFloat(3, assignment.getWeight(true));
-                pstmt.executeUpdate();
-
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
         db.closeDB();
     }
 
@@ -231,7 +216,8 @@ public class Course implements Comparable<Course> {
     public ArrayList<Assignment> getAssignments() {
         DBManager db = new DBManager();
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints, ugrad_weight, grad_weight, " +
+                "ugrad_weight_type, grad_weight_type FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
 
@@ -359,7 +345,8 @@ public class Course implements Comparable<Course> {
             db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
-            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year,
+                    this.active, this.id);
             db.executeUpdate(query);
         }
         db.closeDB();
