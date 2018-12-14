@@ -189,8 +189,7 @@ public class EditAssignmentView extends View {
     }
 
     private void createAssignment(String name, String type, String desc, String uWeight, String gWeight,
-                                  String uWeightType, String gWeightType,
-                                  int points) {
+                                  String uWeightType, String gWeightType, int points) {
         double ugradAssignmentWeight = Double.parseDouble(uWeight);
         double gradAssignmentWeight = Double.parseDouble(gWeight);
         double ugradAssignmentTypeWeight = Double.parseDouble(uWeightType);

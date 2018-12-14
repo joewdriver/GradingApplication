@@ -33,7 +33,8 @@ public class Strings {
 
     public static final String addAssignmentToCourse = "INSERT INTO `assignments` (class_ID, name, description, " +
             "extra_credit, type, totalPoints, ugrad_weight, grad_weight, ugrad_weight_type, grad_weight_type) " +
-            "VALUES(?,?,?,?,?,?,?,?,?,?)";
+            "VALUES(%d,\"%s\",\"%s\",%d,\"%s\",%d,%f,%f,%f,%f)";
+
 
     public static final String getAssignmentScores = "SELECT score from course_assignments where assignment_ID=%d";
 

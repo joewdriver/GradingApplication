@@ -126,7 +126,6 @@ public class Assignment implements Comparable<Assignment>{
             tempdb.closeDB();
         }
         tempdb.closeDB();
-
         return assignmentId;
     }
 
@@ -272,7 +271,8 @@ public class Assignment implements Comparable<Assignment>{
     public void saveNew(int courseId) {
         DBManager db = new DBManager();
         String query = String.format(Strings.addAssignmentToCourse, courseId, this.name, this.description,
-                this.extraCredit, this.type, this.totalPoints);
+                this.extraCredit, this.type, this.totalPoints, this.ugradWeight, this.gradWeight, this.ugradWeightType,
+                this.gradWeightType);
         db.executeUpdate(query);
         db.closeDB();
 
