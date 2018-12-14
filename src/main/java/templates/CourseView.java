@@ -317,11 +317,9 @@ public class CourseView extends View {
 
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
-            //TODO: add the average calculation here based on db call
-            //undergraduatePanel.add(new TextField("100"));
             double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
+                undergraduatePanel.add(new JLabel(Double.toString(student.getScore(assignment.getId()))));
                 totalScore += assignment.getScore(student);
             }
             undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
@@ -386,7 +384,7 @@ public class CourseView extends View {
             graduatePanel.add(btn);
             double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                double score = assignment.getScore(student);
+                double score = student.getScore(assignment.getId());
                 graduatePanel.add(new JLabel(Double.toString(score)));
                 totalScore = totalScore + score;
             }
