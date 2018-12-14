@@ -76,7 +76,7 @@ public class AssignmentView extends View {
 
         totalPoints = new JLabel("Total Points: " + Integer.toString(assignment.getTotalPoints()));
 
-        weight = new JLabel("Weight of assignment: " + Float.toString(assignment.getWeight()));
+        weight = new JLabel("Weight of assignment: " + Float.toString(assignment.getWeight(false)));
         assignmentName = new JLabel(assignment.getName());
         courseId = new JLabel(assignment.getCourse().getSectionNumber());
         //courseId = new JLabel("111");

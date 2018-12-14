@@ -28,7 +28,7 @@ public class DBManager {
     private String salt = "$2a$12$j8hShUjV20vKXOBJarEOd.";
 
     public DBManager() {
-        System.out.println("Connection Opened");
+//        System.out.println("Connection Opened");
         try{
             Class.forName("org.sqlite.JDBC");
             // this either accesses or creates the db
@@ -164,7 +164,7 @@ public class DBManager {
 
     // needs to be called whenever we are done with the db.
     public void closeDB() {
-        System.out.println("Connection Closed");
+//        System.out.println("Connection Closed");
         try {
             conn.close();
         } catch (SQLException e) {
@@ -217,7 +217,6 @@ public class DBManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            closeDB();
         }
     }
 
@@ -229,7 +228,6 @@ public class DBManager {
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
-            closeDB();
         }
         return rs;
     }

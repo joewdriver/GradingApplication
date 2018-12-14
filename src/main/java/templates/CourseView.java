@@ -178,7 +178,6 @@ public class CourseView extends View {
 
         // populate each list accordingly
         for(Student student : students) {
-            System.out.println("email: " + student.getEmail());
             if(student.getGraduateLevel().equals("Undergraduate")) {
                 undergraduates.add(student);
             } else {
@@ -311,7 +310,6 @@ public class CourseView extends View {
 
         
         for(Student student: undergraduates) {
-            System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
             if(!student.getNotes().equals("")) {
                 btn.setForeground(Color.RED);
@@ -379,7 +377,6 @@ public class CourseView extends View {
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
         for(Student student: graduates) {
-            System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
             if(!student.getNotes().equals("")) {
                 btn.setForeground(Color.RED);
@@ -449,8 +446,9 @@ public class CourseView extends View {
         fileChooser.showDialog(null,"Please Select the File");
         fileChooser.setVisible(true);
         File studentList = fileChooser.getSelectedFile();
+
+        //TODO what is the purpose of this?
         if(studentList != null)
-            System.out.println("File name "+studentList.getName());
 
         // Now let's parse the file
         // we expect to input to be as such: BU ID, first name, middle initial, last name
@@ -462,7 +460,6 @@ public class CourseView extends View {
                 String str = scanner.nextLine();
                 String[] data = str.split(",");
                 if (data.length == 6) {
-                    //TODO: this is harcoded, make it better
                     String buId = data[0];
                     String firstName = data[1];
                     String middleInitial = data[2];

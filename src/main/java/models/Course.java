@@ -86,7 +86,7 @@ public class Course implements Comparable<Course> {
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
             System.out.println("Checkpoint Alpha");
-            newCourse.addAssignment(assignment, 0, assignment.getId());
+            newCourse.addAssignment(assignment);
         }
 
         // return the newly created course
@@ -173,32 +173,15 @@ public class Course implements Comparable<Course> {
         return new Group(1, "Sample Group", this);
     }
 
-    public void addAssignment(Assignment assignment, float weight, int curr_assignmentID){
-        DBManager tempdb = new DBManager();
-        String insertQuery = Strings.addAssignmentToCourse;
-        try {
+    public void addAssignment(Assignment assignment){
 
-            PreparedStatement pstmt = tempdb.getConn().prepareStatement(insertQuery);
-            pstmt.setInt(1, this.id);
-            pstmt.setString(2, assignment.getName());
-            pstmt.setString(3, assignment.getDescription());
-            pstmt.setInt(4, assignment.getExtraCredit());
-            pstmt.setString(5, assignment.getType());
-            pstmt.setInt(6,assignment.getTotalPoints());
-            pstmt.executeUpdate();
-
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-        tempdb.closeDB();
         DBManager db = new DBManager();
         for(Student tempStudent : this.getStudents()){
-            insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
+            String insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
             try {
-                System.out.println("THE  ID: "  + curr_assignmentID);
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
                 pstmt.setString(1, tempStudent.getBuId());
-                pstmt.setInt(2, curr_assignmentID);
+                pstmt.setInt(2, assignment.getId());
                 pstmt.setFloat(3,0);
                 pstmt.executeUpdate();
 
@@ -209,36 +192,18 @@ public class Course implements Comparable<Course> {
         db.closeDB();
 
         db = new DBManager();
-            insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
+            String insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
             try {
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
                 pstmt.setInt(1, -1);
-                pstmt.setInt(2, curr_assignmentID);
-                pstmt.setFloat(3,weight);
+                pstmt.setInt(2, assignment.getId());
+                pstmt.setFloat(3, assignment.getWeight(true));
                 pstmt.executeUpdate();
 
             }catch (SQLException e) {
                 e.printStackTrace();
             }
         db.closeDB();
-
-        ArrayList<Student> students = this.getStudents();
-        for(Student student: students){
-            db = new DBManager();
-            insertQuery = "INSERT INTO course_assignments ( BU_ID, assignment_ID, score)  VALUES(?,?,?)";
-            try {
-                PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
-                pstmt.setString(1,  student.getBuId());
-                pstmt.setInt(2, curr_assignmentID);
-                pstmt.setFloat(3,weight);
-                pstmt.executeUpdate();
-
-            }catch (SQLException e) {
-                e.printStackTrace();
-            }
-            db.closeDB();
-        }
-
     }
 
     public void deleteAssignment(Assignment assignment){
@@ -340,6 +305,7 @@ public class Course implements Comparable<Course> {
         }
 
         for(Assignment assignment : this.getAssignments()){
+            System.out.println("CHECKPOINT A");
             insertQuery = "INSERT INTO `course_assignments` (BU_ID, assignment_ID, score) VALUES(?,?, ?)";
             DBManager db = new DBManager();
             try {
