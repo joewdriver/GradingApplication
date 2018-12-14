@@ -144,7 +144,6 @@ public class Student {
         /*
         * @details: provide the average grade
         * */
-        DBManager db = new DBManager();
         System.out.println("in get score");
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
@@ -155,6 +154,8 @@ public class Student {
                 "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
         System.out.println("getting my select: " + selectQuery + "and my bu id: " + this.buId);
+
+        DBManager db = new DBManager();
         try {
             ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
@@ -169,8 +170,8 @@ public class Student {
             db.closeDB();
         }
         db.closeDB();
-        db = new DBManager();
 
+        db = new DBManager();
         int scoreIdx = 0;
         for (Assignment assign : assignments){
             int weight = 1;
@@ -194,6 +195,7 @@ public class Student {
             }
             scoreIdx++;
         }
+        db.closeDB();
         return rsum;
     }
 
@@ -220,14 +222,14 @@ public class Student {
                 "WHERE B.BU_ID = '" + this.buId + "'";
 
         try {
-            Statement stmt  = db.getConn().createStatement();
-            ResultSet rs    = stmt.executeQuery(selectQuery);
+            ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
                 courses.add(new Course(rs));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+            db.closeDB();
         }
         db.closeDB();
         return courses;
@@ -247,6 +249,8 @@ public class Student {
             if(rs.next()) {
                 insert = false;
             }
+            db.closeDB();
+            db = new DBManager();
 
             // if we run this as an insert
             if(insert) {
@@ -260,6 +264,7 @@ public class Student {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            db.closeDB();
         }
 
         db.closeDB();

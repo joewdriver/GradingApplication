@@ -130,8 +130,11 @@ public class Assignment implements Comparable<Assignment>{
         return assignmentId;
     }
 
-    public float getWeight(){
+    public float getWeight(boolean newAssignment){
         DBManager db = new DBManager();
+        if(newAssignment) {
+            return  1;
+        }
         float weight = 0;
         String selectQuery = "SELECT weight FROM `weights` WHERE assignment_ID = "+this.getId()+" ";
         try {
@@ -264,5 +267,16 @@ public class Assignment implements Comparable<Assignment>{
         db.executeUpdate(query);
         db.closeDB();
         //TODO find a way to save weighting, or remove weighting from assignment edit view
+    }
+
+    public void saveNew(int courseId) {
+        DBManager db = new DBManager();
+        String query = String.format(Strings.addAssignmentToCourse, courseId, this.name, this.description,
+                this.extraCredit, this.type, this.totalPoints);
+        db.executeUpdate(query);
+        db.closeDB();
+
+        this.id = Assignment.getLastId();
+
     }
 }

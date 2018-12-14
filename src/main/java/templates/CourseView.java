@@ -103,15 +103,6 @@ public class CourseView extends View {
             }
         };
 
-        // action listener for the row headers
-        alStudentView = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // retrieve the calling button and get its text object to pass in.
-                ContextButton btn = (ContextButton) e.getSource();
-                goToStudent((Student)btn.getContext());
-            }
-        };
-
         alClone = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ContextButton btn = (ContextButton) e.getSource();
@@ -178,7 +169,6 @@ public class CourseView extends View {
 
         // populate each list accordingly
         for(Student student : students) {
-            System.out.println("email: " + student.getEmail());
             if(student.getGraduateLevel().equals("Undergraduate")) {
                 undergraduates.add(student);
             } else {
@@ -311,7 +301,6 @@ public class CourseView extends View {
 
         
         for(Student student: undergraduates) {
-            System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
             if(!student.getNotes().equals("")) {
                 btn.setForeground(Color.RED);
@@ -319,11 +308,9 @@ public class CourseView extends View {
 
             btn.addActionListener(this.alStudentView);
             undergraduatePanel.add(btn);
-            //TODO: add the average calculation here based on db call
-            //undergraduatePanel.add(new TextField("100"));
             double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                undergraduatePanel.add(new JLabel(Double.toString(assignment.getScore(student))));
+                undergraduatePanel.add(new JLabel(Double.toString(student.getScore(assignment.getId()))));
                 totalScore += assignment.getScore(student);
             }
             undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
@@ -380,7 +367,6 @@ public class CourseView extends View {
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
         for(Student student: graduates) {
-            System.out.println(student.getGraduateLevel());
             ContextButton btn = new ContextButton(student.getFullName(), student);
             if(!student.getNotes().equals("")) {
                 btn.setForeground(Color.RED);
@@ -390,7 +376,7 @@ public class CourseView extends View {
             graduatePanel.add(btn);
             double totalScore = 0.0;
             for(Assignment assignment:assignments) {
-                double score = assignment.getScore(student);
+                double score = student.getScore(assignment.getId());
                 graduatePanel.add(new JLabel(Double.toString(score)));
                 totalScore = totalScore + score;
             }
@@ -450,8 +436,9 @@ public class CourseView extends View {
         fileChooser.showDialog(null,"Please Select the File");
         fileChooser.setVisible(true);
         File studentList = fileChooser.getSelectedFile();
+
+        //TODO what is the purpose of this?
         if(studentList != null)
-            System.out.println("File name "+studentList.getName());
 
         // Now let's parse the file
         // we expect to input to be as such: BU ID, first name, middle initial, last name
@@ -463,7 +450,6 @@ public class CourseView extends View {
                 String str = scanner.nextLine();
                 String[] data = str.split(",");
                 if (data.length == 6) {
-                    //TODO: this is harcoded, make it better
                     String buId = data[0];
                     String firstName = data[1];
                     String middleInitial = data[2];

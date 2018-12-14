@@ -13,8 +13,6 @@ import java.awt.event.ActionListener;
 import static javax.swing.GroupLayout.Alignment.CENTER;
 
 public class EditAssignmentView extends View {
-    //TODO change course ID to a label drawn off of the source view
-    private JTextField courseId;
     private JTextField assignmentName;
     private JTextField assignmentType;
     private JTextField totalPoints;
@@ -203,16 +201,17 @@ public class EditAssignmentView extends View {
             //creating a new assignment
             Assignment assignment = new Assignment(this.course.getId(), name, type, points, ugradAssignmentWeight,
                     gradAssignmentWeight, ugradAssignmentTypeWeight, gradAssignmentTypeWeight);
-            this.course.addAssignment(assignment, assignmentID);
-            assignment.save();
+            assignment.saveNew(this.course.getId());
+            this.course.addAssignment(assignment);
         } catch(Exception e) {
+            e.printStackTrace();
             //updating an existing assignment
-            Course tempCourse = new Course(this.assignment.getClassId());
-            tempCourse.deleteAssignment(this.assignment);
-            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points,
-                    ugradAssignmentWeight, gradAssignmentWeight, ugradAssignmentTypeWeight, gradAssignmentTypeWeight);
-            tempCourse.addAssignment(assignment, assignmentID);
-            assignment.save();
+            //Course tempCourse = new Course(this.assignment.getClassId());
+            //tempCourse.deleteAssignment(this.assignment);
+            //Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points,
+            //        ugradAssignmentWeight, gradAssignmentWeight, ugradAssignmentTypeWeight, gradAssignmentTypeWeight);
+            //tempCourse.addAssignment(assignment, assignmentID);
+            //assignment.save();
         }
         //this.assignment.save();
         CourseView editAssignmentView = new CourseView(this.course);

@@ -217,7 +217,6 @@ public class DBManager {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            closeDB();
         }
     }
 
@@ -229,7 +228,6 @@ public class DBManager {
             rs = stmt.executeQuery(query);
         } catch (SQLException e) {
             e.printStackTrace();
-            closeDB();
         }
         return rs;
     }
