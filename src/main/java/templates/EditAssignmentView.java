@@ -18,9 +18,9 @@ public class EditAssignmentView extends View {
     private JTextField assignmentName;
     private JTextField assignmentType;
     private JTextField totalPoints;
-    private JLabel weightPrompt;
+    private JLabel ugradWeightPrompt, gradWeightPrompt, ugradWeightTypePrompt, gradWeightTypePrompt;
     private JTextField description;
-    private JTextField weight;
+    private JTextField ugradWeight, gradWeight, ugradWeightType, gradWeightType;
     private JButton submitButton;
     private Assignment assignment;
     private Course course;
@@ -29,7 +29,8 @@ public class EditAssignmentView extends View {
     // constructor for creating a new assignment
     public EditAssignmentView(Course course) {
         this.course = course;
-        this.assignment = new Assignment(course.getId(), "Assignment Name", "Assignment Type", 100);
+        this.assignment = new Assignment(course.getId(), "Assignment Name", "Assignment Type",
+                100, 0.0, 0.0, 0.0, 0.0);
         this.create = true;
 
         setup(1200, 800, "Add Assignment");
@@ -54,11 +55,15 @@ public class EditAssignmentView extends View {
                 String name = assignmentName.getText();
                 String desc = description.getText();
                 String type = assignmentType.getText();
-                String assignmentWeight = weight.getText();
+                String ugradAssignmentWeight = ugradWeight.getText();
+                String gradAssignmentWeight = gradWeight.getText();
+                String ugradAssignmentTypeWeight = ugradWeightType.getText();
+                String gradAssignmentTypeWeight = gradWeightType.getText();
                 int points = Integer.parseInt(totalPoints.getText());
 
                 if(create) {
-                    createAssignment(name, type, desc, assignmentWeight, points);
+                    createAssignment(name, type, desc, ugradAssignmentWeight, gradAssignmentWeight,
+                            ugradAssignmentTypeWeight, gradAssignmentTypeWeight, points);
                 } else {
                     editAssignment();
                 }
@@ -68,30 +73,44 @@ public class EditAssignmentView extends View {
         submitButton.addActionListener(al);
 
 
-        weight = new JTextField("1");
+        ugradWeight = new JTextField(Double.toString(assignment.getUgradWeight()));
+        gradWeight = new JTextField(Double.toString(assignment.getGradWeight()));
+        ugradWeightType = new JTextField(Double.toString(assignment.getUgradWeightType()));
+        gradWeightType = new JTextField(Double.toString(assignment.getGradWeightType()));
 
         assignmentName = new JTextField(assignment.getName());
         Course tempCourse = assignment.getCourse();
         assignmentType = new JTextField(assignment.getType());
         totalPoints = new JTextField(String.valueOf(assignment.getTotalPoints()));
         description = new JTextField((assignment.getDescription() == null ? "Description" : assignment.getDescription()));
-        weightPrompt = new JLabel("Weight: ");
-
+        ugradWeightPrompt = new JLabel("Ugrad. Weight: ");
+        gradWeightPrompt = new JLabel("Grad. Weight: ");
+        ugradWeightTypePrompt = new JLabel("Ugrad. Type Weight: ");
+        gradWeightTypePrompt = new JLabel("Grad. Type Weight: ");
     }
 
     private void buildLayout() {
         Container pane = getContentPane();
 
         JPanel panel = new JPanel();
-        JPanel weightPanel = new JPanel();
+        JPanel ugradWeightPanel = new JPanel();
+        JPanel gradWeightPanel = new JPanel();
+        JPanel ugradWeightTypePanel = new JPanel();
+        JPanel gradWeightTypePanel = new JPanel();
         JPanel spacerPanelV = new JPanel();
         spacerPanelV.add(Box.createVerticalStrut(12));
 
         // Group Layout helps us put things into a row or column
         GroupLayout layout = new GroupLayout(panel);
         layout.setAutoCreateContainerGaps(true);
-        GroupLayout weightLayout = new GroupLayout(weightPanel);
-        weightLayout.setAutoCreateContainerGaps(true);
+        GroupLayout ugradWeightLayout = new GroupLayout(ugradWeightPanel);
+        GroupLayout gradWeightLayout = new GroupLayout(gradWeightPanel);
+        GroupLayout ugradWeightTypeLayout = new GroupLayout(ugradWeightTypePanel);
+        GroupLayout gradWeightTypeLayout = new GroupLayout(gradWeightTypePanel);
+        ugradWeightLayout.setAutoCreateContainerGaps(true);
+        gradWeightLayout.setAutoCreateContainerGaps(true);
+        ugradWeightTypeLayout.setAutoCreateContainerGaps(true);
+        gradWeightTypeLayout.setAutoCreateContainerGaps(true);
 
         // assembles everything into the parent grouping
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
@@ -99,7 +118,10 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentType)
                 .addComponent(description)
                 .addComponent(totalPoints)
-                .addComponent(weightPanel)
+                .addComponent(ugradWeightPanel)
+                .addComponent(gradWeightPanel)
+                .addComponent(ugradWeightTypePanel)
+                .addComponent(gradWeightTypePanel)
                 .addComponent(submitButton)
         );
 
@@ -109,22 +131,58 @@ public class EditAssignmentView extends View {
                 .addComponent(assignmentType)
                 .addComponent(description)
                 .addComponent(totalPoints)
-                .addComponent(weightPanel)
+                .addComponent(ugradWeightPanel)
+                .addComponent(gradWeightPanel)
+                .addComponent(ugradWeightTypePanel)
+                .addComponent(gradWeightTypePanel)
                 .addComponent(submitButton)
         );
 
-        weightLayout.setVerticalGroup(weightLayout.createParallelGroup()
-                .addComponent(weightPrompt)
-                .addComponent(weight)
+        ugradWeightLayout.setVerticalGroup(ugradWeightLayout.createParallelGroup()
+                .addComponent(ugradWeightPrompt)
+                .addComponent(ugradWeight)
         );
 
-        weightLayout.setHorizontalGroup(weightLayout.createSequentialGroup()
-                .addComponent(weightPrompt)
-                .addComponent(weight)
+        ugradWeightLayout.setHorizontalGroup(ugradWeightLayout.createSequentialGroup()
+                .addComponent(ugradWeightPrompt)
+                .addComponent(ugradWeight)
+        );
+
+        gradWeightLayout.setVerticalGroup(gradWeightLayout.createParallelGroup()
+                .addComponent(gradWeightPrompt)
+                .addComponent(gradWeight)
+        );
+
+        gradWeightLayout.setHorizontalGroup(gradWeightLayout.createSequentialGroup()
+                .addComponent(gradWeightPrompt)
+                .addComponent(gradWeight)
+        );
+
+        ugradWeightTypeLayout.setVerticalGroup(ugradWeightTypeLayout.createParallelGroup()
+                .addComponent(ugradWeightTypePrompt)
+                .addComponent(ugradWeightType)
+        );
+
+        ugradWeightTypeLayout.setHorizontalGroup(ugradWeightTypeLayout.createSequentialGroup()
+                .addComponent(ugradWeightTypePrompt)
+                .addComponent(ugradWeightType)
+        );
+
+        gradWeightTypeLayout.setVerticalGroup(gradWeightTypeLayout.createParallelGroup()
+                .addComponent(gradWeightTypePrompt)
+                .addComponent(gradWeightType)
+        );
+
+        gradWeightTypeLayout.setHorizontalGroup(gradWeightTypeLayout.createSequentialGroup()
+                .addComponent(gradWeightTypePrompt)
+                .addComponent(gradWeightType)
         );
 
         panel.setLayout(layout);
-        weightPanel.setLayout(weightLayout);
+        ugradWeightPanel.setLayout(ugradWeightLayout);
+        gradWeightPanel.setLayout(gradWeightLayout);
+        ugradWeightTypePanel.setLayout(ugradWeightTypeLayout);
+        gradWeightTypePanel.setLayout(gradWeightTypeLayout);
 
         // Group Layout doesn't really let us center align since it is relatively built, so we need to use another layout
         // that wraps it and gives us the center aligned look.
@@ -132,21 +190,31 @@ public class EditAssignmentView extends View {
         pane.add(panel);
     }
 
-    private void createAssignment(String name, String type, String desc, String weight, int points) {
-        float assignmentWeight = Float.parseFloat(weight);
+    private void createAssignment(String name, String type, String desc, String uWeight, String gWeight,
+                                  String uWeightType, String gWeightType,
+                                  int points) {
+        double ugradAssignmentWeight = Double.parseDouble(uWeight);
+        double gradAssignmentWeight = Double.parseDouble(gWeight);
+        double ugradAssignmentTypeWeight = Double.parseDouble(uWeightType);
+        double gradAssignmentTypeWeight = Double.parseDouble(gWeightType);
         int assignmentID = Assignment.getLastId() + 1;
+        //TODO: implement the graduate weighting
         try{
             //creating a new assignment
-            Assignment assignment = new Assignment(this.course.getId(), name, type, points);
-            this.course.addAssignment(assignment, assignmentWeight, assignmentID);
+            Assignment assignment = new Assignment(this.course.getId(), name, type, points, ugradAssignmentWeight,
+                    gradAssignmentWeight, ugradAssignmentTypeWeight, gradAssignmentTypeWeight);
+            this.course.addAssignment(assignment, assignmentID);
+            assignment.save();
         } catch(Exception e) {
             //updating an existing assignment
             Course tempCourse = new Course(this.assignment.getClassId());
             tempCourse.deleteAssignment(this.assignment);
-            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points);
-            tempCourse.addAssignment(assignment, assignmentWeight, assignmentID);
+            Assignment assignment = new Assignment(this.assignment.getClassId(), name, type, points,
+                    ugradAssignmentWeight, gradAssignmentWeight, ugradAssignmentTypeWeight, gradAssignmentTypeWeight);
+            tempCourse.addAssignment(assignment, assignmentID);
+            assignment.save();
         }
-        this.assignment.save();
+        //this.assignment.save();
         CourseView editAssignmentView = new CourseView(this.course);
         editAssignmentView.setVisible(true);
         end();
@@ -156,6 +224,10 @@ public class EditAssignmentView extends View {
         this.assignment.setDescription(description.getText());
         this.assignment.setName(assignmentName.getText());
         this.assignment.setType(assignmentType.getText());
+        this.assignment.setUgradWeight(Double.parseDouble(ugradWeight.getText()));
+        this.assignment.setGradWeight(Double.parseDouble(gradWeight.getText()));
+        this.assignment.setUgradWeightType(Double.parseDouble(ugradWeightType.getText()));
+        this.assignment.setGradWeightType(Double.parseDouble(gradWeightType.getText()));
         this.assignment.save();
         AssignmentView assignmentView = new AssignmentView(this.assignment);
         assignmentView.setVisible(true);

@@ -86,7 +86,7 @@ public class Course implements Comparable<Course> {
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
             System.out.println("Checkpoint Alpha");
-            newCourse.addAssignment(assignment, 0, assignment.getId());
+            newCourse.addAssignment(assignment, assignment.getId());
         }
 
         // return the newly created course
@@ -173,7 +173,8 @@ public class Course implements Comparable<Course> {
         return new Group(1, "Sample Group", this);
     }
 
-    public void addAssignment(Assignment assignment, float weight, int curr_assignmentID){
+    //TODO: grad vs ugrad
+    public void addAssignment(Assignment assignment, int curr_assignmentID){
         DBManager tempdb = new DBManager();
         String insertQuery = Strings.addAssignmentToCourse;
         try {
@@ -185,6 +186,10 @@ public class Course implements Comparable<Course> {
             pstmt.setInt(4, assignment.getExtraCredit());
             pstmt.setString(5, assignment.getType());
             pstmt.setInt(6,assignment.getTotalPoints());
+            pstmt.setDouble(7,assignment.getUgradWeight());
+            pstmt.setDouble(8, assignment.getGradWeight());
+            pstmt.setDouble(9, assignment.getUgradWeightType());
+            pstmt.setDouble(10, assignment.getGradWeightType());
             pstmt.executeUpdate();
 
         }catch (SQLException e) {
@@ -208,19 +213,37 @@ public class Course implements Comparable<Course> {
         }
         db.closeDB();
 
+        /*
+        // inser ugradWeights
         db = new DBManager();
             insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
             try {
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
-                pstmt.setInt(1, -1);
+                pstmt.setInt(1, 0);
                 pstmt.setInt(2, curr_assignmentID);
-                pstmt.setFloat(3,weight);
+                pstmt.setFloat(3,ugradWeight);
                 pstmt.executeUpdate();
 
             }catch (SQLException e) {
                 e.printStackTrace();
             }
         db.closeDB();
+
+        // insert gradWeights
+        db = new DBManager();
+        insertQuery = "INSERT INTO weights ( group_id, assignment_ID, weight)  VALUES(?,?,?)";
+        try {
+            PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
+            pstmt.setInt(1, 1);
+            pstmt.setInt(2, curr_assignmentID);
+            pstmt.setFloat(3,gradWeight);
+            pstmt.executeUpdate();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        db.closeDB();
+        */
 
         ArrayList<Student> students = this.getStudents();
         for(Student student: students){
@@ -230,7 +253,7 @@ public class Course implements Comparable<Course> {
                 PreparedStatement pstmt = db.getConn().prepareStatement(insertQuery);
                 pstmt.setString(1,  student.getBuId());
                 pstmt.setInt(2, curr_assignmentID);
-                pstmt.setFloat(3,weight);
+                pstmt.setDouble(3,student.getScore(curr_assignmentID));
                 pstmt.executeUpdate();
 
             }catch (SQLException e) {
@@ -266,7 +289,8 @@ public class Course implements Comparable<Course> {
     public ArrayList<Assignment> getAssignments() {
         DBManager db = new DBManager();
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints FROM `assignments` WHERE class_ID = '" + this.id + "'";
+        String selectQuery = "SELECT class_ID, ID, name, type, totalPoints, ugrad_weight, grad_weight, " +
+                "ugrad_weight_type, grad_weight_type FROM `assignments` WHERE class_ID = '" + this.id + "'";
 
         try {
 
@@ -392,7 +416,8 @@ public class Course implements Comparable<Course> {
             db.executeUpdate(query);
         // this will cover updates of existing objects
         } else {
-            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year, this.active, this.id);
+            query = String.format(Strings.updateCourse,this.sectionNumber, this.season, this.name, this.year,
+                    this.active, this.id);
             db.executeUpdate(query);
         }
         db.closeDB();

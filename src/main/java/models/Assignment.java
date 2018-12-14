@@ -12,6 +12,10 @@ public class Assignment implements Comparable<Assignment>{
     private int classId;
     private String name;
     private String description;
+    private double ugradWeight;
+    private double gradWeight;
+    private double ugradWeightType;
+    private double gradWeightType;
 
     //TODO: still need to be added
     private int value;
@@ -31,6 +35,10 @@ public class Assignment implements Comparable<Assignment>{
             this.name = rs.getString("name");
             this.type = rs.getString("type");
             this.totalPoints = rs.getInt("totalPoints");
+            this.ugradWeight = rs.getDouble("ugrad_weight");
+            this.gradWeight = rs.getDouble("grad_weight");
+            this.ugradWeightType = rs.getDouble("ugrad_weight_type");
+            this.gradWeightType = rs.getDouble("grad_weight_type");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -40,13 +48,49 @@ public class Assignment implements Comparable<Assignment>{
      * to be used when creating a new assignment.  Should insert the new assignment in to the db, then return
      * the created assignment object.  can call the other constructor
      */
-    public Assignment(int classId, String name, String type, int totalPoints) {
+    public Assignment(int classId, String name, String type, int totalPoints, double ugradWeight, double gradWeight,
+                      double ugradWeightType, double gradWeightType) {
         this.classId = classId;
         this.name = name;
         this.type = type;
         this.totalPoints = totalPoints;
+        this.ugradWeight = ugradWeight;
+        this.gradWeight = gradWeight;
+        this.ugradWeightType = ugradWeightType;
+        this.gradWeightType = gradWeightType;
     }
 
+    public double getUgradWeight() {
+        return ugradWeight;
+    }
+
+    public double getGradWeight() {
+        return gradWeight;
+    }
+
+    public double getGradWeightType() {
+        return gradWeightType;
+    }
+
+    public double getUgradWeightType() {
+        return ugradWeightType;
+    }
+
+    public void setGradWeight(double gradWeight) {
+        this.gradWeight = gradWeight;
+    }
+
+    public void setGradWeightType(double gradWeightType) {
+        this.gradWeightType = gradWeightType;
+    }
+
+    public void setUgradWeight(double ugradWeight) {
+        this.ugradWeight = ugradWeight;
+    }
+
+    public void setUgradWeightType(double ugradWeightType) {
+        this.ugradWeightType = ugradWeightType;
+    }
 
     public int getExtraCredit() {
         return extraCredit;
@@ -112,6 +156,10 @@ public class Assignment implements Comparable<Assignment>{
         this.type = "Homework";
         this.totalPoints = 100;
         this.description = "This is a sample description";
+        this.ugradWeight = 0.0;
+        this.gradWeight = 0.0;
+        this.ugradWeightType = 0.0;
+        this.gradWeightType = 0.0;
     }
 
     public String getName() {
@@ -211,8 +259,8 @@ public class Assignment implements Comparable<Assignment>{
 
     public void save() {
         DBManager db = new DBManager();
-        String query = String.format(Strings.updateAssignment,this.totalPoints,
-                this.name, this.description, this.type, this.id);
+        String query = String.format(Strings.updateAssignment,this.totalPoints, this.name, this.description, this.type,
+                this.ugradWeight, this.gradWeight, this.ugradWeightType, this.gradWeightType, this.id);
         db.executeUpdate(query);
         db.closeDB();
         //TODO find a way to save weighting, or remove weighting from assignment edit view

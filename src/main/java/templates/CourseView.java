@@ -280,7 +280,7 @@ public class CourseView extends View {
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
                 //TODO dynamically pull the weights
-                undergraduatePanel.add(new JLabel("100"));
+                undergraduatePanel.add(new JLabel(Double.toString(assignments.get(i).getUgradWeightType())));
                 tmpName = assignments.get(i).getType();
             } else
                 undergraduatePanel.add(new JLabel(""));
@@ -294,17 +294,17 @@ public class CourseView extends View {
             btn.addActionListener(alAssignmentView);
             undergraduatePanel.add(btn);
         }
-        undergraduatePanel.add(new JLabel("Total Points"));
-        undergraduatePanel.add(new JLabel("Out Of:"));
+        undergraduatePanel.add(new JLabel(""));
+        undergraduatePanel.add(new JLabel("Weights"));
 
         // next the assignment list in the top row
-        int sum = 0;
+        double sum = 0.0;
         for(Assignment assignment:assignments) {
-            int totalPoints = assignment.getTotalPoints();
-            undergraduatePanel.add(new JLabel(Integer.toString(totalPoints)));
-            sum += totalPoints;
+            double ugradWeight = assignment.getUgradWeight();
+            undergraduatePanel.add(new JLabel(Double.toString(ugradWeight)));
+            sum += ugradWeight;
         }
-        undergraduatePanel.add(new JLabel(Integer.toString(sum)));
+        undergraduatePanel.add(new JLabel(""));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
@@ -350,7 +350,7 @@ public class CourseView extends View {
         tmpName = "";
         for(int i=0;i<assignments.size();i++) {
             if (assignments.get(i).getType().compareTo(tmpName) != 0) {
-                graduatePanel.add(new JLabel(Integer.toString(assignments.get(i).getTotalPoints())));
+                graduatePanel.add(new JLabel(Double.toString(assignments.get(i).getGradWeightType())));
                 tmpName = assignments.get(i).getType();
             } else
                 graduatePanel.add(new JLabel(""));
@@ -364,17 +364,18 @@ public class CourseView extends View {
             btn.addActionListener(alAssignmentView);
             graduatePanel.add(btn);
         }
-        graduatePanel.add(new JLabel("Total Points"));
-        graduatePanel.add(new JLabel("Out Of"));
+        graduatePanel.add(new JLabel(""));
+        graduatePanel.add(new JLabel("Weights"));
 
         // next the assignment list in the top row
-        sum = 0;
+        sum = 0.0;
+        //TODO: get rid of sum or actually use it to check
         for(Assignment assignment:assignments) {
-            int totalPoints = assignment.getTotalPoints();
-            graduatePanel.add(new JLabel(Integer.toString(totalPoints)));
-            sum += totalPoints;
+            double gradWeight = assignment.getGradWeight();
+            graduatePanel.add(new JLabel(Double.toString(gradWeight)));
+            sum += gradWeight;
         }
-        graduatePanel.add(new JLabel(Integer.toString(sum)));
+        graduatePanel.add(new JLabel(""));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work

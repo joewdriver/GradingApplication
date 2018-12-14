@@ -20,7 +20,7 @@ public class AssignmentView extends View {
     private JLabel assignmentType;
     private JLabel totalPoints;
     private JLabel averageScore;
-    private JLabel weight;
+    private JLabel ugradWeight, gradWeight, ugradWeightType, gradWeightType;
     private JLabel description;
     private JButton editButton;
     private JButton saveButton;
@@ -32,7 +32,8 @@ public class AssignmentView extends View {
     // constructor for creating a new assignment
     public AssignmentView() {
         this.contextFields = new ArrayList<ContextField>();
-        this.assignment = new Assignment(0,"Assignment Name","Assignment Type",100);
+        this.assignment = new Assignment(0,"Assignment Name","Assignment Type",100,
+                0.0, 0.0, 0.0, 0.0);
         setup(1200, 800, "Add Assignment");
         createUIComponents();
         buildLayout() ;
@@ -76,7 +77,12 @@ public class AssignmentView extends View {
 
         totalPoints = new JLabel("Total Points: " + Integer.toString(assignment.getTotalPoints()));
 
-        weight = new JLabel("Weight of assignment: " + Float.toString(assignment.getWeight()));
+        ugradWeight = new JLabel("Ugrad. weight of assignment: " + Double.toString(assignment.getUgradWeight()));
+        gradWeight = new JLabel("Grad. weight of assignment: " + Double.toString(assignment.getGradWeight()));
+        ugradWeightType = new JLabel("Weight of assignment type for ugrad.: " +
+                Double.toString(assignment.getUgradWeightType()));
+        gradWeightType = new JLabel("Weight of assignment type for grad.: " +
+                Double.toString(assignment.getGradWeightType()));
         assignmentName = new JLabel(assignment.getName());
         courseId = new JLabel(assignment.getCourse().getSectionNumber());
         //courseId = new JLabel("111");
@@ -111,7 +117,7 @@ public class AssignmentView extends View {
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
                 .addComponent(totalPoints)
-                .addComponent(weight)
+                //.addComponent(weight)
         );
         // Course ID and assignment header in the same row
         headerLayout.setVerticalGroup(headerLayout.createParallelGroup(CENTER)
@@ -121,7 +127,7 @@ public class AssignmentView extends View {
                 .addComponent(spacerPanelH)
                 .addComponent(assignmentType)
                 .addComponent(totalPoints)
-                .addComponent(weight)
+                //.addComponent(weight)
         );
 
 
@@ -210,6 +216,10 @@ public class AssignmentView extends View {
         // assembles everything into the parent grouping
         layout.setHorizontalGroup(layout.createParallelGroup(CENTER)
                 .addComponent(headerPanel)
+                .addComponent(ugradWeight)
+                .addComponent(gradWeight)
+                .addComponent(ugradWeightType)
+                .addComponent(gradWeightType)
                 .addComponent(description)
                 .addComponent(scorePanel)
                 .addComponent(editButton)
@@ -220,6 +230,10 @@ public class AssignmentView extends View {
         // by making the vertical group sequential, we order the products top to bottom
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addComponent(headerPanel)
+                .addComponent(ugradWeight)
+                .addComponent(gradWeight)
+                .addComponent(ugradWeightType)
+                .addComponent(gradWeightType)
                 .addComponent(description)
                 .addComponent(scorePanel)
                 .addComponent(editButton)
