@@ -178,8 +178,9 @@ public class Student {
             selectQuery = "SELECT * FROM `assignments` WHERE ID = '" + assign.getId() + "'";
             try {
                 ResultSet rs = db.executeQuery(selectQuery);
+                System.out.println(this.graduateLevel);
                 if (rs.next() ) {
-                    if(this.type == "ugrad"){
+                    if(this.graduateLevel.equals("Undergraduate")){
                         weight = rs.getFloat("ugrad_weight");
                         System.out.println("getting ugrad weights: "+ totals.get(scoreIdx));
                         if(totals.get(scoreIdx) != 0)
@@ -194,7 +195,6 @@ public class Student {
                         else
                             rsum += 0 ;
                     }
-
                 }
 
             } catch (SQLException e) {
