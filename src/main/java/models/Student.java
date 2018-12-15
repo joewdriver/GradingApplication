@@ -144,7 +144,6 @@ public class Student {
         /*
         * @details: provide the average grade
         * */
-        System.out.println("in get score");
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
         ArrayList<Integer> totals = new ArrayList<Integer>();
@@ -174,19 +173,28 @@ public class Student {
         db = new DBManager();
         int scoreIdx = 0;
         for (Assignment assign : assignments){
-            int weight = 1;
+            float weight = 1;
             // TODO: move to strings
-
-            selectQuery = "SELECT weight FROM `weights` WHERE  assignment_ID = '" + assign.getId() + "'";
+            selectQuery = "SELECT * FROM `assignments` WHERE ID = '" + assign.getId() + "'";
             try {
                 ResultSet rs = db.executeQuery(selectQuery);
                 if (rs.next() ) {
-                    weight = rs.getInt("weight");
-                    System.out.println("getting my weights: "+ totals.get(scoreIdx));
-                    if(totals.get(scoreIdx) != 0)
-                        rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
-                    else
-                        rsum += 0 ;
+                    if(this.type == "ugrad"){
+                        weight = rs.getFloat("ugrad_weight");
+                        System.out.println("getting ugrad weights: "+ totals.get(scoreIdx));
+                        if(totals.get(scoreIdx) != 0)
+                            rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
+                        else
+                            rsum += 0 ;
+                    }else{
+                        weight = rs.getFloat("grad_weight");
+                        System.out.println("getting grad weights: "+ totals.get(scoreIdx));
+                        if(totals.get(scoreIdx) != 0)
+                            rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
+                        else
+                            rsum += 0 ;
+                    }
+
                 }
 
             } catch (SQLException e) {
