@@ -357,47 +357,43 @@ public class Course implements Comparable<Course> {
         int count = 0;
         double total = 0.0;
         for(Student student:students) {
-//            total += student.getGrade(sectionNumber);
+            total += student.getGrade(this.id);
             count++;
         }
         double mean = total/count;
-        //return total;
-        return 0.0;
+        return total;
     }
 
     public double getMedianScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Double> scores = new ArrayList<Double>();
+        ArrayList<Float> scores = new ArrayList<Float>();
         for(Student student:students) {
-//            scores.add(student.getGrade(sectionNumber));
+            scores.add(student.getGrade(this.id));
         }
         Collections.sort(scores);
         int middle = scores.size()/2;
-//        return scores.get(2);
-        return 0.0;
+        return scores.get(middle);
     }
 
     public double getHighScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Double> scores = new ArrayList<Double>();
+        ArrayList<Float> scores = new ArrayList<Float>();
         for(Student student:students) {
-//            scores.add(student.getGrade(sectionNumber));
+            scores.add(student.getGrade(this.id));
         }
         Collections.sort(scores);
-//        return scores.get(0);
-        return 0.0;
+        return scores.get(0);
     }
 
     public double getLowScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Double> scores = new ArrayList<Double>();
+        ArrayList<Float> scores = new ArrayList<Float>();
         for(Student student:students) {
-//            scores.add(student.getGrade(sectionNumber));
+           scores.add(student.getGrade(this.id));
         }
         Collections.sort(scores);
         Collections.reverse(scores);
-       // return scores.get(0);
-        return 0.0;
+       return scores.get(0);
 
     }
 }
