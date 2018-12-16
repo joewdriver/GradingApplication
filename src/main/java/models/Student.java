@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import utils.DBManager;
+import java.text.DecimalFormat;
 
 public class Student {
     private String buId;
@@ -21,6 +22,7 @@ public class Student {
     private String type;
 
     private String notes;
+    private DecimalFormat df = new DecimalFormat();
 
     public Student(ResultSet rs) {
         try {
@@ -245,7 +247,11 @@ public class Student {
             else
                 totalGrade += (rsum * gradWeight);
         }
-        return totalGrade;
+
+        this.df.setMaximumFractionDigits(2);
+        String tempGrade = this.df.format(totalGrade);
+
+        return Float.parseFloat(tempGrade);
     }
 
     public void setScore(Assignment assignment, Student student, float score){
