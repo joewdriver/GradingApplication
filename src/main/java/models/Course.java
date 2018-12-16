@@ -88,7 +88,7 @@ public class Course implements Comparable<Course> {
         // finally add each assignment to the new course
         for(Assignment assignment:getAssignments()) {
             System.out.println("Checkpoint Alpha");
-            newCourse.addAssignment(assignment);
+            newCourse.addCloneAssignment(assignment);
         }
 
         // return the newly created course
@@ -190,6 +190,16 @@ public class Course implements Comparable<Course> {
                 e.printStackTrace();
             }
         }
+        db.closeDB();
+    }
+
+    public void addCloneAssignment(Assignment assignment){
+        DBManager db = new DBManager();
+        String insertQuery = String.format(Strings.addAssignmentToCourse, this.id, assignment.getName(),
+                assignment.getDescription(),assignment.getExtraCredit(),assignment.getType(),
+                assignment.getTotalPoints(),assignment.getUgradWeight(),assignment.getGradWeight(),
+                assignment.getUgradWeightType(), assignment.getGradWeightType());
+        db.executeUpdate(insertQuery);
         db.closeDB();
     }
 
