@@ -314,7 +314,8 @@ public class CourseView extends View {
                 undergraduatePanel.add(new JLabel(Double.toString(score)));
                 totalScore += score;
             }
-            undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
+            //undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
+            undergraduatePanel.add(new JLabel(Float.toString(student.getGrade(course.getId()))));
         }
 
         // adding in the graduate stuff
