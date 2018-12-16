@@ -251,7 +251,7 @@ public class Student {
         this.df.setMaximumFractionDigits(2);
         String tempGrade = this.df.format(totalGrade);
 
-        return Float.parseFloat(tempGrade);
+        return Double.parseDouble(tempGrade);
     }
 
     public void setScore(Assignment assignment, Student student, float score){

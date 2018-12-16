@@ -294,12 +294,12 @@ public class CourseView extends View {
             undergraduatePanel.add(new JLabel(Double.toString(ugradWeight)));
             sum += ugradWeight;
         }
-        undergraduatePanel.add(new JLabel(""));
+        undergraduatePanel.add(new JLabel("Total Grade"));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
 
-        
+        String grade = "";
         for(Student student: undergraduates) {
             ContextButton btn = new ContextButton(student.getFullName(), student);
             if(!student.getNotes().equals("")) {
@@ -315,7 +315,8 @@ public class CourseView extends View {
                 totalScore += score;
             }
             //undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
-            undergraduatePanel.add(new JLabel(Double.toString(student.getGrade(course.getId()))));
+            grade = Double.toString(student.getGrade(course.getId()));
+            undergraduatePanel.add(new JLabel(grade));
         }
 
         // adding in the graduate stuff
@@ -364,7 +365,7 @@ public class CourseView extends View {
             graduatePanel.add(new JLabel(Double.toString(gradWeight)));
             sum += gradWeight;
         }
-        graduatePanel.add(new JLabel(""));
+        graduatePanel.add(new JLabel("Total Grade"));
 
         // now we get weird. leftmost column should be name buttons, everything else text fields.
         // will need a nested loop to make this work
@@ -380,12 +381,13 @@ public class CourseView extends View {
             for(Assignment assignment:assignments) {
                 double score = student.getScore(assignment.getId());
                 graduatePanel.add(new JLabel(Double.toString(score)));
-                totalScore = totalScore + score;
+                totalScore += score;
             }
-            graduatePanel.add(new JLabel(Double.toString(totalScore)));
-            // TODO resolve average grade
-            //graduatePanel.add(new JLabel(Double.toString(student.getGrade(this.course.getSectionNumber()))));
+            //undergraduatePanel.add(new JLabel(Double.toString(totalScore)));
+            grade = Double.toString(student.getGrade(course.getId()));
+            graduatePanel.add(new JLabel(grade));
         }
+
 
         // footer layout for various functional buttons
         GroupLayout footerLayout = new GroupLayout(footerPanel);
