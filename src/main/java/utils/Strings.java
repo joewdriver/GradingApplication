@@ -48,4 +48,7 @@ public class Strings {
 
     public static final String updateWeight = "UPDATE weight set weight =%s where group_id=%s and assignment_id=%s";
 
+    public static final String updateAssignmentTypeWeight = "UPDATE assignments SET ugrad_weight_type=%f, "+
+            "grad_weight_type=%f where type='%s'";
+
 }

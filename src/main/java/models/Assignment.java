@@ -264,6 +264,10 @@ public class Assignment implements Comparable<Assignment>{
         String query = String.format(Strings.updateAssignment,this.totalPoints, this.name, this.description, this.type,
                 this.ugradWeight, this.gradWeight, this.ugradWeightType, this.gradWeightType, this.id);
         db.executeUpdate(query);
+
+        query = String.format(Strings.updateAssignmentTypeWeight, this.ugradWeightType, this.gradWeightType, this.type);
+        db.executeUpdate(query);
+
         db.closeDB();
         //TODO find a way to save weighting, or remove weighting from assignment edit view
     }
@@ -274,9 +278,34 @@ public class Assignment implements Comparable<Assignment>{
                 this.extraCredit, this.type, this.totalPoints, this.ugradWeight, this.gradWeight, this.ugradWeightType,
                 this.gradWeightType);
         db.executeUpdate(query);
-        db.closeDB();
 
         this.id = Assignment.getLastId();
 
+        query = String.format(Strings.updateAssignmentTypeWeight, this.ugradWeightType, this.gradWeightType, this.type);
+        db.executeUpdate(query);
+
+        db.closeDB();
     }
+
+    /*
+    public void updateAssigntTypeWeights() {
+        String assignmentQuery = Strings.getAllAssignments;
+
+        DBManager tempdb = new DBManager();
+        ResultSet rs = tempdb.executeQuery(assignmentQuery);
+        try {
+            while(rs.next()) {
+                rs.getInt("");
+                query = String.format(Strings.updateGradTypeWeight, this.gradWeightType, this.type);
+                db.executeUpdate(query);
+                query = String.format(Strings.updateUgradTypeWeight, this.ugradWeightType, this.type);
+                db.executeUpdate(query);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            tempdb.closeDB();
+        }
+        tempdb.closeDB();
+    }
+    */
 }

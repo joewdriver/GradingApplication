@@ -372,6 +372,8 @@ public class Course implements Comparable<Course> {
         }
         Collections.sort(scores);
         int middle = scores.size()/2;
+        if (scores.isEmpty())
+            return 0;
         return scores.get(middle);
     }
 
@@ -382,6 +384,8 @@ public class Course implements Comparable<Course> {
             scores.add(student.getGrade(this.id));
         }
         Collections.sort(scores);
+        if (scores.isEmpty())
+            return 0;
         return scores.get(0);
     }
 
@@ -393,7 +397,9 @@ public class Course implements Comparable<Course> {
         }
         Collections.sort(scores);
         Collections.reverse(scores);
-       return scores.get(0);
+        if (scores.isEmpty())
+            return 0;
+        return scores.get(0);
 
     }
 }
