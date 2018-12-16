@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,6 +20,7 @@ public class Course implements Comparable<Course> {
     private String year;
     private String season;
     private int active;
+    private DecimalFormat df = new DecimalFormat();
 
     private String semester;
 //    private DBManager db = new DBManager();
@@ -352,19 +354,21 @@ public class Course implements Comparable<Course> {
         db.closeDB();
     }
 
-    public double getMeanScore() {
+    public String getMeanScore() {
         ArrayList<Student> students = getStudents();
         int count = 0;
-        double total = 0.0;
+        float total = 0;
         for(Student student:students) {
             total += student.getGrade(this.id);
             count++;
         }
-        double mean = total/count;
-        return total;
+        float mean = total/count;
+        this.df.setMaximumFractionDigits(2);
+
+        return df.format(mean);
     }
 
-    public double getMedianScore() {
+    public String getMedianScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
@@ -373,11 +377,12 @@ public class Course implements Comparable<Course> {
         Collections.sort(scores);
         int middle = scores.size()/2;
         if (scores.isEmpty())
-            return 0;
-        return scores.get(middle);
+            return "0";
+        this.df.setMaximumFractionDigits(2);
+        return df.format(scores.get(middle));
     }
 
-    public double getHighScore() {
+    public String getHighScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
@@ -385,11 +390,12 @@ public class Course implements Comparable<Course> {
         }
         Collections.sort(scores);
         if (scores.isEmpty())
-            return 0;
-        return scores.get(0);
+            return "0";
+        this.df.setMaximumFractionDigits(2);
+        return this.df.format(scores.get(0));
     }
 
-    public double getLowScore() {
+    public String getLowScore() {
         ArrayList<Student> students = getStudents();
         ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
@@ -398,8 +404,8 @@ public class Course implements Comparable<Course> {
         Collections.sort(scores);
         Collections.reverse(scores);
         if (scores.isEmpty())
-            return 0;
-        return scores.get(0);
+            return "0";
+        return df.format(scores.get(0));
 
     }
 }
