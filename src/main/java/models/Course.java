@@ -366,7 +366,7 @@ public class Course implements Comparable<Course> {
 
     public double getMedianScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Float> scores = new ArrayList<Float>();
+        ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
             scores.add(student.getGrade(this.id));
         }
@@ -379,7 +379,7 @@ public class Course implements Comparable<Course> {
 
     public double getHighScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Float> scores = new ArrayList<Float>();
+        ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
             scores.add(student.getGrade(this.id));
         }
@@ -391,7 +391,7 @@ public class Course implements Comparable<Course> {
 
     public double getLowScore() {
         ArrayList<Student> students = getStudents();
-        ArrayList<Float> scores = new ArrayList<Float>();
+        ArrayList<Double> scores = new ArrayList<Double>();
         for(Student student:students) {
            scores.add(student.getGrade(this.id));
         }

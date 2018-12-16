@@ -139,17 +139,21 @@ public class Student {
         return score;
     }
 
-    public float getGrade(int classId) {
+    public double getGrade(int classId) {
 
         /*
         * @details: provide the average grade
         * */
         ArrayList<Assignment> assignments = new ArrayList<Assignment>();
+        ArrayList<String> assignmentTypes = new ArrayList<String>();
         ArrayList<Integer> scores = new ArrayList<Integer>();
         ArrayList<Integer> totals = new ArrayList<Integer>();
-        float rsum = 0;
+        double rsum = 0;
+        double ugradWeight = 0.0;
+        double gradWeight = 0.0;
+        double totalGrade = 0.0;
 
-        String selectQuery = "SELECT *  FROM `assignments` as A " +
+        String selectQuery = "SELECT DISTINCT type  FROM `assignments` as A " +
                 "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
                 "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'";
         System.out.println("getting my select: " + selectQuery + "and my bu id: " + this.buId);
@@ -159,9 +163,10 @@ public class Student {
             ResultSet rs = db.executeQuery(selectQuery);
             // loop through the result set
             while (rs.next()) {
-                scores.add(rs.getInt("score"));
-                totals.add(rs.getInt("totalPoints"));
-                assignments.add(new Assignment(rs));
+                //scores.add(rs.getInt("score"));
+                //totals.add(rs.getInt("totalPoints"));
+
+                assignmentTypes.add(rs.getString("type"));
             }
 
         } catch (SQLException e) {
@@ -170,41 +175,77 @@ public class Student {
         }
         db.closeDB();
 
-        db = new DBManager();
-        int scoreIdx = 0;
-        for (Assignment assign : assignments){
-            float weight = 1;
-            // TODO: move to strings
-            selectQuery = "SELECT * FROM `assignments` WHERE ID = '" + assign.getId() + "'";
+        for(String assignmentType : assignmentTypes) {
+            rsum = 0;
+            scores.clear();
+            totals.clear();
+            assignments.clear();
+            selectQuery = "SELECT *  FROM `assignments` as A " +
+                    "INNER JOIN `course_assignments` as B on B.assignment_ID = A.ID " +
+                    "WHERE B.BU_ID = '" + this.buId + "' AND A.class_ID = '" + classId + "'" +
+                    "AND type = '"+assignmentType+"'";
+            System.out.println("getting my select: " + selectQuery + "and my bu id: " + this.buId);
+
+
+            db = new DBManager();
             try {
                 ResultSet rs = db.executeQuery(selectQuery);
-                System.out.println(this.graduateLevel);
-                if (rs.next() ) {
-                    if(this.graduateLevel.equals("Undergraduate")){
-                        weight = rs.getFloat("ugrad_weight");
-                        System.out.println("getting ugrad weights: "+ totals.get(scoreIdx));
-                        if(totals.get(scoreIdx) != 0)
-                            rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
-                        else
-                            rsum += 0 ;
-                    }else{
-                        weight = rs.getFloat("grad_weight");
-                        System.out.println("getting grad weights: "+ totals.get(scoreIdx));
-                        if(totals.get(scoreIdx) != 0)
-                            rsum += weight * ((float)scores.get(scoreIdx) / (float)totals.get(scoreIdx));
-                        else
-                            rsum += 0 ;
-                    }
+                // loop through the result set
+                while (rs.next()) {
+                    scores.add(rs.getInt("score"));
+                    totals.add(rs.getInt("totalPoints"));
+                    ugradWeight = rs.getDouble("ugrad_weight_type");
+                    gradWeight = rs.getDouble("grad_weight_type");
+
+                    assignments.add(new Assignment(rs));
                 }
 
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
                 db.closeDB();
             }
-            scoreIdx++;
+            db.closeDB();
+
+            db = new DBManager();
+            int scoreIdx = 0;
+            for (Assignment assign : assignments) {
+                float weight = 1;
+                // TODO: move to strings
+                selectQuery = "SELECT * FROM `assignments` WHERE ID = '" + assign.getId() + "'";
+                try {
+                    ResultSet rs = db.executeQuery(selectQuery);
+                    System.out.println(this.graduateLevel);
+                    if (rs.next()) {
+                        if (this.graduateLevel.equals("Undergraduate")) {
+                            weight = rs.getFloat("ugrad_weight");
+                            System.out.println("getting ugrad weights: " + totals.get(scoreIdx));
+                            if (totals.get(scoreIdx) != 0)
+                                rsum += (weight * ((double) scores.get(scoreIdx) / (double) totals.get(scoreIdx)));
+                            else
+                                rsum += 0;
+                        } else {
+                            weight = rs.getFloat("grad_weight");
+                            System.out.println("getting grad weights: " + totals.get(scoreIdx));
+                            if (totals.get(scoreIdx) != 0)
+                                rsum += (weight * ((double) scores.get(scoreIdx) / (double) totals.get(scoreIdx)));
+                            else
+                                rsum += 0;
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println(e.getMessage());
+                    db.closeDB();
+                }
+                scoreIdx++;
+            }
+            db.closeDB();
+            if (this.graduateLevel.equals("Undergraduate"))
+                totalGrade += (rsum * ugradWeight);
+            else
+                totalGrade += (rsum * gradWeight);
         }
-        db.closeDB();
-        return rsum;
+        return totalGrade;
     }
 
     public void setScore(Assignment assignment, Student student, float score){
