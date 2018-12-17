@@ -248,8 +248,8 @@ public class Student {
                 totalGrade += (rsum * gradWeight);
         }
 
-        this.df.setMaximumFractionDigits(2);
-        String tempGrade = this.df.format(totalGrade);
+        this.df.setMaximumFractionDigits(4);
+        String tempGrade = this.df.format(totalGrade * 100);
 
         return Double.parseDouble(tempGrade);
     }
